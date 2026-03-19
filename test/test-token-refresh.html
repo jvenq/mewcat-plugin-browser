@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token 刷新功能测试</title>
+    <style>
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .test-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .log-container {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin: 4px 0;
+            padding: 2px 0;
+        }
+        .log-info { color: #4fc3f7; }
+        .log-success { color: #66bb6a; }
+        .log-error { color: #ef5350; }
+        .log-warning { color: #ffa726; }
+        .log-request { color: #ab47bc; }
+        .log-storage { color: #26c6da; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        .status-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .clear-btn {
+            background: #6c757d;
+        }
+        .storage-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .storage-info code {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Token 刷新功能测试</h1>
+        <p class="subtitle">测试 request.ts 中的 401 响应拦截器和 token 自动刷新机制</p>
+
+        <div class="test-section">
+            <div class="test-title">测试场景 1: 单个请求触发 401 <span id="status1" class="status-badge status-pending">待运行</span></div>
+            <p>模拟一个请求返回 401，验证自动刷新 token 并重试请求</p>
+            <button onclick="runTest1()">运行测试 1</button>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">测试场景 2: 并发请求触发 401 <span id="status2" class="status-badge status-pending">待运行</span></div>
+            <p>模拟 3 个并发请求同时返回 401，验证只刷新一次 token，所有请求使用新 token 重试</p>
+            <button onclick="runTest2()">运行测试 2</button>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">测试场景 3: 刷新失败清除 token <span id="status3" class="status-badge status-pending">待运行</span></div>
+            <p>模拟 refresh token 无效，验证清除本地 token 并返回错误</p>
+            <button onclick="runTest3()">运行测试 3</button>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">完整测试套件 <span id="statusAll" class="status-badge status-pending">待运行</span></div>
+            <button onclick="runAllTests()">运行所有测试</button>
+            <button class="clear-btn" onclick="clearLogs()">清除日志</button>
+        </div>
+
+        <div class="storage-info" id="storageInfo">
+            <strong>当前 Storage 状态：</strong><br>
+            accessToken: <code id="accessToken">-</code><br>
+            refreshToken: <code id="refreshToken">-</code>
+        </div>
+
+        <div class="log-container" id="logContainer">
+            <div class="log-entry log-info">等待测试运行...</div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟 Storage
+        class MockStorage {
+            constructor() {
+                this.data = new Map();
+            }
+
+            async get(key) {
+                return this.data.get(key) || null;
+            }
+
+            async set(key, value) {
+                this.data.set(key, value);
+                this.updateStorageDisplay();
+                log(`[Storage] 设置 ${key}: ${value}`, 'storage');
+            }
+
+            async remove(key) {
+                this.data.delete(key);
+                this.updateStorageDisplay();
+                log(`[Storage] 删除 ${key}`, 'storage');
+            }
+
+            clear() {
+                this.data.clear();
+                this.updateStorageDisplay();
+            }
+
+            updateStorageDisplay() {
+                document.getElementById('accessToken').textContent = this.data.get('accessToken') || '-';
+                document.getElementById('refreshToken').textContent = this.data.get('refreshToken') || '-';
+            }
+        }
+
+        const mockStorage = new MockStorage();
+
+        // 日志函数
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('logContainer').innerHTML = '<div class="log-entry log-info">日志已清除</div>';
+        }
+
+        function updateStatus(id, success) {
+            const statusEl = document.getElementById(id);
+            statusEl.className = `status-badge status-${success ? 'success' : 'error'}`;
+            statusEl.textContent = success ? '✓ 通过' : '✗ 失败';
+        }
+
+        // 模拟刷新 token
+        async function mockRefreshToken(refreshToken) {
+            log(`[刷新Token] 使用 refreshToken: ${refreshToken}`, 'warning');
+
+            // 模拟网络延迟
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            if (refreshToken.includes('invalid')) {
+                throw new Error('Invalid refresh token');
+            }
+
+            return {
+                accessToken: `new-access-token-${Date.now()}`,
+                refreshToken: `new-refresh-token-${Date.now()}`
+            };
+        }
+
+        // 模拟 API 请求
+        async function mockApiRequest(url, token, shouldFail = false) {
+            log(`[请求] GET ${url} with token: ${token}`, 'request');
+
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            if (shouldFail || token.includes('old')) {
+                log(`[响应] 401 Unauthorized`, 'error');
+                throw { status: 401, message: 'Token expired' };
+            }
+
+            log(`[响应] 200 OK`, 'success');
+            return { success: true, data: 'Request successful' };
+        }
+
+        // 测试 1: 单个请求触发 401
+        async function runTest1() {
+            log('\n========================================', 'info');
+            log('开始测试场景 1: 单个请求触发 401', 'info');
+            log('========================================', 'info');
+
+            try {
+                // 初始化 storage
+                await mockStorage.set('accessToken', 'old-access-token-1');
+                await mockStorage.set('refreshToken', 'old-refresh-token-1');
+
+                let token = await mockStorage.get('accessToken');
+
+                try {
+                    // 第一次请求，使用旧 token，会返回 401
+                    await mockApiRequest('/api/user', token);
+                } catch (error) {
+                    if (error.status === 401) {
+                        log('[拦截器] 检测到 401，开始刷新 token', 'warning');
+
+                        const refreshToken = await mockStorage.get('refreshToken');
+                        const newTokens = await mockRefreshToken(refreshToken);
+
+                        await mockStorage.set('accessToken', newTokens.accessToken);
+                        await mockStorage.set('refreshToken', newTokens.refreshToken);
+
+                        log('[拦截器] Token 刷新成功，重试原始请求', 'success');
+
+                        // 使用新 token 重试
+                        token = await mockStorage.get('accessToken');
+                        const response = await mockApiRequest('/api/user', token);
+
+                        log(`✅ 测试 1 通过: ${JSON.stringify(response)}`, 'success');
+                        updateStatus('status1', true);
+                        return;
+                    }
+                }
+
+                throw new Error('Should have received 401');
+            } catch (error) {
+                log(`❌ 测试 1 失败: ${error.message}`, 'error');
+                updateStatus('status1', false);
+            }
+        }
+
+        // 测试 2: 并发请求触发 401
+        async function runTest2() {
+            log('\n========================================', 'info');
+            log('开始测试场景 2: 并发请求触发 401', 'info');
+            log('========================================', 'info');
+
+            try {
+                // 初始化 storage
+                mockStorage.clear();
+                await mockStorage.set('accessToken', 'old-access-token-2');
+                await mockStorage.set('refreshToken', 'old-refresh-token-2');
+
+                let isRefreshing = false;
+                let pendingRequests = [];
+
+                const makeRequest = async (url) => {
+                    let token = await mockStorage.get('accessToken');
+
+                    try {
+                        return await mockApiRequest(url, token);
+                    } catch (error) {
+                        if (error.status === 401) {
+                            log(`[${url}] 收到 401`, 'warning');
+
+                            // 如果正在刷新，等待刷新完成
+                            if (isRefreshing) {
+                                log(`[${url}] 等待 token 刷新`, 'warning');
+                                await new Promise(resolve => pendingRequests.push(resolve));
+                                token = await mockStorage.get('accessToken');
+                                log(`[${url}] 使用新 token 重试`, 'info');
+                                return await mockApiRequest(url, token);
+                            }
+
+                            // 开始刷新
+                            isRefreshing = true;
+                            log('[拦截器] 开始刷新 token（仅一次）', 'warning');
+
+                            const refreshToken = await mockStorage.get('refreshToken');
+                            const newTokens = await mockRefreshToken(refreshToken);
+
+                            await mockStorage.set('accessToken', newTokens.accessToken);
+                            await mockStorage.set('refreshToken', newTokens.refreshToken);
+
+                            // 通知所有等待的请求
+                            log(`[拦截器] Token 刷新完成，处理 ${pendingRequests.length} 个等待请求`, 'success');
+                            pendingRequests.forEach(resolve => resolve());
+                            pendingRequests = [];
+                            isRefreshing = false;
+
+                            // 重试原始请求
+                            token = await mockStorage.get('accessToken');
+                            return await mockApiRequest(url, token);
+                        }
+                        throw error;
+                    }
+                };
+
+                // 并发发送 3 个请求
+                const results = await Promise.all([
+                    makeRequest('/api/user'),
+                    makeRequest('/api/posts'),
+                    makeRequest('/api/comments')
+                ]);
+
+                log(`✅ 测试 2 通过: 所有请求成功`, 'success');
+                results.forEach((r, i) => log(`  请求 ${i+1}: ${JSON.stringify(r)}`, 'success'));
+                updateStatus('status2', true);
+            } catch (error) {
+                log(`❌ 测试 2 失败: ${error.message}`, 'error');
+                updateStatus('status2', false);
+            }
+        }
+
+        // 测试 3: refresh token 无效
+        async function runTest3() {
+            log('\n========================================', 'info');
+            log('开始测试场景 3: refresh token 无效', 'info');
+            log('========================================', 'info');
+
+            try {
+                // 使用无效的 refresh token
+                mockStorage.clear();
+                await mockStorage.set('accessToken', 'old-access-token-3');
+                await mockStorage.set('refreshToken', 'invalid-refresh-token');
+
+                let token = await mockStorage.get('accessToken');
+
+                try {
+                    await mockApiRequest('/api/user', token);
+                } catch (error) {
+                    if (error.status === 401) {
+                        log('[拦截器] 检测到 401，尝试刷新 token', 'warning');
+
+                        try {
+                            const refreshToken = await mockStorage.get('refreshToken');
+                            await mockRefreshToken(refreshToken);
+
+                            log('❌ 测试 3 失败: 应该刷新失败但成功了', 'error');
+                            updateStatus('status3', false);
+                            return;
+                        } catch (refreshError) {
+                            log(`[拦截器] 刷新失败: ${refreshError.message}`, 'error');
+                            log('[拦截器] 清除本地 token', 'warning');
+
+                            await mockStorage.remove('accessToken');
+                            await mockStorage.remove('refreshToken');
+
+                            const finalToken = await mockStorage.get('accessToken');
+                            if (finalToken === null) {
+                                log('✅ 测试 3 通过: Token 已清除', 'success');
+                                updateStatus('status3', true);
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                log('❌ 测试 3 失败: 未按预期执行', 'error');
+                updateStatus('status3', false);
+            } catch (error) {
+                log(`❌ 测试 3 失败: ${error.message}`, 'error');
+                updateStatus('status3', false);
+            }
+        }
+
+        // 运行所有测试
+        async function runAllTests() {
+            clearLogs();
+            log('开始运行完整测试套件...', 'info');
+
+            await runTest1();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            await runTest2();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            await runTest3();
+
+            log('\n========================================', 'info');
+            log('所有测试完成', 'info');
+            log('========================================', 'info');
+
+            updateStatus('statusAll', true);
+        }
+
+        // 初始化显示
+        mockStorage.updateStorageDisplay();
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+import {
+    AiModel_Platform_Enum,
+    DEEPSEEK_LLM,
+    DOU_BAO_LLM,
+    GEMINI_LLM,
+    HUNYUAN_LLM,
+    MOONSHOT_LLM,
+    OPENAI_LLM,
+    QWEN_LLM,
+    SystemLLMModel,
+    ZHIPU_LLM,
+    type LLMModel
+} from "@/types"
+
+/**
+ * LLM 模型选项（仅包含已上线的模型）
+ * 按订阅要求和模型ID排序
+ */
+
+export const SYSTEM_LLM_MODEL_OPTIONS: SystemLLMModel[] = [
+    SystemLLMModel.LLM_MODEL_GPT4d1_NANO,
+    SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST,
+    SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K,
+    SystemLLMModel.LLM_MODEL_DEEPSEEK_CHAT,
+    SystemLLMModel.LLM_MODEL_GPT4d1_MINI,
+    SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST,
+    SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST,
+    SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO,
+    SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE,
+    SystemLLMModel.LLM_MODEL_KIMI_K2
+]
+/**
+ * LLM 模型显示名称映射（使用后端返回的 display_name）
+ */
+export const SYSTEM_LLM_MODEL_NAMES: Record<SystemLLMModel, string> = {
+    [SystemLLMModel.LLM_MODEL_UNSPECIFIED]: "未指定",
+    [SystemLLMModel.LLM_MODEL_GLM4_AIR]: "GLM-4 Air",
+    [SystemLLMModel.LLM_MODEL_GLM4_AIRX]: "GLM-4 AirX",
+    [SystemLLMModel.LLM_MODEL_GLM4_FLASHX]: "GLM-4 FlashX",
+    [SystemLLMModel.LLM_MODEL_GLM4_PLUS]: "GLM-4 Plus",
+    [SystemLLMModel.LLM_MODEL_GLM_4d5_FLASH]: "GLM-4.5 Flash",
+    [SystemLLMModel.LLM_MODEL_DEEPSEEK_CHAT]: "DeepSeek-V3-0324",
+    [SystemLLMModel.LLM_MODEL_DEEPSEEK_R1]: "DeepSeek R1",
+    [SystemLLMModel.LLM_MODEL_GPT4O_MINI]: "GPT-4o Mini",
+    [SystemLLMModel.LLM_MODEL_GPT4d1_NANO]: "gpt-4.1-nano",
+    [SystemLLMModel.LLM_MODEL_GPT4d1_MINI]: "gpt-4.1-mini",
+    [SystemLLMModel.LLM_MODEL_CLAUDE3_HAIKU]: "Claude 3 Haiku",
+    [SystemLLMModel.LLM_MODEL_YI_LIGHTNING]: "Yi Lightning",
+    [SystemLLMModel.LLM_MODEL_QWEN_2d5_32B_INSTRUCT]: "Qwen 2.5 32B",
+    [SystemLLMModel.LLM_MODEL_QWQ_PLUS_LATEST]: "QwQ Plus",
+    [SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST]: "qwen-max-latest",
+    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST_THINKING]: "Qwen Plus Thinking",
+    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST]: "qwen-plus-latest",
+    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST_THINKING]:
+        "Qwen Turbo Thinking",
+    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST]: "qwen-turbo-latest",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO]: "Doubao-1.5-pro",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K]: "Doubao-1.5-lite",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415]:
+        "豆包-1.5 Thinking Pro",
+    [SystemLLMModel.LLM_MODEL_GEMINI_2d0_FLASH]: "Gemini 2.0 Flash",
+    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH]: "Gemini 2.5 Flash",
+    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE]: "gemini-2.5-flash-lite",
+    [SystemLLMModel.LLM_MODEL_KIMI_K2]: "Kimi-K2",
+    [SystemLLMModel.LLM_MODEL_BAAI_BGE_M3]: "BAAI BGE-M3",
+    [SystemLLMModel.LLM_MODEL_ZHIPU_EMBEDDING_3]: "智谱 Embedding-3",
+    [SystemLLMModel.LLM_MODEL_BAAI_RERANK_V2_M3]: "BAAI Rerank V2-M3",
+    [SystemLLMModel.LLM_MODEL_ZHIPU_RERANK]: "智谱 Rerank"
+}
+
+export const GEMINI_MODEL_LIST: GEMINI_LLM[] = [
+    GEMINI_LLM.Gemini_3_Pro,
+    GEMINI_LLM.Gemini_3_Flash,
+    GEMINI_LLM.Gemini_2_5_Pro,
+    GEMINI_LLM.Gemini_2_5_Flash,
+    GEMINI_LLM.Gemini_2_5_Flash_Lite
+]
+
+export const GEMINI_MODEL_NAMES: Record<GEMINI_LLM, string> = {
+    [GEMINI_LLM.Gemini_3_Pro]: "gemini-3-pro-preview",
+    [GEMINI_LLM.Gemini_3_Flash]: "gemini-3-flash-preview",
+    [GEMINI_LLM.Gemini_2_5_Pro]: "gemini-2.5-pro",
+    [GEMINI_LLM.Gemini_2_5_Flash]: "gemini-2.5-flash",
+    [GEMINI_LLM.Gemini_2_5_Flash_Lite]: "gemini-2.5-flash-lite"
+}
+
+export const DEEPSEEK_MODEL_LIST: DEEPSEEK_LLM[] = [
+    DEEPSEEK_LLM.DEEPSEEK_CHAT,
+    DEEPSEEK_LLM.DEEPSEEK_REASONER
+]
+
+export const DEEPSEEK_MODEL_NAMES: Record<DEEPSEEK_LLM, string> = {
+    [DEEPSEEK_LLM.DEEPSEEK_CHAT]: "deepseek-chat",
+    [DEEPSEEK_LLM.DEEPSEEK_REASONER]: "deepseek-reasoner"
+}
+
+export const ALIYUN_BAILIAN_MODEL_LIST: DOU_BAO_LLM[] = [
+    DOU_BAO_LLM.DOUBAO_SEED_1_8_251228,
+    DOU_BAO_LLM.GLM_4_7_251222,
+    DOU_BAO_LLM.DOUBAO_SEED_CODE_PREVIEW_251028,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_LITE_251015,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_FLASH_250828,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_VISION_250815
+]
+
+export const ALIYUN_BAILIAN_MODEL_NAMES: Record<DOU_BAO_LLM, string> = {
+    [DOU_BAO_LLM.DOUBAO_SEED_1_8_251228]: "doubao-seed-1.8-251228",
+    [DOU_BAO_LLM.GLM_4_7_251222]: "glm-4.7-251222",
+    [DOU_BAO_LLM.DOUBAO_SEED_CODE_PREVIEW_251028]:
+        "doubao-seed-code-preview-251028",
+    [DOU_BAO_LLM.DOUBAO_SEED_1_6_LITE_251015]: "doubao-seed-1.6-lite-251015",
+    [DOU_BAO_LLM.DOUBAO_SEED_1_6_FLASH_250828]: "doubao-seed-1.6-flash-250828",
+    [DOU_BAO_LLM.DOUBAO_SEED_1_6_VISION_250815]: "doubao-seed-1.6-vision-250815"
+}
+
+export const HUNYUAN_MODEL_LIST: HUNYUAN_LLM[] = [
+    HUNYUAN_LLM.HUNYUAN_TRANSLATION,
+    HUNYUAN_LLM.HUNYUAN_TRANSLATION_LITE,
+    HUNYUAN_LLM.HY_2_0_INSTRUCT,
+    HUNYUAN_LLM.HY_2_0_THINK
+]
+
+export const HUNYUAN_MODEL_NAMES: Record<HUNYUAN_LLM, string> = {
+    [HUNYUAN_LLM.HUNYUAN_TRANSLATION]: "hunyuan-translation",
+    [HUNYUAN_LLM.HUNYUAN_TRANSLATION_LITE]: "hunyuan-translation-lite",
+    [HUNYUAN_LLM.HY_2_0_INSTRUCT]:
+        "Tencent HY 2.0 Instruct（hunyuan-2.0-instruct-20251111）",
+    [HUNYUAN_LLM.HY_2_0_THINK]:
+        "Tencent HY 2.0 Think（hunyuan-2.0-thinking-20251109）"
+}
+
+export const OPENAI_MODEL_LIST: OPENAI_LLM[] = [
+    OPENAI_LLM.GPT_5,
+    OPENAI_LLM.GPT_5_CHAT,
+    OPENAI_LLM.GPT_5_MINI,
+    OPENAI_LLM.GPT_5_NANO,
+    OPENAI_LLM.GPT_5_2
+]
+
+export const OPENAI_MODEL_NAMES: Record<OPENAI_LLM, string> = {
+    [OPENAI_LLM.GPT_5]: "gpt-5",
+    [OPENAI_LLM.GPT_5_CHAT]: "gpt-5-chat",
+    [OPENAI_LLM.GPT_5_MINI]: "gpt-5-mini",
+    [OPENAI_LLM.GPT_5_NANO]: "gpt-5-nano",
+    [OPENAI_LLM.GPT_5_2]: "gpt-5.2-2025-12-11",
+    [OPENAI_LLM.GPT_5_2_PRO]: "gpt-5.2-pro-2025-12-11"
+}
+
+export const MOONSHOT_MODEL_LIST: MOONSHOT_LLM[] = [
+    MOONSHOT_LLM.KIMI_K2_0905_PREVIEW,
+    MOONSHOT_LLM.KIMI_K2_0711_PREVIEW,
+    MOONSHOT_LLM.KIMI_K2_TURBO_PREVIEW,
+    MOONSHOT_LLM.KIMI_K2_THINKING,
+    MOONSHOT_LLM.KIMI_K2_THINKING_TURBO
+]
+
+export const MOONSHOT_MODEL_NAMES: Record<MOONSHOT_LLM, string> = {
+    [MOONSHOT_LLM.KIMI_K2_0905_PREVIEW]: "kimi-k2-0905-preview",
+    [MOONSHOT_LLM.KIMI_K2_0711_PREVIEW]: "kimi-k2-0711-preview",
+    [MOONSHOT_LLM.KIMI_K2_TURBO_PREVIEW]: "kimi-k2-turbo-preview",
+    [MOONSHOT_LLM.KIMI_K2_THINKING]: "kimi-k2-thinking",
+    [MOONSHOT_LLM.KIMI_K2_THINKING_TURBO]: "kimi-k2-thinking-turbo",
+    [MOONSHOT_LLM.KIMI_K2_2_5]: "kimi-k2-2.5"
+}
+
+export const ZHIPU_MODEL_LIST: ZHIPU_LLM[] = [
+    ZHIPU_LLM.GLM_4_PLUS,
+    ZHIPU_LLM.GLM_4_AIR_250414,
+    ZHIPU_LLM.GLM_4_AIRX,
+    ZHIPU_LLM.GLM_4_LONG,
+    ZHIPU_LLM.GLM_4_FLASHX,
+    ZHIPU_LLM.GLM_4_FLASH_250414,
+    ZHIPU_LLM.GLM_4V_PLUS_0111,
+    ZHIPU_LLM.GLM_4V_FLASH
+]
+
+export const ZHIPU_MODEL_NAMES: Record<ZHIPU_LLM, string> = {
+    [ZHIPU_LLM.GLM_4_PLUS]: "glm-4-plus",
+    [ZHIPU_LLM.GLM_4_AIR_250414]: "glm-4-air-250414",
+    [ZHIPU_LLM.GLM_4_AIRX]: "glm-4-airx",
+    [ZHIPU_LLM.GLM_4_LONG]: "glm-4-long",
+    [ZHIPU_LLM.GLM_4_FLASHX]: "glm-4-flashx",
+    [ZHIPU_LLM.GLM_4_FLASH_250414]: "glm-4-flash-250414",
+    [ZHIPU_LLM.GLM_4V_PLUS_0111]: "glm-4v-plus-0111",
+    [ZHIPU_LLM.GLM_4V_FLASH]: "glm-4v-flash"
+}
+
+export const Huoshan_LLM_MODEL_LIST: DOU_BAO_LLM[] = [
+    DOU_BAO_LLM.DOUBAO_SEED_1_8_251228,
+    DOU_BAO_LLM.GLM_4_7_251222,
+    DOU_BAO_LLM.DOUBAO_SEED_CODE_PREVIEW_251028,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_LITE_251015,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_FLASH_250828,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_VISION_250815
+]
+
+export const Huoshan_LLM_MODEL_NAMES: Record<DOU_BAO_LLM, string> = {
+    [DOU_BAO_LLM.DOUBAO_SEED_1_8_251228]: "doubao-seed-1.8-251228",
+    [DOU_BAO_LLM.GLM_4_7_251222]: "glm-4.7-251222",
+    [DOU_BAO_LLM.DOUBAO_SEED_CODE_PREVIEW_251028]:
+        "doubao-seed-code-preview-251028",
+    [DOU_BAO_LLM.DOUBAO_SEED_1_6_LITE_251015]: "doubao-seed-1.6-lite-251015",
+    [DOU_BAO_LLM.DOUBAO_SEED_1_6_FLASH_250828]: "doubao-seed-1.6-flash-250828",
+    [DOU_BAO_LLM.DOUBAO_SEED_1_6_VISION_250815]: "doubao-seed-1.6-vision-250815"
+}
+
+export const aiModelListMap = new Map<AiModel_Platform_Enum, LLMModel[]>([
+    [AiModel_Platform_Enum.SYSTEM, SYSTEM_LLM_MODEL_OPTIONS],
+    [AiModel_Platform_Enum.GEMINI, GEMINI_MODEL_LIST],
+    [AiModel_Platform_Enum.DEEPSEEK, DEEPSEEK_MODEL_LIST],
+    [AiModel_Platform_Enum.BAILIAN, ALIYUN_BAILIAN_MODEL_LIST],
+    // [AiModel_Platform_Enum.QIAN_WEN, QIAN_WEN_MODEL_LIST],
+    [AiModel_Platform_Enum.ZHIPU, ZHIPU_MODEL_LIST],
+    [AiModel_Platform_Enum.HUNYUAN, HUNYUAN_MODEL_LIST],
+    [AiModel_Platform_Enum.OPENAI, OPENAI_MODEL_LIST],
+    [AiModel_Platform_Enum.MOONSHOT, MOONSHOT_MODEL_LIST],
+    [AiModel_Platform_Enum.HUOSHAN, Huoshan_LLM_MODEL_LIST]
+])
+
+/**
+ * 支持思考能力的模型集合
+ * 包含所有具有深度推理能力的模型
+ */
+export const THINKING_CAPABLE_MODELS = new Set<LLMModel>([
+    // DeepSeek 系列
+    DEEPSEEK_LLM.DEEPSEEK_REASONER,
+
+    // 月之暗面
+    MOONSHOT_LLM.KIMI_K2_2_5,
+
+    // 豆包
+    DOU_BAO_LLM.DOUBAO_SEED_1_8_251228,
+    DOU_BAO_LLM.GLM_4_7_251222,
+    DOU_BAO_LLM.DOUBAO_SEED_CODE_PREVIEW_251028,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_LITE_251015,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_FLASH_250828,
+    DOU_BAO_LLM.DOUBAO_SEED_1_6_VISION_250815,
+
+    // gemini
+    GEMINI_LLM.Gemini_3_Pro,
+    GEMINI_LLM.Gemini_3_Flash,
+    GEMINI_LLM.Gemini_2_5_Flash,
+    GEMINI_LLM.Gemini_2_5_Flash_Lite,
+    GEMINI_LLM.Gemini_2_5_Pro,
+
+    // qwen 系列（阿里云百炼）
+    QWEN_LLM.QWEN3_MAX,
+    QWEN_LLM.QWEN3_PLUS,
+    QWEN_LLM.QWEN3_TURBO
+])
