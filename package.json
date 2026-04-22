@@ -1,0 +1,135 @@
+{
+    "name": "doc2x-plugin-browser",
+    "displayName": "side translate",
+    "private": true,
+    "version": "0.0.1",
+    "packageManager": "pnpm@10.20.0",
+    "scripts": {
+        "dev": "plasmo dev",
+        "build": "plasmo build && pnpm obfuscate && pnpm zip:prod",
+        "package": "node scripts/package-with-date.js",
+        "package:dev": "node scripts/package-dev.js",
+        "crx": "node scripts/build-crx.js",
+        "obfuscate": "node scripts/obfuscate.js",
+        "lint": "eslint --config ./eslint.config.mjs src/",
+        "typecheck": "tsc --noEmit",
+        "typecheck:watch": "tsc --noEmit --watch",
+        "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",
+        "format:check": "prettier --debug-check \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",
+        "format:diff": "prettier -w \"src/translation/DOMTraverser.ts\"",
+        "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm check:hotlink-rules && pnpm spell",
+        "check:all": "pnpm typecheck && pnpm lint && pnpm format:check",
+        "spell": "cspell \"**/*.{ts,tsx,js,scss,css,jsx,md}\"",
+        "knip": "knip",
+        "commit": "git cz",
+        "clean": "rimraf \"**/{node_modules,build,dist,.{cache,log},log,.plasmo}\" pnpm-lock.yaml",
+        "zip:prod": " pnpm clean:prod:zip && pnpm package",
+        "clean:prod:zip": "rimraf **/build/chrome-mv3-prod.zip",
+        "test:rpc": "npx tsx ./test/test-rpc.ts",
+        "test:rpc:web": "node ./test/test-server.mjs",
+        "test:401": "npx tsx ./test/test-401-interceptor.ts",
+        "sync:hotlink-rules": "node scripts/sync-hotlink-sites-from-immersive.js",
+        "check:hotlink-rules": "node scripts/sync-hotlink-sites-from-immersive.js --check"
+    },
+    "dependencies": {
+        "@connectrpc/connect": "2.1.0",
+        "@connectrpc/connect-web": "2.1.0",
+        "@connectrpc/protoc-gen-connect-es": "1.7.0",
+        "@floating-ui/core": "1.7.3",
+        "@floating-ui/react": "0.27.16",
+        "@mozilla/readability": "^0.6.0",
+        "@plasmohq/messaging": "0.7.1",
+        "@plasmohq/storage": "1.15.0",
+        "@noedgeai/doc2x-shared": "0.1.2",
+        "axios": "1.11.0",
+        "date-fns": "4.1.0",
+        "franc": "6.2.0",
+        "jotai": "2.13.1",
+        "nanoid": "4.0.2",
+        "ramda": "0.31.3",
+        "react": "18.3.0",
+        "react-dom": "18.3.0",
+        "react-use": "17.4.0",
+        "styled-components": "6.1.8",
+        "use-immer": "0.11.0",
+        "zod": "4.0.15"
+    },
+    "devDependencies": {
+        "@bufbuild/buf": "^1.57.2",
+        "@bufbuild/connect-web": "0.13.0",
+        "@bufbuild/protobuf": "2.9.0",
+        "@bufbuild/protoc-gen-es": "2.9.0",
+        "@dnd-kit/core": "6.3.1",
+        "@dnd-kit/modifiers": "9.0.0",
+        "@dnd-kit/sortable": "10.0.0",
+        "@dnd-kit/utilities": "3.2.2",
+        "@eslint/js": "9.24.0",
+        "@ianvs/prettier-plugin-sort-imports": "4.5.0",
+        "@types/chrome": "0.0.263",
+        "@types/node": "20",
+        "@types/ramda": "0.27.0",
+        "@types/react": "18.3.0",
+        "@types/react-dom": "18.3.0",
+        "@types/styled-components": "5.1.34",
+        "@typescript-eslint/eslint-plugin": "8.30.1",
+        "@typescript-eslint/parser": "8.30.1",
+        "chalk": "4.1.2",
+        "crx": "3.0.1",
+        "cspell": "6.0.0",
+        "eslint": "9.24.0",
+        "eslint-config-prettier": "10.1.2",
+        "eslint-plugin-prettier": "5.2.6",
+        "eslint-plugin-react-hooks": "5.2.0",
+        "fs-extra": "11.1.0",
+        "git-cz": "4.9.0",
+        "glob": "11.0.0",
+        "husky": "8.0.2",
+        "javascript-obfuscator": "4.1.0",
+        "knip": "1.1.0",
+        "plasmo": "0.90.5",
+        "prettier": "3.5.3",
+        "react-error-boundary": "4.0.12",
+        "rimraf": "3.0.2",
+        "typescript": "5.9.2",
+        "typescript-eslint": "8.30.1",
+        "zx": "8.8.0"
+    },
+    "config": {
+        "commitizen": {
+            "path": "git-cz"
+        }
+    },
+    "manifest": {
+        "host_permissions": [
+            "<all_urls>",
+            "http://*/*",
+            "https://*/*",
+            "https://v2c.doc2x.noedgeai.com/*",
+            "http://127.0.0.1/*"
+        ],
+        "manifest_version": 3,
+        "permissions": [
+            "storage",
+            "tabs",
+            "scripting",
+            "windows",
+            "contextMenus",
+            "declarativeNetRequest",
+            "declarativeNetRequestWithHostAccess"
+        ],
+        "background": {
+            "service_worker": "background"
+        },
+        "web_accessible_resources": [
+            {
+                "resources": [
+                    "assets/**"
+                ],
+                "matches": [
+                    "<all_urls>",
+                    "http://127.0.0.1/*"
+                ]
+            }
+        ]
+    }
+}

@@ -12,10 +12,9 @@ const isDevelopment = process.env.NODE_ENV === "development"
  * Doc2X 前端 URL 匹配模式
  * 用于 Plasmo content script 的 matches 配置
  */
-export const DOC2X_MATCHES = [
-    "https://dev.frontend.noedgeai.com/*",
-    "https://doc2x.noedgeai.com/*"
-]
+export const DOC2X_MATCHES = isDevelopment
+    ? ["https://dev.frontend.noedgeai.com/*"]
+    : ["https://doc2x.noedgeai.com/*"]
 
 /**
  * Doc2X 前端基础 URL
@@ -32,7 +31,7 @@ export function isDoc2xPage(url: string = window.location.href): boolean {
     try {
         const urlObj = new URL(url)
         return DOC2X_MATCHES.some(pattern => {
-            const regex = new RegExp(pattern)
+            const regex = new RegExp(pattern.replace(/\*/g, ".*"))
             return regex.test(urlObj.href)
         })
     } catch {

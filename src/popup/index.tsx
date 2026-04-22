@@ -351,6 +351,7 @@ function IndexPopup() {
     const [config] = useAtom(configAtom)
     const accessToken = useAtomValue(accessTokenAtom)
     const user = useAtomValue(userAtom)
+    console.log("🚀 ~ IndexPopup ~ user:", user)
     const fetchUser = useSetAtom(fetchUserAtom)
 
     const updateConfig = useSetAtom(updateConfigAtom)
@@ -488,6 +489,7 @@ function IndexPopup() {
                     <HeaderSubtitle>智能翻译助手</HeaderSubtitle>
                 </HeaderInfo>
             </Header>
+
             <UserCard>
                 {user.avatar ? (
                     <Avatar

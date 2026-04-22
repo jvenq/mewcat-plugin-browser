@@ -1,0 +1,10 @@
+onlyBuiltDependencies:
+  - '@bufbuild/buf'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - esbuild
+  - javascript-obfuscator
+  - knip
+  - lmdb
+  - msgpackr-extract
+  - sharp

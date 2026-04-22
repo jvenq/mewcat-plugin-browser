@@ -1,4 +1,4 @@
-// import { LangSelectNumberEnum } from "@noedgeai/doc2x-shared"
+import { LangSelectNumberEnum } from "@noedgeai/doc2x-shared"
 
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -47,19 +47,6 @@ const API_ALLOWED_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"]
 const DOWNLOAD_TIMEOUT_MS = 15_000
 const API_TIMEOUT_MS = 30_000
 const REFRESH_TIMEOUT_MS = 10_000
-
-export enum LangSelectNumberEnum {
-    ZH = 0,
-    EN = 1,
-    JA = 2,
-    FR = 3,
-    RU = 4,
-    PT = 5,
-    ES = 6,
-    DE = 7,
-    KO = 8,
-    AR = 9
-}
 
 const LANG_CODE_MAP: Record<string, LangSelectNumberEnum> = {
     "zh-CN": LangSelectNumberEnum.ZH,
