@@ -142,9 +142,7 @@ export function getLLMModelName(model: LLMModel): string {
 
 export function getModelByModelList(modelList: BaseModel[], model: string) {
     return find(
-        item =>
-            item.id === model ||
-            (item.isSystem && item.params.modelVersion.toString() === model),
+        item => item.id === model,
         modelList
     )
 }

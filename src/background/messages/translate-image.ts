@@ -1,14 +1,10 @@
 
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-import { Storage } from "@plasmohq/storage"
 
 import { resolveAllHotlinkHeaders } from "../config/hotlink-sites"
 import { withTemporaryHotlinkRule } from "../lib/hotlink-dnr"
 import {
-    getCachedTranslation,
-    setCachedTranslation,
-    withDebounce,
-    getDebounceKey
+    getCachedTranslation
 } from "@/translation/PictureCache"
 
 // --- Types ---
@@ -35,48 +31,9 @@ export interface TranslateImageResponse {
 }
 
 
-export enum LangSelectNumberEnum {
-    ZH = 1,
-    EN = 2,
-    JA = 3,
-    FR = 4,
-    RU = 5,
-    PT = 6,
-    ES = 7,
-    DE = 8,
-    KO = 9,
-    AR = 10
-}
-
 // --- Constants ---
 
-const API_DOMAIN = (process.env.PLASMO_PUBLIC_DOC2X_API_DOMAIN || "").replace(
-    /\/$/,
-    ""
-)
-const TRANSLATE_MODEL = 72
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
-const API_ALLOWED_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"]
 const DOWNLOAD_TIMEOUT_MS = 15_000
-const API_TIMEOUT_MS = 30_000
-const REFRESH_TIMEOUT_MS = 10_000
-
-const LANG_CODE_MAP: Record<string, LangSelectNumberEnum> = {
-    "zh-CN": LangSelectNumberEnum.ZH,
-    "zh-TW": LangSelectNumberEnum.ZH,
-    zh: LangSelectNumberEnum.ZH,
-    en: LangSelectNumberEnum.EN,
-    ja: LangSelectNumberEnum.JA,
-    fr: LangSelectNumberEnum.FR,
-    ru: LangSelectNumberEnum.RU,
-    pt: LangSelectNumberEnum.PT,
-    es: LangSelectNumberEnum.ES,
-    de: LangSelectNumberEnum.DE,
-    ko: LangSelectNumberEnum.KO,
-    ar: LangSelectNumberEnum.AR
-}
-
-const storage = new Storage({ area: "local" })
 
 // --- Helper Functions ---
 
@@ -122,10 +79,6 @@ class DownloadMimeError extends Error {
         this.name = "DownloadMimeError"
         this.mimeType = mimeType
     }
-}
-
-function getLangEnum(langCode: string): LangSelectNumberEnum {
-    return LANG_CODE_MAP[langCode] || LangSelectNumberEnum.ZH
 }
 
 function fetchWithTimeout(
@@ -593,116 +546,6 @@ async function captureAndCropTarget(
     return { blob: croppedBlob, mimeType: "image/png" }
 }
 
-/**
- * Read access token from chrome.storage.local
- */
-async function getAuthToken(): Promise<string> {
-    const token = await storage.get<string>("accessToken")
-    if (!token) {
-        throw new Error("未登录，请先登录")
-    }
-    return token
-}
-
-/**
- * Refresh access token using refresh token
- */
-async function refreshAuthToken(): Promise<string> {
-    const refreshToken = await storage.get<string>("refreshToken")
-    if (!refreshToken) {
-        await storage.remove("accessToken")
-        throw new Error("登录已过期，请重新登录")
-    }
-
-    const response = await fetchWithTimeout(`${API_DOMAIN}/token/refresh`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${refreshToken}`
-        },
-        timeout: REFRESH_TIMEOUT_MS
-    })
-
-    if (!response.ok) {
-        await storage.remove("accessToken")
-        await storage.remove("refreshToken")
-        throw new Error("登录已过期，请重新登录")
-    }
-
-    const result = await response.json()
-    if (result.code !== "success" || !result.data?.accessToken) {
-        await storage.remove("accessToken")
-        await storage.remove("refreshToken")
-        throw new Error("登录已过期，请重新登录")
-    }
-
-    await storage.set("accessToken", result.data.accessToken)
-    await storage.set("refreshToken", result.data.refreshToken)
-    return result.data.accessToken
-}
-
-class TokenExpiredError extends Error {
-    constructor() {
-        super("Token expired")
-        this.name = "TokenExpiredError"
-    }
-}
-
-/**
- * Call the mewCat image translation API
- */
-async function callTranslationApi(
-    imageBlob: Blob,
-    mimeType: string,
-    targetLanguage: string,
-    accessToken: string
-): Promise<string> {
-    // Validate image
-    if (imageBlob.size > MAX_IMAGE_SIZE) {
-        throw new Error("图片大小超过 10MB 限制")
-    }
-    if (!API_ALLOWED_MIME_TYPES.includes(mimeType)) {
-        throw new Error("仅支持 PNG、JPEG、WEBP 格式的图片")
-    }
-
-    const translateLang = getLangEnum(targetLanguage)
-    const url = `${API_DOMAIN}/gateway.v1.TaskService/CreateTranslateImageTask?translate_lang=${translateLang}&translate_model=${TRANSLATE_MODEL}`
-
-    const response = await fetchWithTimeout(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": mimeType,
-            Authorization: `Bearer ${accessToken}`
-        },
-        body: imageBlob,
-        timeout: API_TIMEOUT_MS
-    })
-
-    console.log("[TranslateImage] API HTTP 响应:", {
-        status: response.status,
-        ok: response.ok
-    })
-
-    if (!response.ok) {
-        const errorText = await response.text().catch(() => "")
-        console.error("[TranslateImage] API 错误响应:", {
-            status: response.status,
-            body: errorText
-        })
-        if (response.status === 401) {
-            throw new TokenExpiredError()
-        }
-        throw new Error(`翻译 API 错误: HTTP ${response.status}`)
-    }
-
-    const result = await response.json()
-    const translatedUrl = result.data?.rendered || result.data?.imageUrl
-    if (result.code === "success" && translatedUrl) {
-        return translatedUrl
-    }
-    throw new Error(result.msg || "图片翻译失败")
-}
-
 // --- Main Handler ---
 
 const handler: PlasmoMessaging.MessageHandler<
@@ -829,61 +672,8 @@ const handler: PlasmoMessaging.MessageHandler<
             console.log("[TranslateImage] 使用缓存结果")
             translatedImageUrl = cachedUrl
         } else {
-            // Step 3: Call translation API with debounce and 401 retry
-            console.log("[TranslateImage] 缓存未命中，开始调用翻译 API:", {
-                site,
-                mimeType: imageData.mimeType,
-                size: imageData.blob.size
-            })
-
-            const debounceKey = await getDebounceKey(
-                imageData.blob,
-                sourceLang,
-                targetLanguage
-            )
-
-            translatedImageUrl = await withDebounce(debounceKey, async () => {
-                let accessToken: string
-                try {
-                    accessToken = await getAuthToken()
-                } catch (tokenError) {
-                    console.error(
-                        "[TranslateImage] 获取 Token 失败:",
-                        tokenError
-                    )
-                    throw tokenError
-                }
-                console.log("[TranslateImage] Token 获取成功")
-
-                try {
-                    return await callTranslationApi(
-                        imageData.blob,
-                        imageData.mimeType,
-                        targetLanguage,
-                        accessToken
-                    )
-                } catch (error) {
-                    if (error instanceof TokenExpiredError) {
-                        console.log("[TranslateImage] Token 过期，刷新中...")
-                        accessToken = await refreshAuthToken()
-                        return await callTranslationApi(
-                            imageData.blob,
-                            imageData.mimeType,
-                            targetLanguage,
-                            accessToken
-                        )
-                    }
-                    throw error
-                }
-            })
-
-            // Step 4: Save to cache
-            await setCachedTranslation(
-                imageData.blob,
-                sourceLang,
-                targetLanguage,
-                translatedImageUrl
-            )
+            // Image translation via third-party API is not yet implemented.
+            throw new Error("图片翻译功能暂不可用，请等待后续版本支持")
         }
 
         console.log("[TranslateImage] API 调用成功:", {

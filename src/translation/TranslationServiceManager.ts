@@ -68,25 +68,26 @@ export class TranslationServiceManager {
         )
 
         if (model) {
-            const missingFields: string[] = []
             if (!model?.params?.apiKey?.trim()) {
-                missingFields.push("API Key")
+                Toast.show({
+                    type: ToastType.ERROR,
+                    message: `${model.name || platformNameMap[model.type]} 配置不完整，缺少：API Key，请在设置中填写后再使用。`
+                })
+                return
             }
             try {
                 const translator = new UniversalTranslator(model.type, {
                     apiKey: model.params.apiKey,
-                    model: model.isSystem
-                        ? model.params.modelVersion
-                        : getLLMModelName(model.params.modelVersion),
+                    model: getLLMModelName(model.params.modelVersion),
                     aiRole: this.config.aiRole,
                     baseUrl: model.params.baseUrl,
                     enableThinking: this.config.enableThinking
                 })
                 this.translators.set(model.type, translator)
-            } catch {
+            } catch (error) {
                 Toast.show({
                     type: ToastType.ERROR,
-                    message: `${model.name || platformNameMap[model.type]} 配置不完整，缺少：${missingFields.join("、")}，请在设置中填写后再使用。`
+                    message: `${model.name || platformNameMap[model.type]} 初始化失败：${error instanceof Error ? error.message : String(error)}`
                 })
             }
         }

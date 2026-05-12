@@ -1,19 +1,7 @@
-import { create } from "@bufbuild/protobuf"
-import { createClient } from "@connectrpc/connect"
-import { createConnectTransport } from "@connectrpc/connect-web"
-
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-
-import {
-    ChatService,
-    CompletionRequestSchema,
-    CompletionRequest_CommonMessageSchema
-} from "@/es/chat/v1/chat_pb"
 
 import type {
     AiHttpRequestConfig,
-    AiStreamRequestConfig,
-    RequestType,
     TranslationEngineRequestConfig,
     UnifiedRequestBody,
     UnifiedResponse
@@ -68,59 +56,6 @@ function sendError(
     const errorMessage =
         error instanceof Error ? error.message : "Unknown error"
     res.send({ error: errorMessage, success: false, headers } as UnifiedResponse)
-}
-
-// ============================================================================
-// AI 流式请求处理器 (原 RPC)
-// ============================================================================
-
-/** 初始化 RPC 客户端 */
-const url = new URL(process.env.PLASMO_PUBLIC_DOC2X_API_DOMAIN || "")
-const transport = createConnectTransport({
-    baseUrl: url.origin,
-    useBinaryFormat: false,
-    fetch
-})
-const rpcClient = createClient(ChatService, transport)
-
-/** 处理 AI 流式请求 */
-async function handleAiStreamRequest(
-    config: AiStreamRequestConfig,
-    res: PlasmoMessaging.Response
-): Promise<void> {
-    const { apiKey, model, temperature = 0.1, messages, timeout } = config
-
-    // 构建 protobuf 消息
-    const protoMessages = messages.map(msg =>
-        create(CompletionRequest_CommonMessageSchema, {
-            role: msg.role,
-            content: msg.content
-        })
-    )
-
-    const request = create(CompletionRequestSchema, {
-        messages: protoMessages,
-        modelOption: { model: Number(model), tryCnt: 1 },
-        temperature
-    })
-
-    const [controller, timeoutId] = createAbortController(timeout)
-
-    try {
-        const response = await rpcClient.completion(request, {
-            signal: controller.signal,
-            headers: { authorization: `Bearer ${apiKey}` }
-        })
-
-        sendSuccess(res, response.content)
-    } catch (error) {
-        if (controller.signal.aborted) {
-            throw new Error("Request timeout")
-        }
-        throw error
-    } finally {
-        cleanupAbortController(controller, timeoutId)
-    }
 }
 
 // ============================================================================
@@ -254,9 +189,6 @@ const handle: PlasmoMessaging.PortHandler = async (req, res) => {
         const body = req.body as UnifiedRequestBody
 
         switch (body.type) {
-            case "ai_stream":
-                await handleAiStreamRequest(body.config, res)
-                break
             case "ai_http":
                 await handleAiHttpRequest(body.config, res)
                 break

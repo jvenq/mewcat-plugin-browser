@@ -1,13 +1,10 @@
-import { useAtomValue } from "jotai"
 import { clone } from "ramda"
 import React, { useLayoutEffect } from "react"
 import { useAsyncRetry } from "react-use"
 import styled from "styled-components"
 
-import { accessTokenAtom } from "@/state"
 import { useConfig } from "@/state/config"
 import { TranslationServiceManager } from "@/translation/TranslationServiceManager"
-import { AiModel_Platform_Enum } from "@/types"
 
 import LoadingDots from "../LoadingDots"
 
@@ -68,7 +65,6 @@ export const TranslateTextPanel: React.FunctionComponent<
     TranslateTextPanelProps
 > = ({ data, onFinished }) => {
     const config = useConfig()
-    const accessToken = useAtomValue(accessTokenAtom)
 
     const {
         value: translateText,
@@ -79,12 +75,6 @@ export const TranslateTextPanel: React.FunctionComponent<
             return
         }
         const newConfig = clone(config)
-        newConfig.aiModelList.map(item => {
-            if (item.type === AiModel_Platform_Enum.SYSTEM) {
-                item.params.apiKey = accessToken
-            }
-            return item
-        })
 
         const translationManager = new TranslationServiceManager(newConfig)
         const result = await translationManager.translateText(
@@ -98,7 +88,7 @@ export const TranslateTextPanel: React.FunctionComponent<
         )
 
         return result
-    }, [data, config, accessToken])
+    }, [data, config])
 
     useLayoutEffect(() => {
         translateText && !loading && onFinished()

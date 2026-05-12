@@ -4,10 +4,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useAsync, useAsyncFn, useClickAway, useLatest } from "react-use"
 import styled, { StyleSheetManager } from "styled-components"
 
-import { storage } from "@/state/constants"
-import { AiModel_Platform_Enum } from "@/types"
-import { getModelByModelList, Toast, ToastType } from "@/utils"
-
 import Icon from "../components/Icon"
 import SettingsPanel from "../components/SettingsPanel"
 import Tooltip from "../components/Tooltip"
@@ -286,35 +282,6 @@ const TranslationControlCenter: React.FunctionComponent = () => {
             return
         }
 
-        const model = getModelByModelList(
-            configRef.current.aiModelList,
-            configRef.current.currentModel
-        )
-        if (model?.isSystem) {
-            const accessToken = (await storage.getItem("accessToken")) || ""
-            if (!accessToken) {
-                Toast.show({
-                    message: (
-                        <span>
-                            请先登录
-                            <a
-                                href="https://doc2x.noedgeai.com"
-                                target="_blank"
-                                style={{
-                                    color: "var(--primary-color)",
-                                    display: "block"
-                                }}
-                            >
-                                https://doc2x.noedgeai.com
-                            </a>
-                        </span>
-                    ),
-                    type: ToastType.WARNING
-                })
-                return
-            }
-        }
-
         return doTranslate()
     }, [
         configRef,
@@ -389,22 +356,6 @@ const TranslationControlCenter: React.FunctionComponent = () => {
     // 监听配置变化（包括模型切换）
     const prevModelRef = useRef(config.currentModel)
     useAsync(async () => {
-        const accessToken = (await storage.getItem("accessToken")) || ""
-        config.aiModelList.map(item => {
-            if (item.type === AiModel_Platform_Enum.SYSTEM) {
-                item.params.apiKey = accessToken
-            }
-            return item
-        })
-        if (
-            !accessToken &&
-            config.aiModelList.some(
-                item => item.type === AiModel_Platform_Enum.SYSTEM
-            )
-        ) {
-            return
-        }
-
         // 检测模型是否切换
         const modelChanged = prevModelRef.current !== config.currentModel
         prevModelRef.current = config.currentModel

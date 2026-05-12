@@ -1,27 +1,13 @@
 import { Storage } from "@plasmohq/storage"
 
-import { AiModel_Platform_Enum, SystemLLMModel, type BaseModel } from "@/types"
+import { type BaseModel } from "@/types"
 import { AiRole, type ExtensionConfig } from "@/types/config"
 import { logEnvironmentInfo } from "@/utils/environment"
 
 // 在非生产环境中输出环境信息
 logEnvironmentInfo()
 
-const aiModelList: BaseModel[] = [
-    // 通用模型
-    {
-        id: "SYSTEM",
-        type: AiModel_Platform_Enum.SYSTEM,
-        name: "mewCat",
-        enabled: true,
-        isSystem: true,
-        params: {
-            modelName: "",
-            modelVersion: SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K,
-            apiKey: ""
-        }
-    }
-]
+const aiModelList: BaseModel[] = []
 
 /**
  * 基础配置（不包含敏感信息）
@@ -103,7 +89,7 @@ export const defaultExtensionConfig: ExtensionConfig = {
     // 扩展配置
     extensionEnabled: true,
     cacheEnabled: true,
-    currentModel: "SYSTEM",
+    currentModel: "",
 
     // AI 思考能力配置
     enableThinking: false,

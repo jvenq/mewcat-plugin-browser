@@ -8,26 +8,12 @@ import type { Message } from "@/types"
  * 请求类型枚举
  */
 export enum RequestType {
-    /** AI 模型流式请求 (原 RPC) */
-    AI_STREAM = "ai_stream",
-    /** AI 模型普通 HTTP 请求 (原 HTTP) */
+    /** AI 模型普通 HTTP 请求 */
     AI_HTTP = "ai_http",
     /** 翻译引擎请求 (DEEPL/DEEPLX) */
     TRANSLATION_ENGINE = "translation_engine",
     /** 中断所有请求 */
     ABORT = "abort"
-}
-
-/**
- * AI 流式请求配置
- */
-export interface AiStreamRequestConfig {
-    apiKey: string
-    model: number
-    messages: Array<{ role: string; content: string }>
-    temperature?: number
-    timeout?: number
-    enableThinking?: boolean
 }
 
 /**
@@ -66,7 +52,6 @@ export interface TranslationEngineRequestConfig {
  * 统一请求体
  */
 export type UnifiedRequestBody =
-    | { type: RequestType.AI_STREAM; config: AiStreamRequestConfig }
     | { type: RequestType.AI_HTTP; config: AiHttpRequestConfig }
     | {
           type: RequestType.TRANSLATION_ENGINE

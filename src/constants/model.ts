@@ -7,7 +7,6 @@ import {
     MOONSHOT_LLM,
     OPENAI_LLM,
     QWEN_LLM,
-    SystemLLMModel,
     ZHIPU_LLM,
     type LLMModel
 } from "@/types"
@@ -16,57 +15,6 @@ import {
  * LLM 模型选项（仅包含已上线的模型）
  * 按订阅要求和模型ID排序
  */
-
-export const SYSTEM_LLM_MODEL_OPTIONS: SystemLLMModel[] = [
-    SystemLLMModel.LLM_MODEL_GPT4d1_NANO,
-    SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST,
-    SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K,
-    SystemLLMModel.LLM_MODEL_DEEPSEEK_CHAT,
-    SystemLLMModel.LLM_MODEL_GPT4d1_MINI,
-    SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST,
-    SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST,
-    SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO,
-    SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE,
-    SystemLLMModel.LLM_MODEL_KIMI_K2
-]
-/**
- * LLM 模型显示名称映射（使用后端返回的 display_name）
- */
-export const SYSTEM_LLM_MODEL_NAMES: Record<SystemLLMModel, string> = {
-    [SystemLLMModel.LLM_MODEL_UNSPECIFIED]: "未指定",
-    [SystemLLMModel.LLM_MODEL_GLM4_AIR]: "GLM-4 Air",
-    [SystemLLMModel.LLM_MODEL_GLM4_AIRX]: "GLM-4 AirX",
-    [SystemLLMModel.LLM_MODEL_GLM4_FLASHX]: "GLM-4 FlashX",
-    [SystemLLMModel.LLM_MODEL_GLM4_PLUS]: "GLM-4 Plus",
-    [SystemLLMModel.LLM_MODEL_GLM_4d5_FLASH]: "GLM-4.5 Flash",
-    [SystemLLMModel.LLM_MODEL_DEEPSEEK_CHAT]: "DeepSeek-V3-0324",
-    [SystemLLMModel.LLM_MODEL_DEEPSEEK_R1]: "DeepSeek R1",
-    [SystemLLMModel.LLM_MODEL_GPT4O_MINI]: "GPT-4o Mini",
-    [SystemLLMModel.LLM_MODEL_GPT4d1_NANO]: "gpt-4.1-nano",
-    [SystemLLMModel.LLM_MODEL_GPT4d1_MINI]: "gpt-4.1-mini",
-    [SystemLLMModel.LLM_MODEL_CLAUDE3_HAIKU]: "Claude 3 Haiku",
-    [SystemLLMModel.LLM_MODEL_YI_LIGHTNING]: "Yi Lightning",
-    [SystemLLMModel.LLM_MODEL_QWEN_2d5_32B_INSTRUCT]: "Qwen 2.5 32B",
-    [SystemLLMModel.LLM_MODEL_QWQ_PLUS_LATEST]: "QwQ Plus",
-    [SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST]: "qwen-max-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST_THINKING]: "Qwen Plus Thinking",
-    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST]: "qwen-plus-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST_THINKING]:
-        "Qwen Turbo Thinking",
-    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST]: "qwen-turbo-latest",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO]: "Doubao-1.5-pro",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K]: "Doubao-1.5-lite",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415]:
-        "豆包-1.5 Thinking Pro",
-    [SystemLLMModel.LLM_MODEL_GEMINI_2d0_FLASH]: "Gemini 2.0 Flash",
-    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH]: "Gemini 2.5 Flash",
-    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE]: "gemini-2.5-flash-lite",
-    [SystemLLMModel.LLM_MODEL_KIMI_K2]: "Kimi-K2",
-    [SystemLLMModel.LLM_MODEL_BAAI_BGE_M3]: "BAAI BGE-M3",
-    [SystemLLMModel.LLM_MODEL_ZHIPU_EMBEDDING_3]: "智谱 Embedding-3",
-    [SystemLLMModel.LLM_MODEL_BAAI_RERANK_V2_M3]: "BAAI Rerank V2-M3",
-    [SystemLLMModel.LLM_MODEL_ZHIPU_RERANK]: "智谱 Rerank"
-}
 
 export const GEMINI_MODEL_LIST: GEMINI_LLM[] = [
     GEMINI_LLM.Gemini_3_Pro,
@@ -205,7 +153,6 @@ export const Huoshan_LLM_MODEL_NAMES: Record<DOU_BAO_LLM, string> = {
 }
 
 export const aiModelListMap = new Map<AiModel_Platform_Enum, LLMModel[]>([
-    [AiModel_Platform_Enum.SYSTEM, SYSTEM_LLM_MODEL_OPTIONS],
     [AiModel_Platform_Enum.GEMINI, GEMINI_MODEL_LIST],
     [AiModel_Platform_Enum.DEEPSEEK, DEEPSEEK_MODEL_LIST],
     [AiModel_Platform_Enum.BAILIAN, ALIYUN_BAILIAN_MODEL_LIST],

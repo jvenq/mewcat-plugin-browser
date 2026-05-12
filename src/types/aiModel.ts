@@ -7,8 +7,6 @@ export enum AiModel_Platform_Enum {
     OPENAI = "OPENAI",
     MOONSHOT = "MOONSHOT",
     GEMINI = "GEMINI",
-    BASE = "BASE",
-    SYSTEM = "SYSTEM",
     DEEPL = "DEEPL",
     DEEPLX = "DEEPLX"
 }
@@ -22,8 +20,6 @@ export interface BaseModel {
     enabled: boolean
     /** 模型名称（必传） */
     name: string
-    /** 是否系统模型 */
-    isSystem: boolean
     /** 模型配置 */
     params: {
         /** 模型名称（必传） */

@@ -6,34 +6,6 @@ export interface BaseUser {
     phone: string
     invite_code: string
 }
-export interface MewCatUserInfo {
-    state: {
-        expireTime: number
-        token: string
-        refreshToken: string
-        trialInfo: null | Record<string, string>
-        userInfo: {
-            username: string
-            phone: string
-            avatar: string
-            registerTime: string
-            wechatBound: boolean
-            inviteCode: string
-        }
-        subscriptionInfo: {
-            parse_pages: string
-            subscription_end: string
-            subscribed: boolean
-            subscription_level: number
-            image_quota: string
-            extra_image_quota: string
-            available_points: string
-            subscription_duration: string
-            available_pages: string
-        }
-    }
-    version: number
-}
 
 export interface SubscriptionRemainingQuota {
     /**

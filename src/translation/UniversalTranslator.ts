@@ -79,7 +79,7 @@ export class UniversalTranslator {
             return customUrl
         }
 
-        const baseUrls: Record<AiModel_Platform_Enum, string> = {
+        const baseUrls: Partial<Record<AiModel_Platform_Enum, string>> = {
             [AiModel_Platform_Enum.HUOSHAN]:
                 "https://ark.cn-beijing.volces.com/api/v3",
             [AiModel_Platform_Enum.BAILIAN]:
@@ -93,10 +93,6 @@ export class UniversalTranslator {
             [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn/v1",
             [AiModel_Platform_Enum.GEMINI]:
                 "https://generativelanguage.googleapis.com/v1beta/models",
-            [AiModel_Platform_Enum.SYSTEM]:
-                process.env.PLASMO_PUBLIC_DOC2X_API_DOMAIN,
-            [AiModel_Platform_Enum.BASE]:
-                process.env.PLASMO_PUBLIC_DOC2X_API_DOMAIN,
             [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
             [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org"
         }
@@ -229,27 +225,7 @@ export class UniversalTranslator {
      */
     private buildAiRequestConfig(messages: Message[]): UnifiedRequestBody {
         const url = this.buildRequestUrl()
-        const isStream =
-            this.provider === AiModel_Platform_Enum.BASE ||
-            this.provider === AiModel_Platform_Enum.SYSTEM
         const thinkingConfig = this.buildThinkingConfig()
-
-        if (isStream) {
-            return {
-                type: RequestType.AI_STREAM,
-                config: {
-                    apiKey: this.apiKey,
-                    model: Number(this.model),
-                    messages: messages.map(msg => ({
-                        role: msg.role,
-                        content: msg.content
-                    })),
-                    temperature: 0.1,
-                    timeout: UniversalTranslator.timeout,
-                    ...thinkingConfig
-                }
-            }
-        }
 
         // Gemini 使用特殊格式
         if (this.provider === AiModel_Platform_Enum.GEMINI) {
@@ -473,10 +449,7 @@ export class UniversalTranslator {
         const requestBody = this.buildAiRequestConfig(aiMessages)
         const response = await this.sendRequest(requestBody)
 
-        const isStream = requestBody.type === RequestType.AI_STREAM
-        const translated = isStream
-            ? (response.content as string)
-            : this.parseAiResponse(response.content)
+        const translated = this.parseAiResponse(response.content)
 
         if (!translated) {
             throw new Error("Invalid response: No translation content")
@@ -500,10 +473,7 @@ export class UniversalTranslator {
         const requestBody = this.buildAiRequestConfig(aiMessages)
         const response = await this.sendRequest(requestBody)
 
-        const isStream = requestBody.type === RequestType.AI_STREAM
-        const translated = isStream
-            ? (response.content as string)
-            : this.parseAiResponse(response.content)
+        const translated = this.parseAiResponse(response.content)
 
         if (!translated) {
             const traceId =
@@ -597,9 +567,7 @@ export class UniversalTranslator {
 
         const response = await axios.post<unknown, Response<unknown>>(
             url,
-            requestBody.type === RequestType.AI_STREAM
-                ? requestBody.config
-                : requestBody.config,
+            requestBody.config,
             {
                 headers: this.buildHeaders(),
                 timeout: UniversalTranslator.timeout
@@ -671,11 +639,7 @@ ${truncatedContent}`
             const requestBody = this.buildAiRequestConfig(messages)
             const response = await this.sendRequest(requestBody)
 
-            // 解析响应
-            const isStream = requestBody.type === RequestType.AI_STREAM
-            const summary = isStream
-                ? (response.content as string)
-                : this.parseAiResponse(response.content)
+            const summary = this.parseAiResponse(response.content)
 
             if (!summary) {
                 console.warn("[UniversalTranslator] 摘要生成返回空内容")
