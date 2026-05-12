@@ -1,4 +1,3 @@
-import { LangSelectNumberEnum } from "@noedgeai/doc2x-shared"
 
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -33,6 +32,20 @@ export interface TranslateImageResponse {
     success: boolean
     translatedImageUrl?: string
     error?: string
+}
+
+
+export enum LangSelectNumberEnum {
+    ZH = 1,
+    EN = 2,
+    JA = 3,
+    FR = 4,
+    RU = 5,
+    PT = 6,
+    ES = 7,
+    DE = 8,
+    KO = 9,
+    AR = 10
 }
 
 // --- Constants ---
@@ -410,7 +423,7 @@ async function captureAndCropTarget(
                 const canvases = document.querySelectorAll("canvas")
                 for (const canvas of canvases) {
                     if (
-                        canvas.getAttribute("data-doc2x-canvas-id") ===
+                        canvas.getAttribute("data-mewcat-canvas-id") ===
                         captureTarget.canvasId
                     ) {
                         targetElement = canvas
@@ -636,7 +649,7 @@ class TokenExpiredError extends Error {
 }
 
 /**
- * Call the Doc2X image translation API
+ * Call the mewCat image translation API
  */
 async function callTranslationApi(
     imageBlob: Blob,

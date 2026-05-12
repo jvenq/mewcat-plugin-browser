@@ -1,7 +1,7 @@
 import { atom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 
-import { doc2xRequest } from "@/services/request"
+import { mewCatRequest } from "@/services/request"
 import {
     getFreeQuota,
     getSubscriptionRemainingQuota,
@@ -76,7 +76,7 @@ export const fetchUserAtom = atom(null, async (get, set) => {
 export const setAccessTokenAtom = atom(
     null,
     (get, set, accessToken: string) => {
-        doc2xRequest.defaults.headers.Authorization = `Bearer ${accessToken}`
+        mewCatRequest.defaults.headers.Authorization = `Bearer ${accessToken}`
         set(accessTokenAtom, accessToken)
     }
 )

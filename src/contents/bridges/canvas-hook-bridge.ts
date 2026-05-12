@@ -32,7 +32,7 @@ let lastErrorReportKey = ""
 let lastErrorReportAt = 0
 
 function generateRequestId(): string {
-    return `doc2x-canvas-query-${Date.now()}-${Math.random().toString(16).slice(2)}`
+    return `mewcat-canvas-query-${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
 function shouldReportError(error: CanvasHookError): boolean {
@@ -64,12 +64,12 @@ async function reportCanvasHookError(error: CanvasHookError): Promise<void> {
 }
 
 export function ensureCanvasId(canvas: HTMLCanvasElement): string {
-    const existing = canvas.getAttribute("data-doc2x-canvas-id")
+    const existing = canvas.getAttribute("data-mewcat-canvas-id")
     if (existing) {
         return existing
     }
-    const generated = `doc2x-canvas-${Date.now()}-${Math.random().toString(16).slice(2)}`
-    canvas.setAttribute("data-doc2x-canvas-id", generated)
+    const generated = `mewcat-canvas-${Date.now()}-${Math.random().toString(16).slice(2)}`
+    canvas.setAttribute("data-mewcat-canvas-id", generated)
     return generated
 }
 

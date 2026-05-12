@@ -5,16 +5,16 @@ import type {
 } from "@/types"
 
 import type { Response } from "./request"
-import { doc2xRequest } from "./request"
+import { mewCatRequest } from "./request"
 import type { AiModuleRequest, AiModuleResponse } from "./types"
 
 export async function getUserInfo() {
-    const res = await doc2xRequest.get<unknown, Response<User>>("/user/profile")
+    const res = await mewCatRequest.get<unknown, Response<User>>("/user/profile")
     return res.data
 }
 
 export async function getSubscriptionRemainingQuota() {
-    const res = await doc2xRequest.get<
+    const res = await mewCatRequest.get<
         unknown,
         Response<SubscriptionRemainingQuota>
     >("/user/subscription")
@@ -22,7 +22,7 @@ export async function getSubscriptionRemainingQuota() {
 }
 
 export async function getFreeQuota(): Promise<FreeRemainingQuota> {
-    const res = await doc2xRequest.get<
+    const res = await mewCatRequest.get<
         unknown,
         Response<{
             free_parse_pages: string
@@ -43,7 +43,7 @@ export async function getFreeQuota(): Promise<FreeRemainingQuota> {
  * @returns 模型选项列表
  */
 export async function getCompletionModelOptions() {
-    const res = await doc2xRequest.get<
+    const res = await mewCatRequest.get<
         AiModuleRequest,
         Response<AiModuleResponse[]>
     >("/user/completion/model")

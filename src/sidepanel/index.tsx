@@ -63,7 +63,7 @@ const SlidePanel: React.FunctionComponent = () => {
     return (
         <Container>
             <Header>
-                <Logo src={iconImg} alt="Doc2X" />
+                <Logo src={iconImg} alt="mewCat" />
                 <Title>翻译侧边栏</Title>
             </Header>
             <Content>

@@ -1,6 +1,6 @@
 {
-    "name": "doc2x-plugin-browser",
-    "displayName": "side translate",
+    "name": "mewcat-plugin-browser",
+    "displayName": "mewCat",
     "private": true,
     "version": "0.0.1",
     "packageManager": "pnpm@10.20.0",
@@ -40,7 +40,6 @@
         "@mozilla/readability": "^0.6.0",
         "@plasmohq/messaging": "0.7.1",
         "@plasmohq/storage": "1.15.0",
-        "@noedgeai/doc2x-shared": "0.1.2",
         "axios": "1.11.0",
         "date-fns": "4.1.0",
         "franc": "6.2.0",

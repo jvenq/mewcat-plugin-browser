@@ -368,9 +368,9 @@ export class DomSelector {
             container: Element,
             originText: string
         ): string => {
-            // 优先使用 data-doc2x-parent-node-id，否则使用 WeakMap 生成的唯一ID
+            // 优先使用 data-mewcat-parent-node-id，否则使用 WeakMap 生成的唯一ID
             const containerId =
-                container.getAttribute("data-doc2x-parent-node-id") ||
+                container.getAttribute("data-mewcat-parent-node-id") ||
                 getUniqueContainerId(container)
             // 使用原始文本而不是清理后的文本，避免占位符清理导致的误判
             return `${containerId}::${originText}`

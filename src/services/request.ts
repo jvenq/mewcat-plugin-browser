@@ -74,7 +74,7 @@ export interface ErrorResponse {
     details?: Record<string, string> // 可选：错误详情（如字段校验失败信息）
 }
 
-export const doc2xRequest = axios.create({
+export const mewCatRequest = axios.create({
     baseURL: `${process.env.PLASMO_PUBLIC_DOC2X_API_DOMAIN}/v2`,
     timeout: 10000,
     withCredentials: true,
@@ -87,7 +87,7 @@ export const doc2xRequest = axios.create({
  * 刷新 token
  */
 const refreshAccessToken = async function (refreshToken: string) {
-    const res = await doc2xRequest.post<
+    const res = await mewCatRequest.post<
         unknown,
         Response<{ refreshToken: string; accessToken: string }>
     >(
@@ -123,15 +123,14 @@ const processQueue = (error: Error | null, token: string | null = null) => {
             if (promise.config.headers && token) {
                 promise.config.headers.Authorization = `Bearer ${token}`
             }
-            promise.resolve(doc2xRequest(promise.config))
+            promise.resolve(mewCatRequest(promise.config))
         }
     })
 
     failedQueue = []
 }
 
-// 响应拦截器：处理 401
-doc2xRequest.interceptors.response.use(
+mewCatRequest.interceptors.response.use(
     (response: AxiosResponse) => response.data,
     async (error: AxiosError) => {
         const originalRequest = error.config as AxiosRequestConfig & {
@@ -186,7 +185,7 @@ doc2xRequest.interceptors.response.use(
             processQueue(null, response.accessToken)
 
             // 重新发送原始请求
-            return doc2xRequest(originalRequest)
+            return mewCatRequest(originalRequest)
         } catch (err) {
             // 刷新失败，清除 token 并处理队列
             await storage.remove("accessToken")

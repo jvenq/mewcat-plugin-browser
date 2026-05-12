@@ -72,7 +72,7 @@ export function createTranslationContainerElement(
     }
 
     containerElement.style.cssText = cssText
-    containerElement.className = "notranslate doc2x-container"
+    containerElement.className = "notranslate mewcat-container"
     containerElement.setAttribute("data-lang", targetLanguage)
     containerElement.setAttribute("data-translate-docx-id", uniqueId)
 
@@ -106,7 +106,7 @@ export function createTranslationDisplayElement(
     const translationElement = document.createElement("font")
     // 应用样式特定的CSS
     translationElement.style.cssText = getTranslationStyleCSS(style)
-    translationElement.className = "doc2x-wrapper"
+    translationElement.className = "mewcat-wrapper"
     translationElement.innerHTML = text
     return translationElement
 }
@@ -195,7 +195,7 @@ export function createTranslationErrorUI(
 } {
     // 创建错误容器
     const errorContainer = document.createElement("font")
-    errorContainer.className = "doc2x-error-container"
+    errorContainer.className = "mewcat-error-container"
     errorContainer.style.cssText = `
         margin-left: 4px;
         display:flex;
@@ -216,7 +216,7 @@ export function createTranslationErrorUI(
             color: #7748f9;
             cursor: pointer;
             user-select: none;
-            ${className === "doc2x-retry-btn" ? "margin-right: 6px;" : ""}
+            ${className === "mewcat-retry-btn" ? "margin-right: 6px;" : ""}
             font-size: 0.75em;
             text-decoration: none;
             display: inline-flex;
@@ -245,7 +245,7 @@ export function createTranslationErrorUI(
 
     // 创建重试按钮
     const retryButton = createButton(
-        "doc2x-retry-btn",
+        "mewcat-retry-btn",
         "重新翻译",
         createSVGIcon(
             "0 0 24 24",
@@ -265,7 +265,7 @@ export function createTranslationErrorUI(
 
     // 创建错误原因按钮
     const errorReasonButton = createButton(
-        "doc2x-error-reason-btn",
+        "mewcat-error-reason-btn",
         "查看错误详情",
         createSVGIcon(
             "0 0 1024 1024",
@@ -276,7 +276,7 @@ export function createTranslationErrorUI(
     )
     // 创建错误详情弹窗
     const errorModal = document.createElement("div")
-    errorModal.className = "doc2x-error-modal"
+    errorModal.className = "mewcat-error-modal"
     errorModal.style.cssText = `
         display: none;
         position: fixed;
@@ -294,7 +294,7 @@ export function createTranslationErrorUI(
 
     // 错误详情内容区域
     const errorModalContent = document.createElement("div")
-    errorModalContent.className = "doc2x-error-modal-content"
+    errorModalContent.className = "mewcat-error-modal-content"
     errorModalContent.style.cssText = `
         background: #ffffff;
         padding: 24px;
@@ -308,7 +308,7 @@ export function createTranslationErrorUI(
 
     // 关闭按钮
     const closeButton = document.createElement("button")
-    closeButton.className = "doc2x-error-modal-close"
+    closeButton.className = "mewcat-error-modal-close"
     closeButton.innerHTML = "✕"
     closeButton.style.cssText = `
         position: absolute;
@@ -371,9 +371,9 @@ export function createTranslationErrorUI(
     // 显示/隐藏弹窗的方法
     const showErrorDetails = () => {
         // 注入动画样式（如果还没有注入）
-        if (!document.getElementById("doc2x-error-modal-animations")) {
+        if (!document.getElementById("mewcat-error-modal-animations")) {
             const style = document.createElement("style")
-            style.id = "doc2x-error-modal-animations"
+            style.id = "mewcat-error-modal-animations"
             style.textContent = `
                 @keyframes fadeIn {
                     from { opacity: 0; }
@@ -509,6 +509,6 @@ export function insertAfter(newNode: Element, targetNode: HTMLElement) {
 }
 
 export function setTranslateUniqueId(ele: Element, uniqueId: string) {
-    ele.setAttribute("data-doc2x-parent-node-id", uniqueId)
+    ele.setAttribute("data-mewcat-parent-node-id", uniqueId)
     return uniqueId
 }

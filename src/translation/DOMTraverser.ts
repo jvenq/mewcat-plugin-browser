@@ -270,7 +270,7 @@ export class DOMTraverser {
                 }
 
                 const nodeId =
-                    parentElement.getAttribute("data-doc2x-parent-node-id") ||
+                    parentElement.getAttribute("data-mewcat-parent-node-id") ||
                     nanoid()
                 const textNode = this.createTextNode(element)
                 const translateNode: TranslationNode = {

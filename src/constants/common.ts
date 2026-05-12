@@ -1,3 +1,3 @@
-import { DOC2X_FRONTEND_URL } from "@/config"
+import { MEWCAT_FRONTEND_URL } from "@/config"
 
-export const DOC2X_URL = DOC2X_FRONTEND_URL
+export const MEWCAT_URL = MEWCAT_FRONTEND_URL

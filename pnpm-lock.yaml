@@ -26,9 +26,6 @@ importers:
       '@mozilla/readability':
         specifier: ^0.6.0
         version: 0.6.0
-      '@noedgeai/doc2x-shared':
-        specifier: 0.1.2
-        version: 0.1.2
       '@plasmohq/messaging':
         specifier: 0.7.1
         version: 0.7.1(react@18.3.0)
@@ -1356,9 +1353,6 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
-
-  '@noedgeai/doc2x-shared@0.1.2':
-    resolution: {integrity: sha512-sO6nxX5AH4f7qGkfiX3F27l4Oi+TQFVATtfHlknSfeDUOJUhIfHcdCNbrXa/r7xpda3YGp72WWAH6A7UGqMgfA==, tarball: https://npm.pkg.github.com/download/@noedgeai/doc2x-shared/0.1.2/fae56245266136ce417dfd529188260d8f394d4a}
 
   '@npmcli/map-workspaces@3.0.1':
     resolution: {integrity: sha512-QXwE2p5zRTP6X8Irgf/swYwwdQEalSA1GBm0IGE/86R5EJbUGgKMOP0kOjaJWJxaWPkSqyhM8N50SPxFHTfkNg==}
@@ -6455,8 +6449,6 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
-
-  '@noedgeai/doc2x-shared@0.1.2': {}
 
   '@npmcli/map-workspaces@3.0.1':
     dependencies:

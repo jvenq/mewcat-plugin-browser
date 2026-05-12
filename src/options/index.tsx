@@ -75,7 +75,7 @@ const IndexOptions: React.FunctionComponent = () => {
         <Container className="options-container">
             <SidebarWrapper>
                 <OptionsSidebar
-                    title="Doc2X 翻译助手"
+                    title="译趣喵"
                     subtitle="高级设置"
                     navigationItems={NAVIGATION_ITEMS}
                     activeTab={activeTab}

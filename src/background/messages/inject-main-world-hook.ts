@@ -1,6 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 import { getCanvasRolloutDecision } from "../config/canvas-sites"
-import { installDoc2xCanvasImageHook } from "../../contents/inject/canvas-image-hook"
+import { installMewCatCanvasImageHook } from "../../contents/inject/canvas-image-hook"
 import {
     CANVAS_HOOK_CHANNEL,
     CANVAS_HOOK_VERSION
@@ -48,7 +48,7 @@ const handler: PlasmoMessaging.MessageHandler<
         await chrome.scripting.executeScript({
             target: { tabId },
             world: "MAIN",
-            func: installDoc2xCanvasImageHook,
+            func: installMewCatCanvasImageHook,
             args: [CANVAS_HOOK_CHANNEL, CANVAS_HOOK_VERSION]
         })
 

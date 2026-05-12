@@ -1,4 +1,4 @@
-export const CANVAS_HOOK_CHANNEL = "doc2x-canvas-hook"
+export const CANVAS_HOOK_CHANNEL = "mewcat-canvas-hook"
 export const CANVAS_HOOK_VERSION = "1.0.0"
 
 export type CanvasContextType =

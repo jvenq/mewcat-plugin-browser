@@ -6,7 +6,7 @@ export interface BaseUser {
     phone: string
     invite_code: string
 }
-export interface Doc2xUserInfo {
+export interface MewCatUserInfo {
     state: {
         expireTime: number
         token: string

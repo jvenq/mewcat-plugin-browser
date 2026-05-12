@@ -13,8 +13,8 @@ import {
 
 import { useAsyncRetry } from "react-use"
 
-import { DOC2X_URL } from "@/constants/common"
-import { doc2xRequest } from "@/services/request"
+import { MEWCAT_URL } from "@/constants/common"
+import { mewCatRequest } from "@/services/request"
 import { Toast, ToastType } from "@/utils/toast"
 
 import NativeSelect from "../NativeSelect"
@@ -363,7 +363,7 @@ function SettingsPanel({ currentTabUrl }: SettingsPanelProps) {
     const targetLanguageOptions = languages.languages
 
     const { retry: fetchUserRetry, loading } = useAsyncRetry(async () => {
-        doc2xRequest.defaults.headers.Authorization = `Bearer ${accessToken}`
+        mewCatRequest.defaults.headers.Authorization = `Bearer ${accessToken}`
         if (config.currentModel === "SYSTEM") {
             if (!accessToken) {
                 Toast.show({
@@ -399,7 +399,7 @@ function SettingsPanel({ currentTabUrl }: SettingsPanelProps) {
             await fetchUser()
         } catch (error) {
             Toast.show({
-                message: `获取用户信息失败, 请重新打开 ${DOC2X_URL}`,
+                message: `获取用户信息失败, 请重新打开 ${MEWCAT_URL}`,
                 type: ToastType.ERROR
             })
             return Promise.reject(error)
@@ -473,9 +473,9 @@ function SettingsPanel({ currentTabUrl }: SettingsPanelProps) {
     return (
         <PanelContainer>
             <Header>
-                <Logo src={iconImg} alt="Doc2X" />
+                <Logo src={iconImg} alt="mewCat" />
                 <HeaderInfo>
-                    <HeaderTitle>Doc2X 翻译</HeaderTitle>
+                    <HeaderTitle>译趣喵</HeaderTitle>
                     <HeaderSubtitle>智能翻译助手</HeaderSubtitle>
                 </HeaderInfo>
             </Header>

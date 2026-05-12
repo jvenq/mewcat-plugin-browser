@@ -1,6 +1,6 @@
-export function installDoc2xCanvasImageHook(channel: string, version: string) {
+export function installMewCatCanvasImageHook(channel: string, version: string) {
     const windowRef = window as Window & {
-        __doc2xCanvasHookState__?: {
+        __mewCatCanvasHookState__?: {
             version: string
             installed: boolean
         }
@@ -38,12 +38,12 @@ export function installDoc2xCanvasImageHook(channel: string, version: string) {
 
     try {
         if (
-            windowRef.__doc2xCanvasHookState__?.installed &&
-            windowRef.__doc2xCanvasHookState__?.version === version
+            windowRef.__mewCatCanvasHookState__?.installed &&
+            windowRef.__mewCatCanvasHookState__?.version === version
         ) {
             return
         }
-        windowRef.__doc2xCanvasHookState__ = {
+        windowRef.__mewCatCanvasHookState__ = {
             version,
             installed: true
         }
@@ -102,20 +102,20 @@ export function installDoc2xCanvasImageHook(channel: string, version: string) {
         }
 
         const ensureCanvasId = (canvas: HTMLCanvasElement): string => {
-            const existing = canvas.getAttribute("data-doc2x-canvas-id")
+            const existing = canvas.getAttribute("data-mewcat-canvas-id")
             if (existing) {
                 return existing
             }
-            const generated = `doc2x-canvas-${Date.now()}-${nextCanvasId}`
+            const generated = `mewcat-canvas-${Date.now()}-${nextCanvasId}`
             nextCanvasId += 1
-            canvas.setAttribute("data-doc2x-canvas-id", generated)
+            canvas.setAttribute("data-mewcat-canvas-id", generated)
             return generated
         }
 
         const findCanvasById = (canvasId: string): HTMLCanvasElement | null => {
             const canvases = document.querySelectorAll("canvas")
             for (const canvas of canvases) {
-                if (canvas.getAttribute("data-doc2x-canvas-id") === canvasId) {
+                if (canvas.getAttribute("data-mewcat-canvas-id") === canvasId) {
                     return canvas
                 }
             }

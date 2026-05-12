@@ -325,7 +325,7 @@ const ImageTranslate: React.FC = () => {
             const originalOpacity = canvas.style.opacity
             const overlay = document.createElement("img")
             overlay.alt = "Translated canvas overlay"
-            overlay.setAttribute("data-doc2x-canvas-overlay-id", canvasId)
+            overlay.setAttribute("data-mewcat-canvas-overlay-id", canvasId)
             overlay.style.position = "fixed"
             overlay.style.pointerEvents = "none"
             overlay.style.zIndex = "2147483000"

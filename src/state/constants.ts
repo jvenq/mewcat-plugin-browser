@@ -12,7 +12,7 @@ const aiModelList: BaseModel[] = [
     {
         id: "SYSTEM",
         type: AiModel_Platform_Enum.SYSTEM,
-        name: "Doc2X",
+        name: "mewCat",
         enabled: true,
         isSystem: true,
         params: {
