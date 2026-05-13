@@ -7,6 +7,7 @@ import {
     MOONSHOT_LLM,
     OPENAI_LLM,
     QWEN_LLM,
+    SystemLLMModel,
     ZHIPU_LLM,
     type LLMModel
 } from "@/types"
@@ -195,3 +196,41 @@ export const THINKING_CAPABLE_MODELS = new Set<LLMModel>([
     QWEN_LLM.QWEN3_PLUS,
     QWEN_LLM.QWEN3_TURBO
 ])
+
+/**
+ * SystemLLMModel 枚举值到模型名称的映射
+ * 用于 getLLMModelName 和 SYSTEM_LLM_MODEL_OPTIONS 标签生成
+ */
+export const SYSTEM_LLM_MODEL_NAMES: Record<SystemLLMModel, string> = {
+    [SystemLLMModel.LLM_MODEL_UNSPECIFIED]: "未指定",
+    [SystemLLMModel.LLM_MODEL_GLM4_AIR]: "glm-4-air",
+    [SystemLLMModel.LLM_MODEL_GLM4_AIRX]: "glm-4-airx",
+    [SystemLLMModel.LLM_MODEL_GLM4_FLASHX]: "glm-4-flashx",
+    [SystemLLMModel.LLM_MODEL_GLM4_PLUS]: "glm-4-plus",
+    [SystemLLMModel.LLM_MODEL_GLM_4d5_FLASH]: "glm-4.5-flash",
+    [SystemLLMModel.LLM_MODEL_DEEPSEEK_CHAT]: "deepseek-chat",
+    [SystemLLMModel.LLM_MODEL_DEEPSEEK_R1]: "deepseek-r1",
+    [SystemLLMModel.LLM_MODEL_GPT4O_MINI]: "gpt-4o-mini",
+    [SystemLLMModel.LLM_MODEL_GPT4d1_NANO]: "gpt-4.1-nano",
+    [SystemLLMModel.LLM_MODEL_GPT4d1_MINI]: "gpt-4.1-mini",
+    [SystemLLMModel.LLM_MODEL_CLAUDE3_HAIKU]: "claude3-haiku",
+    [SystemLLMModel.LLM_MODEL_YI_LIGHTNING]: "yi-lightning",
+    [SystemLLMModel.LLM_MODEL_QWEN_2d5_32B_INSTRUCT]: "Qwen2.5-32B-Instruct",
+    [SystemLLMModel.LLM_MODEL_QWQ_PLUS_LATEST]: "qwq-plus-latest",
+    [SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST]: "qwen-max-latest",
+    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST_THINKING]: "qwen-plus-latest-thinking",
+    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST]: "qwen-plus-latest",
+    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST_THINKING]: "qwen-turbo-latest-thinking",
+    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST]: "qwen-turbo-latest",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO]: "Doubao-1.5-pro",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K]: "Doubao-1.5-lite-32K",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415]: "Doubao-1.5-thinking-pro-250415",
+    [SystemLLMModel.LLM_MODEL_GEMINI_2d0_FLASH]: "gemini-2.0-flash",
+    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH]: "gemini-2.5-flash",
+    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE]: "gemini-2.5-flash-lite",
+    [SystemLLMModel.LLM_MODEL_KIMI_K2]: "Kimi-K2",
+    [SystemLLMModel.LLM_MODEL_BAAI_BGE_M3]: "BAAI/BGE-M3",
+    [SystemLLMModel.LLM_MODEL_ZHIPU_EMBEDDING_3]: "Zhipu/Embedding-3",
+    [SystemLLMModel.LLM_MODEL_BAAI_RERANK_V2_M3]: "AAI/bge-reranker-v2-m3",
+    [SystemLLMModel.LLM_MODEL_ZHIPU_RERANK]: "Zhipu/Rerank"
+}
