@@ -58,7 +58,7 @@ export const DISABLED_SITES_OPTIONS = [
 // 扩展信息
 export const EXTENSION_INFO = {
     version: "v0.0.1",
-    author: "武汉智识无垠科技有限公司",
+    author: "kidrue",
     description: "智能网页翻译助手，支持多种翻译引擎和划词翻译"
 }
 

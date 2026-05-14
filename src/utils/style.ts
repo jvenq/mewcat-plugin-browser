@@ -63,9 +63,9 @@ export function getTranslationStyleCSS(
             return (
                 baseStyle +
                 `
-                color: #1976d2;
+                color: #f97316;
                 background: rgba(255, 235, 59, 0.3);
-                border-left: 3px solid #1976d2;
+                border-left: 3px solid #f97316;
             `
             )
 
@@ -73,10 +73,10 @@ export function getTranslationStyleCSS(
             return (
                 baseStyle +
                 `
-                color: #1976d2;
+                color: #f97316;
                 background: transparent;
                 text-decoration: underline;
-                text-decoration-color: #1976d2;
+                text-decoration-color: #f97316;
                 text-decoration-thickness: 2px;
             `
             )
@@ -85,9 +85,9 @@ export function getTranslationStyleCSS(
             return (
                 baseStyle +
                 `
-                color: #1976d2;
-                background: rgba(227, 242, 253, 0.8);
-                border: 1px solid rgba(227, 242, 253, 0.5);
+                color: #f97316;
+                background: rgba(255, 247, 237, 0.8);
+                border: 1px solid rgba(255, 247, 237, 0.5);
             `
             )
 
@@ -95,9 +95,9 @@ export function getTranslationStyleCSS(
             return (
                 baseStyle +
                 `
-                color: #1976d2;
+                color: #f97316;
                 background: transparent;
-                border: 2px solid #1976d2;
+                border: 2px solid #f97316;
                 border-radius: 4px;
             `
             )
@@ -106,10 +106,10 @@ export function getTranslationStyleCSS(
             return (
                 baseStyle +
                 `
-                color: #1976d2;
+                color: #f97316;
                 background: rgba(255, 255, 255, 0.1);
-                text-shadow: 1px 1px 3px rgba(25, 118, 210, 0.6);
-                box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+                text-shadow: 1px 1px 3px rgba(249, 115, 22, 0.6);
+                box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
             `
             )
 
@@ -165,13 +165,13 @@ export function getStyleDescription(style: TranslationStyleType): string {
         case TranslationStyle.NONE:
             return "无样式 - 不添加任何特殊样式"
         case TranslationStyle.HIGHLIGHT:
-            return "高亮显示 - 使用黄色背景和蓝色边框"
+            return "高亮显示 - 使用黄色背景和橙色边框"
         case TranslationStyle.UNDERLINE:
-            return "下划线 - 使用蓝色下划线标识"
+            return "下划线 - 使用橙色下划线标识"
         case TranslationStyle.BACKGROUND:
-            return "背景色 - 使用淡蓝色背景"
+            return "背景色 - 使用淡橙色背景"
         case TranslationStyle.BORDER:
-            return "边框 - 使用蓝色边框包围"
+            return "边框 - 使用橙色边框包围"
         case TranslationStyle.SHADOW:
             return "阴影 - 使用文字阴影和盒子阴影"
         default:
