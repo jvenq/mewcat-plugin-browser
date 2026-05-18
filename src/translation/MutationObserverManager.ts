@@ -179,7 +179,7 @@ export class MutationObserverManager {
         return nodes.filter(node => {
             // 检查节点的翻译展示容器是否存在且有内容
             const displayNode = document.querySelector(
-                `[data-translate-docx-id="${node.id}"]`
+                `[data-translate-id="${node.id}"]`
             )
 
             if (!displayNode) {

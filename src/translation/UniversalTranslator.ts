@@ -94,7 +94,9 @@ export class UniversalTranslator {
             [AiModel_Platform_Enum.GEMINI]:
                 "https://generativelanguage.googleapis.com/v1beta/models",
             [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
-            [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org"
+            [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org",
+            [AiModel_Platform_Enum.GOOGLE]: "https://translation.googleapis.com/language/translate/v2",
+            [AiModel_Platform_Enum.BASE]: "https://api.base.com/v1"
         }
 
         const url = baseUrls[provider]

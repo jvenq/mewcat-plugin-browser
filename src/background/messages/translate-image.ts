@@ -1,4 +1,3 @@
-
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import { resolveAllHotlinkHeaders } from "../config/hotlink-sites"

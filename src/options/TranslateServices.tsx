@@ -38,17 +38,12 @@ import { configAtom, updateAiModelConfigAtom, updateConfigAtom } from "@/state"
 import { storage } from "@/state/constants"
 import { hideScrollBar } from "@/styles/scroll"
 import { ApiKeyValidator } from "@/translation/ApiKeyValidator"
-import {
-    AiModel_Platform_Enum,
-    AiRole,
-    type BaseModel,
-    type LLMModel
-} from "@/types"
+import type { AiModel_Platform_Enum } from "@/types"
+import { AiRole, type BaseModel, type LLMModel } from "@/types"
 import {
     getLLMModelName,
     getModelByModelList,
-    isModelThinkingCapable,
-    SYSTEM_LLM_MODEL_OPTIONS
+    isModelThinkingCapable
 } from "@/utils/llmModel"
 import { Toast, ToastType } from "@/utils/toast"
 
@@ -276,10 +271,7 @@ function LeftPanelItem({
         >
             <StatusDot $enabled={isEnabled} />
             <ModelItemContent>
-                <ModelItemTitle>
-                    {model.name}
-                    {model.isSystem && " (系统)"}
-                </ModelItemTitle>
+                <ModelItemTitle>{model.name}</ModelItemTitle>
                 <ModelItemSubtitle>
                     {model.params.modelVersion
                         ? getLLMModelName(model.params.modelVersion)
@@ -327,9 +319,6 @@ export const TranslateServices: React.FunctionComponent = () => {
     const modelOptions = useMemo(() => {
         if (!activeId) {
             return []
-        }
-        if (currentModelData?.type === AiModel_Platform_Enum.SYSTEM) {
-            return SYSTEM_LLM_MODEL_OPTIONS
         }
         return (
             aiModelListMap.get(currentModelData?.type)?.map?.(model => ({
@@ -391,13 +380,9 @@ export const TranslateServices: React.FunctionComponent = () => {
                 const accessToken = await storage.get<string>("accessToken")
                 // 创建 UniversalTranslator 实例
                 const translator = new UniversalTranslator(model.type, {
-                    apiKey: model.isSystem
-                        ? accessToken || ""
-                        : model.params.apiKey,
+                    apiKey: model.params.apiKey,
                     baseUrl: model.params.baseUrl,
-                    model: model.isSystem
-                        ? model.params.modelVersion
-                        : getLLMModelName(model.params.modelVersion),
+                    model: getLLMModelName(model.params.modelVersion),
                     aiRole: AiRole.DEFAULT,
                     endpoint: model.params.endpoint
                 })
@@ -636,7 +621,6 @@ export const TranslateServices: React.FunctionComponent = () => {
                     {
                         id: nanoid(),
                         type: platform,
-                        isSystem: false,
                         enabled: true,
                         name: platformNameMap[platform],
                         params: {
@@ -792,7 +776,7 @@ export const TranslateServices: React.FunctionComponent = () => {
                                             {currentModelData.name}
                                         </ModelTitle>
                                         <ModelDescription>
-                                            {currentModelConfig.description}
+                                            {currentModelConfig?.description}
                                         </ModelDescription>
                                     </ModelHeaderContent>
                                     <ModelHeaderActions>
@@ -820,23 +804,22 @@ export const TranslateServices: React.FunctionComponent = () => {
                                                 currentModelData.id
                                             )}
                                         </Button>
-                                        {!currentModelData.isSystem && (
-                                            <Button
-                                                type="secondary"
-                                                size="sm"
-                                                onClick={() =>
-                                                    onRemoveModel(
-                                                        currentModelData.id
-                                                    )
-                                                }
-                                            >
-                                                删除模型
-                                            </Button>
-                                        )}
+
+                                        <Button
+                                            type="secondary"
+                                            size="sm"
+                                            onClick={() =>
+                                                onRemoveModel(
+                                                    currentModelData.id
+                                                )
+                                            }
+                                        >
+                                            删除模型
+                                        </Button>
                                     </ModelHeaderActions>
                                 </ModelHeader>
                                 <ConfigForm>
-                                    {currentModelConfig.items.map(item => {
+                                    {currentModelConfig?.items?.map(item => {
                                         const fieldConfig =
                                             currentModelConfig.fields[item]
                                         if (!fieldConfig) {

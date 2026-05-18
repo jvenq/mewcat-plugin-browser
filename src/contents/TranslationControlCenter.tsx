@@ -283,14 +283,7 @@ const TranslationControlCenter: React.FunctionComponent = () => {
         }
 
         return doTranslate()
-    }, [
-        configRef,
-        doTranslate,
-        isDragged,
-        isTranslate,
-        loading,
-        onClearTranslate
-    ])
+    }, [doTranslate, isDragged, isTranslate, loading, onClearTranslate])
 
     const onToggleTranslateRef = useLatest(onToggleTranslate)
 

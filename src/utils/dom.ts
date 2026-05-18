@@ -74,7 +74,7 @@ export function createTranslationContainerElement(
     containerElement.style.cssText = cssText
     containerElement.className = "notranslate mewcat-container"
     containerElement.setAttribute("data-lang", targetLanguage)
-    containerElement.setAttribute("data-translate-docx-id", uniqueId)
+    containerElement.setAttribute("data-translate-id", uniqueId)
 
     if (insertTagType === "nbsp") {
         const fontElement = document.createElement("font")
@@ -114,7 +114,7 @@ export function createTranslationDisplayElement(
 export function createLoadingELement(size = 30) {
     // 创建旋转的loading元素
     const spinner = document.createElement("div")
-    spinner.className = "docx-loading"
+    spinner.className = "meow-loading"
     spinner.style.cssText = `
             width: ${size}px;
             height: ${size}px;
@@ -127,10 +127,10 @@ export function createLoadingELement(size = 30) {
 
     // 创建动画样式
     const styleSheet = document.createElement("style")
-    styleSheet.setAttribute("data-docx-loading-stylesheet", "1")
+    styleSheet.setAttribute("data-meow-loading-stylesheet", "1")
 
     const isCreatedLoadingStyleSheet = document.querySelector(
-        "[data-docx-loading-stylesheet]"
+        "[data-meow-loading-stylesheet]"
     )
 
     if (!isCreatedLoadingStyleSheet) {

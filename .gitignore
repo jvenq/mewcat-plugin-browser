@@ -1,4 +1,4 @@
-node_modules
-build
 .plasmo
 .deepseek
+node_modules/
+build/

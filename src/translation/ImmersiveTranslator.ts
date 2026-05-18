@@ -1428,10 +1428,10 @@ export class ImmersiveTranslator {
                     const element = node as HTMLElement
 
                     // 忽略翻译容器和其子元素
-                    if (element.hasAttribute("data-translate-docx-id")) {
+                    if (element.hasAttribute("data-translate-id")) {
                         return false
                     }
-                    if (element.closest("[data-translate-docx-id]")) {
+                    if (element.closest("[data-translate-id]")) {
                         return false
                     }
 
