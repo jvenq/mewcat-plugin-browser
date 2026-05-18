@@ -399,9 +399,9 @@ const SlidePanel: React.FunctionComponent = () => {
                 targetLang
             )
             setResult(translated || "")
-        } catch (e: any) {
-            if (e?.name !== "AbortError") {
-                setError(e?.message || "翻译失败，请重试")
+        } catch (e) {
+            if ((e as Error)?.name !== "AbortError") {
+                setError((e as Error)?.message || "翻译失败，请重试")
             }
         } finally {
             setLoading(false)
@@ -436,7 +436,7 @@ const SlidePanel: React.FunctionComponent = () => {
         <Container>
             <Header>
                 <Logo src={iconImg} alt="mewCat" />
-                <Title>翻译侧边栏</Title>
+                <HeaderTitle>翻译侧边栏</HeaderTitle>
             </Header>
 
             <TabBar>

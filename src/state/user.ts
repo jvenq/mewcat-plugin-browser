@@ -1,9 +1,6 @@
 import { atom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 
-import { request } from "@/services/request"
-
-
 import type { BaseUser } from "../types"
 import { chromeStorageAdapter } from "./util"
 
@@ -51,8 +48,7 @@ export const resetUserAtom = atom(null, (_get, set) => {
 
 export const setAccessTokenAtom = atom(
     null,
-    (get, set, accessToken: string) => {
-        request.defaults.headers.Authorization = `Bearer ${accessToken}`
+    (_get, set, accessToken: string) => {
         set(accessTokenAtom, accessToken)
     }
 )

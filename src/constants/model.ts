@@ -7,6 +7,7 @@ import {
     MOONSHOT_LLM,
     OPENAI_LLM,
     QWEN_LLM,
+    SystemLLMModel,
     ZHIPU_LLM,
     type LLMModel
 } from "@/types"
