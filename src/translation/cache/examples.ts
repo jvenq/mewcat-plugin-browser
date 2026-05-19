@@ -3,8 +3,8 @@
  */
 
 import {
-    TranslationCacheFactory,
     createDefaultCache,
+    TranslationCacheFactory,
     type CacheKeyParams
 } from "./index"
 
@@ -144,7 +144,7 @@ async function example4_BatchOperations() {
     console.log("Batch set completed")
 
     // 批量获取
-    const paramsList = entries.map((e) => e.params)
+    const paramsList = entries.map(e => e.params)
     const results = await cache.batchGet(paramsList)
 
     console.log("Batch get results:")

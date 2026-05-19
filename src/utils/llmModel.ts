@@ -8,13 +8,10 @@ import {
     Huoshan_LLM_MODEL_NAMES,
     MOONSHOT_MODEL_NAMES,
     OPENAI_MODEL_NAMES,
-
     THINKING_CAPABLE_MODELS,
     ZHIPU_MODEL_NAMES
 } from "@/constants/model"
 import type { BaseModel, LLMModel } from "@/types"
-
-
 
 /**
  * 获取 LLM 模型的显示名称
@@ -34,10 +31,7 @@ export function getLLMModelName(model: LLMModel): string {
 }
 
 export function getModelByModelList(modelList: BaseModel[], model: string) {
-    return find(
-        item => item.id === model,
-        modelList
-    )
+    return find(item => item.id === model, modelList)
 }
 
 /**
@@ -45,7 +39,9 @@ export function getModelByModelList(modelList: BaseModel[], model: string) {
  * @param model - 模型版本号
  * @returns 是否支持思考能力
  */
-export function isThinkingCapableModel(model: LLMModel | undefined | null): boolean {
+export function isThinkingCapableModel(
+    model: LLMModel | undefined | null
+): boolean {
     if (!model) {
         return false
     }
@@ -57,7 +53,9 @@ export function isThinkingCapableModel(model: LLMModel | undefined | null): bool
  * @param model - BaseModel 对象
  * @returns 是否支持思考能力
  */
-export function isModelThinkingCapable(model: BaseModel | undefined | null): boolean {
+export function isModelThinkingCapable(
+    model: BaseModel | undefined | null
+): boolean {
     if (!model?.params?.modelVersion) {
         return false
     }

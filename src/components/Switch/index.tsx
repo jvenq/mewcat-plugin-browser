@@ -81,9 +81,7 @@ const SwitchTrack = styled.span<{ $checked: boolean; $size: string }>`
         transition: all var(--transition-fast);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         transform: ${props =>
-            props.$checked
-                ? "translateX(calc(100% - 2px))"
-                : "translateX(0)"};
+            props.$checked ? "translateX(calc(100% - 2px))" : "translateX(0)"};
     }
 
     &:hover {
@@ -108,7 +106,11 @@ const Switch: React.FC<SwitchProps> = ({
     }
 
     return (
-        <SwitchContainer $disabled={disabled} $size={size} className={className}>
+        <SwitchContainer
+            $disabled={disabled}
+            $size={size}
+            className={className}
+        >
             <SwitchInput
                 type="checkbox"
                 checked={checked}

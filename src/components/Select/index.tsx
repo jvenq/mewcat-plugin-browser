@@ -102,15 +102,18 @@ const Option = styled.div<{ isSelected: boolean }>`
     padding: var(--space-2) var(--space-3);
     cursor: pointer;
     font-size: var(--font-size-sm);
-    color: ${props => (props.isSelected ? "var(--primary-color)" : "var(--text-primary)")};
-    background: ${props => (props.isSelected ? "var(--primary-light)" : "transparent")};
+    color: ${props =>
+        props.isSelected ? "var(--primary-color)" : "var(--text-primary)"};
+    background: ${props =>
+        props.isSelected ? "var(--primary-light)" : "transparent"};
     display: flex;
     align-items: center;
     gap: var(--space-2);
     transition: all var(--transition-fast);
 
     &:hover {
-        background: ${props => (props.isSelected ? "var(--primary-light)" : "var(--gray-100)")};
+        background: ${props =>
+            props.isSelected ? "var(--primary-light)" : "var(--gray-100)"};
     }
 `
 

@@ -192,9 +192,7 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
                 ensureCanvasId(this)
             } catch (error) {
                 const err =
-                    error instanceof Error
-                        ? error
-                        : new Error(String(error))
+                    error instanceof Error ? error : new Error(String(error))
                 postError(
                     "GET_CONTEXT_RECORD_FAILED",
                     err.message,
@@ -208,7 +206,8 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
         HTMLCanvasElement.prototype.getContext = hookedGetContext
 
         if (hasOffscreenCanvas) {
-            const originalOffscreenGetContext = OffscreenCanvas.prototype.getContext
+            const originalOffscreenGetContext =
+                OffscreenCanvas.prototype.getContext
             const hookedOffscreenGetContext = function (
                 this: OffscreenCanvas,
                 contextType: string,
@@ -260,7 +259,10 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
                 height: targetCanvas.height,
                 sourceContextType,
                 targetContextType,
-                renderType: resolveRenderType(sourceContextType, targetContextType),
+                renderType: resolveRenderType(
+                    sourceContextType,
+                    targetContextType
+                ),
                 updatedAt: Date.now()
             }
 
@@ -275,7 +277,7 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
         }
 
         const originalDrawImage = CanvasRenderingContext2D.prototype.drawImage
-        const hookedDrawImage = (function (
+        const hookedDrawImage = function (
             this: CanvasRenderingContext2D,
             ...args: unknown[]
         ) {
@@ -289,9 +291,7 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
                 recordDrawImageMeta(targetCanvas, args[0], "2d")
             } catch (error) {
                 const err =
-                    error instanceof Error
-                        ? error
-                        : new Error(String(error))
+                    error instanceof Error ? error : new Error(String(error))
                 postError(
                     "DRAW_IMAGE_HOOK_FAILED",
                     err.message,
@@ -302,14 +302,14 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
             }
 
             return result
-        }) as CanvasRenderingContext2D["drawImage"]
+        } as CanvasRenderingContext2D["drawImage"]
         CanvasRenderingContext2D.prototype.drawImage = hookedDrawImage
 
         if (hasOffscreen2dContext) {
             const offscreenDrawImageProto =
                 OffscreenCanvasRenderingContext2D.prototype
             const originalOffscreenDrawImage = offscreenDrawImageProto.drawImage
-            const hookedOffscreenDrawImage = (function (
+            const hookedOffscreenDrawImage = function (
                 this: OffscreenCanvasRenderingContext2D,
                 ...args: unknown[]
             ) {
@@ -339,7 +339,7 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
                 }
 
                 return result
-            }) as OffscreenCanvasRenderingContext2D["drawImage"]
+            } as OffscreenCanvasRenderingContext2D["drawImage"]
             offscreenDrawImageProto.drawImage = hookedOffscreenDrawImage
         }
 
@@ -397,9 +397,7 @@ export function installMewCatCanvasImageHook(channel: string, version: string) {
                 )
             } catch (error) {
                 const err =
-                    error instanceof Error
-                        ? error
-                        : new Error(String(error))
+                    error instanceof Error ? error : new Error(String(error))
                 postError(
                     "CANVAS_META_QUERY_FAILED",
                     err.message,

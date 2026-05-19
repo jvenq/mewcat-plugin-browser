@@ -25,10 +25,7 @@ export const Selection: React.FunctionComponent = () => {
                     }
                 />
 
-                <FormRow
-                    label="触发方式"
-                    description="选择划词翻译的触发方式"
-                >
+                <FormRow label="触发方式" description="选择划词翻译的触发方式">
                     <CustomSelect
                         value={config.selectionTriggerMode || "direct"}
                         onChange={value =>

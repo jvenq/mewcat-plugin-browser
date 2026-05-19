@@ -28,7 +28,10 @@ export interface UseSelectionTranslateOptions {
  * 划词翻译 Hook
  * 根据配置处理不同的触发模式和交互方式
  */
-export function useSelectionTranslate<T extends HTMLElement>({ config, shadowId }: UseSelectionTranslateOptions) {
+export function useSelectionTranslate<T extends HTMLElement>({
+    config,
+    shadowId
+}: UseSelectionTranslateOptions) {
     const triggerMode = config.selectionTriggerMode
     const dotRef = useRef<T>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -56,7 +59,10 @@ export function useSelectionTranslate<T extends HTMLElement>({ config, shadowId 
             }
             // 完整域名匹配
             if (site.includes(".")) {
-                return currentHostname === site || currentHostname.endsWith("." + site)
+                return (
+                    currentHostname === site ||
+                    currentHostname.endsWith("." + site)
+                )
             }
             // URL包含匹配
             return currentUrl.includes(site)
@@ -84,7 +90,10 @@ export function useSelectionTranslate<T extends HTMLElement>({ config, shadowId 
             if (!prev.textRect) {
                 return prev
             }
-            const position = calculatePosition(prev.textRect, containerRef.current.getBoundingClientRect())
+            const position = calculatePosition(
+                prev.textRect,
+                containerRef.current.getBoundingClientRect()
+            )
             return {
                 ...prev,
                 position
@@ -171,10 +180,13 @@ export function useSelectionTranslate<T extends HTMLElement>({ config, shadowId 
             // 根据配置的触发模式检查对应的按键
             const triggerKeyText = e.key.toUpperCase()
             // 检查是否为精确的 Shift 触发
-            const isShiftTrigger = triggerMode === "shift" && triggerKeyText === "SHIFT"
+            const isShiftTrigger =
+                triggerMode === "shift" && triggerKeyText === "SHIFT"
 
             // 检查是否为精确的 Ctrl 触发
-            const isCtrlTrigger = triggerMode === "ctrl" && ["CONTROL", "CTRL"].includes(triggerKeyText)
+            const isCtrlTrigger =
+                triggerMode === "ctrl" &&
+                ["CONTROL", "CTRL"].includes(triggerKeyText)
 
             // 如果既不是 Shift 触发，也不是 Ctrl 触发，则返回
             if (!(isShiftTrigger || isCtrlTrigger)) {
@@ -199,7 +211,9 @@ export function useSelectionTranslate<T extends HTMLElement>({ config, shadowId 
         const handleMouseDown = (e: MouseEvent) => {
             if (e.target instanceof HTMLElement) {
                 const shadowRoot = e.target.shadowRoot?.getElementById(shadowId)
-                const isIncludeShadow = shadowRoot?.contains(containerRef.current)
+                const isIncludeShadow = shadowRoot?.contains(
+                    containerRef.current
+                )
                 if (isIncludeShadow) {
                     isIgnore = true
                     return
@@ -232,7 +246,16 @@ export function useSelectionTranslate<T extends HTMLElement>({ config, shadowId 
             document.removeEventListener("mousedown", handleMouseDown)
             document.removeEventListener("mouseup", handleMouseUp)
         }
-    }, [containerRef, showTranslatePanel, hideAll, settingSelection, shadowId, showTriggerDot, triggerMode, config.isSelectedTranslate])
+    }, [
+        containerRef,
+        showTranslatePanel,
+        hideAll,
+        settingSelection,
+        shadowId,
+        showTriggerDot,
+        triggerMode,
+        config.isSelectedTranslate
+    ])
 
     // 监听配置变化
     useEffect(() => {

@@ -124,7 +124,10 @@ const NativeSelect: React.FC<NativeSelectProps> = ({
                     </option>
                 )}
                 {options.map(option => (
-                    <option key={String(option.value)} value={String(option.value)}>
+                    <option
+                        key={String(option.value)}
+                        value={String(option.value)}
+                    >
                         {option.label}
                     </option>
                 ))}

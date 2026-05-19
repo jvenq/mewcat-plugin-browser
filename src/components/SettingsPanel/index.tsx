@@ -1,13 +1,9 @@
 import { useAtom, useSetAtom } from "jotai"
+import { useAsyncRetry } from "react-use"
 import styled from "styled-components"
 
 import { AUTO_DETECT_OPTION, languages } from "@/constants"
-import {
-    configAtom,
-    updateConfigAtom
-} from "@/state"
-
-import { useAsyncRetry } from "react-use"
+import { configAtom, updateConfigAtom } from "@/state"
 
 import NativeSelect from "../NativeSelect"
 import CustomToggle from "../Switch"

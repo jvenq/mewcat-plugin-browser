@@ -31,10 +31,7 @@ const STORAGE_QUOTA_BYTES = 10 * 1024 * 1024 // chrome.storage.local 默认约 1
 
 // --- In-Memory Debounce Map ---
 
-const pendingRequests = new Map<
-    string,
-    Promise<string>
->()
+const pendingRequests = new Map<string, Promise<string>>()
 
 // --- Helper Functions ---
 

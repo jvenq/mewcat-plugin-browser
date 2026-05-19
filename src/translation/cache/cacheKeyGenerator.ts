@@ -3,13 +3,13 @@
  * 负责生成标准化的缓存键
  */
 
-import type { CacheKeyParams } from "./types"
 import {
     extractTextTemplate,
     hashText,
     hashTextSync,
     normalizeText
 } from "./textNormalizer"
+import type { CacheKeyParams } from "./types"
 
 /**
  * 生成缓存键（异步版本，使用 SHA-256）
@@ -40,8 +40,7 @@ export async function generateCacheKey(
     const keyText = hasVariables ? template : normalizedText
 
     // 4. 对长文本使用哈希，短文本直接使用
-    const textKey =
-        keyText.length > 100 ? await hashText(keyText) : keyText
+    const textKey = keyText.length > 100 ? await hashText(keyText) : keyText
 
     // 5. 组合生成键
     const parts = [

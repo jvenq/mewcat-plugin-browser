@@ -3,8 +3,8 @@
  * 提供快速的内存级缓存访问
  */
 
-import type { CacheEntry, CacheKeyParams, CacheStats } from "./types"
 import { generateCacheKeySync } from "./cacheKeyGenerator"
+import type { CacheEntry, CacheKeyParams, CacheStats } from "./types"
 
 /**
  * L1 内存缓存配置

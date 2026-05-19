@@ -178,7 +178,7 @@ const AddIcon = styled.span`
     justify-content: center;
     width: 14px;
     height: 14px;
-    
+
     &::before {
         content: "+";
         font-size: 16px;

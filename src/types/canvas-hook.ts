@@ -71,4 +71,3 @@ export type CanvasHookEvent =
     | CanvasMetaQueryEvent
     | CanvasMetaResponseEvent
     | CanvasMetaErrorEvent
-

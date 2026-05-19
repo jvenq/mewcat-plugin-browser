@@ -123,7 +123,6 @@ export enum DOU_BAO_LLM {
     DOUBAO_SEED_1_6_VISION_250815 = 800006
 }
 
-
 export enum SystemLLMModel {
     LLM_MODEL_UNSPECIFIED = 0,
     LLM_MODEL_GLM4_AIR = 1,

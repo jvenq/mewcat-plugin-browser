@@ -3,7 +3,17 @@
  */
 export const LANGUAGE_DETECTION_CONFIG = {
     /** 支持的源语言 */
-    supportedSourceLanguages: ["en", "es", "fr", "de", "it", "pt", "ru", "ja", "ko"],
+    supportedSourceLanguages: [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ru",
+        "ja",
+        "ko"
+    ],
     /** 最小检测文本长度 */
     minDetectionLength: 2,
     /** 语言检测置信度阈值 */

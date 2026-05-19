@@ -35,7 +35,9 @@ function cleanupAbortController(
     timeoutId?: NodeJS.Timeout
 ): void {
     activeAbortControllers.delete(controller)
-    if (timeoutId) {clearTimeout(timeoutId)}
+    if (timeoutId) {
+        clearTimeout(timeoutId)
+    }
 }
 
 /** 发送成功响应 */
@@ -55,7 +57,11 @@ function sendError(
 ): void {
     const errorMessage =
         error instanceof Error ? error.message : "Unknown error"
-    res.send({ error: errorMessage, success: false, headers } as UnifiedResponse)
+    res.send({
+        error: errorMessage,
+        success: false,
+        headers
+    } as UnifiedResponse)
 }
 
 // ============================================================================
@@ -105,7 +111,9 @@ async function handleAiHttpRequest(
         }
         // 传递响应头到错误处理
         if (error && typeof error === "object" && "headers" in error) {
-            const errorWithHeaders = error as { headers?: Record<string, string> }
+            const errorWithHeaders = error as {
+                headers?: Record<string, string>
+            }
             sendError(res, error, errorWithHeaders.headers)
             return
         }
@@ -159,7 +167,9 @@ async function handleTranslationEngineRequest(
             throw new Error("Request timeout")
         }
         if (error && typeof error === "object" && "headers" in error) {
-            const errorWithHeaders = error as { headers?: Record<string, string> }
+            const errorWithHeaders = error as {
+                headers?: Record<string, string>
+            }
             sendError(res, error, errorWithHeaders.headers)
             return
         }

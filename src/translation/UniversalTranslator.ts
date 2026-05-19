@@ -566,8 +566,13 @@ export class UniversalTranslator {
         const requestBody = this.buildAiRequestConfig(testMessages)
 
         // 剥离内部字段（apiKey/baseUrl/headers/timeout），只发送 API 需要的字段
-        const { apiKey: _, baseUrl: _u, headers: _h, timeout: _t, ...apiPayload } =
-            requestBody.config
+        const {
+            apiKey: _,
+            baseUrl: _u,
+            headers: _h,
+            timeout: _t,
+            ...apiPayload
+        } = requestBody.config
 
         const response = await axios.post<unknown, Response<unknown>>(
             url,

@@ -1,10 +1,11 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-import { getCanvasRolloutDecision } from "../config/canvas-sites"
+
 import { installMewCatCanvasImageHook } from "../../contents/inject/canvas-image-hook"
 import {
     CANVAS_HOOK_CHANNEL,
     CANVAS_HOOK_VERSION
 } from "../../types/canvas-hook"
+import { getCanvasRolloutDecision } from "../config/canvas-sites"
 
 export interface InjectMainWorldHookRequest {
     pageUrl?: string
@@ -61,9 +62,7 @@ const handler: PlasmoMessaging.MessageHandler<
         res.send({
             success: false,
             error:
-                error instanceof Error
-                    ? error.message
-                    : "Main World 注入失败"
+                error instanceof Error ? error.message : "Main World 注入失败"
         })
     }
 }

@@ -3,8 +3,8 @@
  * 提供跨页面、跨会话的持久化缓存
  */
 
-import type { CacheEntry, CacheKeyParams, CacheStats } from "./types"
 import { generateCacheKey } from "./cacheKeyGenerator"
+import type { CacheEntry, CacheKeyParams, CacheStats } from "./types"
 
 /**
  * L2 持久化缓存配置
@@ -61,7 +61,7 @@ export class L2PersistentCache {
                 resolve()
             }
 
-            request.onupgradeneeded = (event) => {
+            request.onupgradeneeded = event => {
                 const db = (event.target as IDBOpenDBRequest).result
 
                 // 如果存储已存在，先删除
@@ -112,7 +112,7 @@ export class L2PersistentCache {
 
         const key = await generateCacheKey(params)
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readonly"
@@ -209,7 +209,7 @@ export class L2PersistentCache {
             return
         }
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readwrite"
@@ -255,7 +255,7 @@ export class L2PersistentCache {
 
         const key = await generateCacheKey(params)
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readwrite"
@@ -311,7 +311,7 @@ export class L2PersistentCache {
             return 0
         }
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readonly"
@@ -341,7 +341,7 @@ export class L2PersistentCache {
         const now = Date.now()
         let cleanedCount = 0
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readwrite"
@@ -350,7 +350,7 @@ export class L2PersistentCache {
             const index = store.index("expiresAt")
             const request = index.openCursor()
 
-            request.onsuccess = (event) => {
+            request.onsuccess = event => {
                 const cursor = (event.target as IDBRequest).result
                 if (cursor) {
                     const entry = cursor.value as CacheEntry
@@ -389,7 +389,7 @@ export class L2PersistentCache {
         const cutoffTime = Date.now() - maxAge
         let cleanedCount = 0
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readwrite"
@@ -398,7 +398,7 @@ export class L2PersistentCache {
             const index = store.index("createdAt")
             const request = index.openCursor()
 
-            request.onsuccess = (event) => {
+            request.onsuccess = event => {
                 const cursor = (event.target as IDBRequest).result
                 if (cursor) {
                     const entry = cursor.value as CacheEntry
@@ -433,7 +433,7 @@ export class L2PersistentCache {
 
         let cleanedCount = 0
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readwrite"
@@ -441,7 +441,7 @@ export class L2PersistentCache {
             const store = transaction.objectStore(this.storeName)
             const request = store.openCursor()
 
-            request.onsuccess = (event) => {
+            request.onsuccess = event => {
                 const cursor = (event.target as IDBRequest).result
                 if (cursor) {
                     const entry = cursor.value as CacheEntry
@@ -485,7 +485,7 @@ export class L2PersistentCache {
         const toDelete = currentSize - maxSize
         let deletedCount = 0
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readwrite"
@@ -494,7 +494,7 @@ export class L2PersistentCache {
             const index = store.index("lastAccessTime")
             const request = index.openCursor()
 
-            request.onsuccess = (event) => {
+            request.onsuccess = event => {
                 const cursor = (event.target as IDBRequest).result
                 if (cursor && deletedCount < toDelete) {
                     cursor.delete()
@@ -531,7 +531,7 @@ export class L2PersistentCache {
             }
         }
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readonly"
@@ -543,7 +543,7 @@ export class L2PersistentCache {
             let totalHits = 0
             let totalSize = 0
 
-            request.onsuccess = (event) => {
+            request.onsuccess = event => {
                 const cursor = (event.target as IDBRequest).result
                 if (cursor) {
                     const entry = cursor.value as CacheEntry
@@ -584,7 +584,7 @@ export class L2PersistentCache {
             return []
         }
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const transaction = this.db!.transaction(
                 [this.storeName],
                 "readonly"

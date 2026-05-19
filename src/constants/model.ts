@@ -218,13 +218,16 @@ export const SYSTEM_LLM_MODEL_NAMES: Record<SystemLLMModel, string> = {
     [SystemLLMModel.LLM_MODEL_QWEN_2d5_32B_INSTRUCT]: "Qwen2.5-32B-Instruct",
     [SystemLLMModel.LLM_MODEL_QWQ_PLUS_LATEST]: "qwq-plus-latest",
     [SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST]: "qwen-max-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST_THINKING]: "qwen-plus-latest-thinking",
+    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST_THINKING]:
+        "qwen-plus-latest-thinking",
     [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST]: "qwen-plus-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST_THINKING]: "qwen-turbo-latest-thinking",
+    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST_THINKING]:
+        "qwen-turbo-latest-thinking",
     [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST]: "qwen-turbo-latest",
     [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO]: "Doubao-1.5-pro",
     [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K]: "Doubao-1.5-lite-32K",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415]: "Doubao-1.5-thinking-pro-250415",
+    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415]:
+        "Doubao-1.5-thinking-pro-250415",
     [SystemLLMModel.LLM_MODEL_GEMINI_2d0_FLASH]: "gemini-2.0-flash",
     [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH]: "gemini-2.5-flash",
     [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE]: "gemini-2.5-flash-lite",

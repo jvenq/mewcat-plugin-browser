@@ -79,7 +79,9 @@ export async function clearStaleHotlinkDynamicRules(): Promise<void> {
 
     const dynamicRules = await chrome.declarativeNetRequest.getDynamicRules()
     const staleRuleIds = dynamicRules
-        .filter(rule => rule.id >= DNR_RULE_ID_BASE && rule.id <= DNR_RULE_ID_MAX)
+        .filter(
+            rule => rule.id >= DNR_RULE_ID_BASE && rule.id <= DNR_RULE_ID_MAX
+        )
         .map(rule => rule.id)
 
     if (!staleRuleIds.length) {
@@ -95,7 +97,10 @@ function ensureStaleRuleCleanup(): Promise<void> {
     if (!staleRuleCleanupPromise) {
         staleRuleCleanupPromise = clearStaleHotlinkDynamicRules().catch(
             error => {
-                console.warn("[TranslateImage] 清理残留 DNR 动态规则失败:", error)
+                console.warn(
+                    "[TranslateImage] 清理残留 DNR 动态规则失败:",
+                    error
+                )
             }
         )
     }

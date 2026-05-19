@@ -36,10 +36,13 @@ export const refreshTokenAtom = atomWithStorage<string>(
 )
 
 // 设置用户数据的写入原子
-export const setUserAtom = atom(null, (get, set, userData: Partial<BaseUser>) => {
-    const currentUser = get(userAtom)
-    set(userAtom, { ...currentUser, ...userData })
-})
+export const setUserAtom = atom(
+    null,
+    (get, set, userData: Partial<BaseUser>) => {
+        const currentUser = get(userAtom)
+        set(userAtom, { ...currentUser, ...userData })
+    }
+)
 
 // 重置用户数据的写入原子
 export const resetUserAtom = atom(null, (_get, set) => {

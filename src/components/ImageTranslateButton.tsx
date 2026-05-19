@@ -52,7 +52,9 @@ const SCxButton = styled.button.withConfig({
     opacity: ${props => (props.visible ? 1 : 0)};
     pointer-events: ${props => (props.visible ? "auto" : "none")};
     animation: ${props => (props.visible ? fadeIn : "none")} 0.15s ease;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 
     &:hover {
         transform: ${props => (props.translating ? "scale(1)" : "scale(1.1)")};

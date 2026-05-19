@@ -1,4 +1,5 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
+
 import type { CanvasHookError } from "../../types/canvas-hook"
 
 export interface CanvasHookEventRequest {
@@ -38,4 +39,3 @@ const handler: PlasmoMessaging.MessageHandler<
 }
 
 export default handler
-

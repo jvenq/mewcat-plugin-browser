@@ -20,11 +20,16 @@ const Input = styled.input<{ $isValid?: boolean }>`
     padding: 0 var(--space-4);
     padding-right: 80px;
     height: 36px;
-    border: 1px solid ${props => {
-        if (props.$isValid === false) {return "var(--error)"}
-        if (props.$isValid === true) {return "var(--success)"}
-        return "var(--border-color)"
-    }};
+    border: 1px solid
+        ${props => {
+            if (props.$isValid === false) {
+                return "var(--error)"
+            }
+            if (props.$isValid === true) {
+                return "var(--success)"
+            }
+            return "var(--border-color)"
+        }};
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
     font-family: "Monaco", "Consolas", "Courier New", monospace;
@@ -169,7 +174,9 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
     }
 
     const handleTest = async () => {
-        if (!onTest || !hasValue || testStatus === "testing") {return}
+        if (!onTest || !hasValue || testStatus === "testing") {
+            return
+        }
 
         setTestStatus("testing")
         setTestMessage("正在测试连接...")
@@ -217,7 +224,11 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
                             $variant="test"
                             onClick={handleTest}
                             disabled={testStatus === "testing"}
-                            title={testStatus === "testing" ? "测试中..." : testButtonText}
+                            title={
+                                testStatus === "testing"
+                                    ? "测试中..."
+                                    : testButtonText
+                            }
                         >
                             {testStatus === "testing" ? (
                                 <Icon name="loading" size={12} />
@@ -243,8 +254,12 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
 
             {testStatus !== "idle" && (
                 <StatusText $status={testStatus}>
-                    {testStatus === "testing" && <Icon name="loading" size={12} />}
-                    {testStatus === "success" && <Icon name="success" size={12} />}
+                    {testStatus === "testing" && (
+                        <Icon name="loading" size={12} />
+                    )}
+                    {testStatus === "success" && (
+                        <Icon name="success" size={12} />
+                    )}
                     {testStatus === "error" && <Icon name="error" size={12} />}
                     {testMessage}
                 </StatusText>

@@ -2,10 +2,7 @@ import { useAtom, useSetAtom } from "jotai"
 import styled from "styled-components"
 
 import { AUTO_DETECT_OPTION, languages } from "@/constants"
-import {
-    configAtom,
-    updateConfigAtom
-} from "@/state"
+import { configAtom, updateConfigAtom } from "@/state"
 
 import "@/styles/popup.scss"
 import "@/styles/theme.scss"

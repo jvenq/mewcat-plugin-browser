@@ -85,7 +85,9 @@ function resolveSiteRule(hostname: string): CanvasSiteRule | null {
     return CANVAS_SITE_RULES.find(rule => rule.pattern.test(hostname)) || null
 }
 
-export function getCanvasRolloutDecision(pageUrl?: string): CanvasRolloutDecision {
+export function getCanvasRolloutDecision(
+    pageUrl?: string
+): CanvasRolloutDecision {
     if (!ENABLE_CANVAS_REBUILD) {
         return {
             enabled: false,
@@ -152,4 +154,3 @@ export function getCanvasHookConfig() {
         }))
     }
 }
-

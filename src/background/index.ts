@@ -10,7 +10,9 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // 处理右键菜单点击事件
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (!tab?.id) {return}
+    if (!tab?.id) {
+        return
+    }
 
     try {
         await handleToggleImmersiveTranslate(tab.id)

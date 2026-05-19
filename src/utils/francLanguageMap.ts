@@ -504,10 +504,8 @@ export function detectChineseVariant(text: string): "zh-CN" | "zh-TW" | null {
 
     if (simplifiedCount >= threshold && simplifiedCount > traditionalCount) {
         return "zh-CN"
-    } if (
-        traditionalCount >= threshold &&
-        traditionalCount > simplifiedCount
-    ) {
+    }
+    if (traditionalCount >= threshold && traditionalCount > simplifiedCount) {
         return "zh-TW"
     }
 

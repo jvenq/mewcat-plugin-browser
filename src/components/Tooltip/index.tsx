@@ -227,8 +227,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
     const arrowStyles: React.CSSProperties = middlewareData.arrow
         ? {
-              left: middlewareData.arrow.x != null ? `${middlewareData.arrow.x}px` : "",
-              top: middlewareData.arrow.y != null ? `${middlewareData.arrow.y}px` : "",
+              left:
+                  middlewareData.arrow.x != null
+                      ? `${middlewareData.arrow.x}px`
+                      : "",
+              top:
+                  middlewareData.arrow.y != null
+                      ? `${middlewareData.arrow.y}px`
+                      : "",
               [staticSide]: "-4px"
           }
         : {}

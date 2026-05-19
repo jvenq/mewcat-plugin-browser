@@ -187,7 +187,9 @@ export class MutationObserverManager {
             }
 
             // 检查是否有错误节点（翻译失败）
-            const hasError = displayNode.querySelector(".mewcat-error-container")
+            const hasError = displayNode.querySelector(
+                ".mewcat-error-container"
+            )
             if (hasError) {
                 if (this.debug) {
                     console.log(

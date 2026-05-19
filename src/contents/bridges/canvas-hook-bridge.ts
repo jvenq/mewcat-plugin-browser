@@ -1,13 +1,14 @@
 import { sendToBackground } from "@plasmohq/messaging"
-import type {
-    InjectMainWorldHookRequest,
-    InjectMainWorldHookResponse
-} from "../../background/messages/inject-main-world-hook"
+
+import { shouldEnableCanvasHook } from "../../background/config/canvas-sites"
 import type {
     CanvasHookEventRequest,
     CanvasHookEventResponse
 } from "../../background/messages/canvas-hook-event"
-import { shouldEnableCanvasHook } from "../../background/config/canvas-sites"
+import type {
+    InjectMainWorldHookRequest,
+    InjectMainWorldHookResponse
+} from "../../background/messages/inject-main-world-hook"
 import {
     CANVAS_HOOK_CHANNEL,
     type CanvasHookError,
@@ -132,7 +133,9 @@ export function startCanvasHookBridge() {
     window.addEventListener("message", handleWindowMessage)
 }
 
-export async function ensureCanvasHookInjected(pageUrl: string): Promise<boolean> {
+export async function ensureCanvasHookInjected(
+    pageUrl: string
+): Promise<boolean> {
     if (!shouldEnableCanvasHook(pageUrl)) {
         return false
     }

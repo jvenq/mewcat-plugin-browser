@@ -64,8 +64,12 @@ const NumberInput: React.FC<NumberInputProps> = ({
 }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = parseInt(e.target.value) || 0
-        if (min !== undefined && newValue < min) {return}
-        if (max !== undefined && newValue > max) {return}
+        if (min !== undefined && newValue < min) {
+            return
+        }
+        if (max !== undefined && newValue > max) {
+            return
+        }
         onChange(newValue)
     }
 

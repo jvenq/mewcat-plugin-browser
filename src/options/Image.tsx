@@ -18,7 +18,9 @@ export const Image: React.FunctionComponent = () => {
                     <Switch
                         checked={config.enableImageTranslateButton || false}
                         onChange={checked =>
-                            updateConfig({ enableImageTranslateButton: checked })
+                            updateConfig({
+                                enableImageTranslateButton: checked
+                            })
                         }
                     />
                 </FormRow>
@@ -31,9 +33,7 @@ export const Image: React.FunctionComponent = () => {
                         value={config.imageTranslateProvider || "系统"}
                         onChange={() => {}}
                         disabled
-                        options={[
-                            { value: "系统", label: "系统" }
-                        ]}
+                        options={[{ value: "系统", label: "系统" }]}
                     />
                 </FormRow>
             </OptionsSection>

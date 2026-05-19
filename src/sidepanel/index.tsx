@@ -11,11 +11,11 @@ import { accessTokenAtom } from "@/state"
 import { useConfig } from "@/state/config"
 import { TranslationServiceManager } from "@/translation/TranslationServiceManager"
 import { AiModel_Platform_Enum } from "@/types"
-import iconImg from "~/assets/icon.png"
 
 import LoadingDots from "../components/LoadingDots"
 import NativeSelect from "../components/NativeSelect"
 import SettingsPanel from "../components/SettingsPanel"
+import iconImg from "~/assets/icon.png"
 
 // ============================================
 // Layout
@@ -72,10 +72,15 @@ const Tab = styled.button<{ $active: boolean }>`
     border: none;
     background: transparent;
     font-size: var(--font-size-sm);
-    font-weight: ${p => (p.$active ? "var(--font-weight-semibold)" : "var(--font-weight-normal)")};
-    color: ${p => (p.$active ? "var(--primary-color)" : "var(--text-secondary)")};
+    font-weight: ${p =>
+        p.$active
+            ? "var(--font-weight-semibold)"
+            : "var(--font-weight-normal)"};
+    color: ${p =>
+        p.$active ? "var(--primary-color)" : "var(--text-secondary)"};
     cursor: pointer;
-    border-bottom: 2px solid ${p => (p.$active ? "var(--primary-color)" : "transparent")};
+    border-bottom: 2px solid
+        ${p => (p.$active ? "var(--primary-color)" : "transparent")};
     transition: all var(--transition-fast);
     margin-bottom: -1px;
 
@@ -276,7 +281,12 @@ const ResultBox = styled.div`
 const ResultText = styled.div<{ $empty?: boolean; $error?: boolean }>`
     font-size: var(--font-size-sm);
     line-height: var(--line-height-relaxed);
-    color: ${p => (p.$error ? "var(--error)" : p.$empty ? "var(--text-tertiary)" : "var(--text-primary)")};
+    color: ${p =>
+        p.$error
+            ? "var(--error)"
+            : p.$empty
+              ? "var(--text-tertiary)"
+              : "var(--text-primary)"};
     white-space: pre-wrap;
     word-break: break-word;
     min-height: 60px;
@@ -296,7 +306,8 @@ const IconButton = styled.button<{ $success?: boolean }>`
     background: transparent;
     font-size: var(--font-size-xs);
     color: ${p => (p.$success ? "var(--success)" : "var(--text-tertiary)")};
-    border-color: ${p => (p.$success ? "var(--success-border)" : "var(--border-color)")};
+    border-color: ${p =>
+        p.$success ? "var(--success-border)" : "var(--border-color)"};
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -440,10 +451,16 @@ const SlidePanel: React.FunctionComponent = () => {
             </Header>
 
             <TabBar>
-                <Tab $active={activeTab === "translate"} onClick={() => setActiveTab("translate")}>
+                <Tab
+                    $active={activeTab === "translate"}
+                    onClick={() => setActiveTab("translate")}
+                >
                     快捷翻译
                 </Tab>
-                <Tab $active={activeTab === "settings"} onClick={() => setActiveTab("settings")}>
+                <Tab
+                    $active={activeTab === "settings"}
+                    onClick={() => setActiveTab("settings")}
+                >
                     设置
                 </Tab>
             </TabBar>
@@ -465,7 +482,12 @@ const SlidePanel: React.FunctionComponent = () => {
                             title="交换语言"
                             disabled={sourceLang === "auto"}
                         >
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
                                 <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
                             </svg>
                         </SwapButton>
@@ -489,8 +511,20 @@ const SlidePanel: React.FunctionComponent = () => {
                             rows={5}
                         />
                         {inputText && (
-                            <ClearButton onClick={() => { setInputText(""); setResult(""); setError("") }} title="清空">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <ClearButton
+                                onClick={() => {
+                                    setInputText("")
+                                    setResult("")
+                                    setError("")
+                                }}
+                                title="清空"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                >
                                     <path d="M18 6L6 18M6 6l12 12" />
                                 </svg>
                             </ClearButton>
@@ -499,7 +533,12 @@ const SlidePanel: React.FunctionComponent = () => {
 
                     <ActionRow>
                         <PasteButton onClick={handlePaste}>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
                                 <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
                                 <rect x="9" y="3" width="6" height="4" rx="1" />
                             </svg>
@@ -513,7 +552,12 @@ const SlidePanel: React.FunctionComponent = () => {
                             {loading ? (
                                 <LoadingDots loading color="#fff" size={4} />
                             ) : (
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                >
                                     <path d="M5 3l14 9-14 9V3z" />
                                 </svg>
                             )}
@@ -526,28 +570,54 @@ const SlidePanel: React.FunctionComponent = () => {
                     <ResultBox>
                         {loading ? (
                             <LoadingBox>
-                                <LoadingDots loading color="var(--primary-color)" size={4} />
+                                <LoadingDots
+                                    loading
+                                    color="var(--primary-color)"
+                                    size={4}
+                                />
                                 翻译中…
                             </LoadingBox>
                         ) : (
-                            <ResultText $empty={!result && !error} $error={!!error}>
+                            <ResultText
+                                $empty={!result && !error}
+                                $error={!!error}
+                            >
                                 {error || result || "翻译结果将显示在这里"}
                             </ResultText>
                         )}
                         {result && !loading && (
                             <ResultActions>
-                                <IconButton $success={copied} onClick={handleCopy}>
+                                <IconButton
+                                    $success={copied}
+                                    onClick={handleCopy}
+                                >
                                     {copied ? (
                                         <>
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2.5"
+                                            >
                                                 <path d="M20 6L9 17l-5-5" />
                                             </svg>
                                             已复制
                                         </>
                                     ) : (
                                         <>
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                            >
+                                                <rect
+                                                    x="9"
+                                                    y="9"
+                                                    width="13"
+                                                    height="13"
+                                                    rx="2"
+                                                />
                                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                                             </svg>
                                             复制

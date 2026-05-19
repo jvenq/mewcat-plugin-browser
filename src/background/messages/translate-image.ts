@@ -1,10 +1,9 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
+import { getCachedTranslation } from "@/translation/PictureCache"
+
 import { resolveAllHotlinkHeaders } from "../config/hotlink-sites"
 import { withTemporaryHotlinkRule } from "../lib/hotlink-dnr"
-import {
-    getCachedTranslation
-} from "@/translation/PictureCache"
 
 // --- Types ---
 
@@ -28,7 +27,6 @@ export interface TranslateImageResponse {
     translatedImageUrl?: string
     error?: string
 }
-
 
 // --- Constants ---
 

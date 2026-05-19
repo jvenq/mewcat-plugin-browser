@@ -89,9 +89,11 @@ const collapseAnimation = keyframes`
 const SCxCollapseCard = styled.div<{ cardStyle?: CollapseProps["cardStyle"] }>`
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
-    border: 1px solid ${props => props.cardStyle?.borderColor || "var(--border-color)"};
+    border: 1px solid
+        ${props => props.cardStyle?.borderColor || "var(--border-color)"};
     overflow: hidden;
-    background: ${props => props.cardStyle?.backgroundColor || "var(--bg-secondary)"};
+    background: ${props =>
+        props.cardStyle?.backgroundColor || "var(--bg-secondary)"};
     transition: all var(--transition-base);
 
     &:hover {

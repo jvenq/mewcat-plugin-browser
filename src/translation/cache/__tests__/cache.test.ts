@@ -6,13 +6,13 @@
  */
 
 import {
-    normalizeText,
-    extractFingerprint,
     calculateSimilarity,
+    createDefaultCache,
+    extractFingerprint,
     extractTextTemplate,
     generateCacheKeySync,
     L1MemoryCache,
-    createDefaultCache,
+    normalizeText,
     type CacheKeyParams
 } from "../index"
 
@@ -25,29 +25,22 @@ export function testTextNormalization() {
     // 测试1: 基本规范化
     const text1 = "  Hello,  world!  "
     const normalized1 = normalizeText(text1)
-    console.assert(
-        normalized1 === "Hello, world!",
-        "❌ 基本规范化失败",
-        { expected: "Hello, world!", actual: normalized1 }
-    )
+    console.assert(normalized1 === "Hello, world!", "❌ 基本规范化失败", {
+        expected: "Hello, world!",
+        actual: normalized1
+    })
     console.log("✅ 基本规范化通过")
 
     // 测试2: 换行符统一
     const text2 = "Hello,\r\nworld!"
     const normalized2 = normalizeText(text2)
-    console.assert(
-        normalized2 === "Hello,\nworld!",
-        "❌ 换行符统一失败"
-    )
+    console.assert(normalized2 === "Hello,\nworld!", "❌ 换行符统一失败")
     console.log("✅ 换行符统一通过")
 
     // 测试3: 引号统一
     const text3 = "\u201cHello\u201d \u2018world\u2019"
     const normalized3 = normalizeText(text3)
-    console.assert(
-        normalized3 === '"Hello" \'world\'',
-        "❌ 引号统一失败"
-    )
+    console.assert(normalized3 === "\"Hello\" 'world'", "❌ 引号统一失败")
     console.log("✅ 引号统一通过")
 
     console.groupEnd()
@@ -226,11 +219,9 @@ export async function testTieredCache() {
 
         // 测试2: 获取缓存
         const result = await cache.get(params)
-        console.assert(
-            result === "你好，世界！",
-            "❌ 分层缓存获取失败",
-            { result }
-        )
+        console.assert(result === "你好，世界！", "❌ 分层缓存获取失败", {
+            result
+        })
         console.log("✅ 分层缓存获取成功")
 
         // 测试3: 批量操作
@@ -287,9 +278,7 @@ export async function runAllTests() {
     if (typeof indexedDB !== "undefined") {
         await testTieredCache()
     } else {
-        console.warn(
-            "⚠️ IndexedDB 不可用，跳过分层缓存测试（需要浏览器环境）"
-        )
+        console.warn("⚠️ IndexedDB 不可用，跳过分层缓存测试（需要浏览器环境）")
     }
 
     console.log("\n✅ 所有测试完成！")
@@ -302,7 +291,5 @@ if (typeof window !== "undefined") {
         runCacheTests?: () => Promise<void>
     }
     ;(window as unknown as WindowWithTests).runCacheTests = runAllTests
-    console.log(
-        "💡 提示：在浏览器控制台中运行 runCacheTests() 来执行测试"
-    )
+    console.log("💡 提示：在浏览器控制台中运行 runCacheTests() 来执行测试")
 }

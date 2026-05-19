@@ -39,7 +39,7 @@ const SCXListItem = styled.li`
     font-size: var(--font-size-sm);
     color: var(--text-primary);
     transition: all var(--transition-fast);
-    
+
     &:hover {
         background-color: var(--gray-100);
     }

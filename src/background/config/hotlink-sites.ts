@@ -230,10 +230,7 @@ export function resolveAllHotlinkHeaders(
             return
         }
 
-        const pageAllowed = isPageHostAllowed(
-            pageHost,
-            rule.pageHostAllowList
-        )
+        const pageAllowed = isPageHostAllowed(pageHost, rule.pageHostAllowList)
         if (!pageAllowed) {
             return
         }

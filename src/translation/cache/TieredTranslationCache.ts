@@ -3,15 +3,15 @@
  * 整合 L1 内存缓存和 L2 持久化缓存，提供统一的缓存接口
  */
 
-import type { CacheKeyParams, CacheStats } from "./types"
-import { L1MemoryCache, type L1CacheConfig } from "./L1MemoryCache"
-import { L2PersistentCache, type L2CacheConfig } from "./L2PersistentCache"
 import {
     CacheCleanupManager,
-    type CleanupStrategyConfig,
-    type CleanupResult
+    type CleanupResult,
+    type CleanupStrategyConfig
 } from "./CacheCleanupManager"
+import { L1MemoryCache, type L1CacheConfig } from "./L1MemoryCache"
+import { L2PersistentCache, type L2CacheConfig } from "./L2PersistentCache"
 import { normalizeText } from "./textNormalizer"
+import type { CacheKeyParams, CacheStats } from "./types"
 
 /**
  * 分层缓存配置
@@ -48,7 +48,8 @@ export class TieredTranslationCache {
         // 初始化 L1 缓存
         this.l1Cache = new L1MemoryCache({
             maxSize: config.l1Config?.maxSize ?? 1000,
-            defaultTTL: config.l1Config?.defaultTTL ?? this.defaultTTL ?? undefined
+            defaultTTL:
+                config.l1Config?.defaultTTL ?? this.defaultTTL ?? undefined
         })
 
         // 初始化 L2 缓存
@@ -152,8 +153,11 @@ export class TieredTranslationCache {
         if (this.enableL2) {
             this.l2Cache
                 .set(normalizedParams, translation, effectiveTTL)
-                .catch((error) => {
-                    console.error("[TieredCache] Failed to set L2 cache:", error)
+                .catch(error => {
+                    console.error(
+                        "[TieredCache] Failed to set L2 cache:",
+                        error
+                    )
                 })
         }
     }
@@ -163,13 +167,11 @@ export class TieredTranslationCache {
      * @param paramsList 缓存键参数列表
      * @returns 翻译结果映射（key: 原文, value: 译文）
      */
-    async batchGet(
-        paramsList: CacheKeyParams[]
-    ): Promise<Map<string, string>> {
+    async batchGet(paramsList: CacheKeyParams[]): Promise<Map<string, string>> {
         const results = new Map<string, string>()
 
         await Promise.all(
-            paramsList.map(async (params) => {
+            paramsList.map(async params => {
                 const result = await this.get(params)
                 if (result !== null) {
                     results.set(params.text, result)
@@ -314,23 +316,25 @@ export class TieredTranslationCache {
      * 导出缓存数据（用于备份）
      * @returns 缓存条目数组
      */
-    async exportCache(): Promise<Array<{
-        key: string
-        text: string
-        translation: string
-        sourceLang: string
-        targetLang: string
-        modelId: string | number
-        aiRole: string
-        createdAt: number
-        hitCount: number
-    }>> {
+    async exportCache(): Promise<
+        Array<{
+            key: string
+            text: string
+            translation: string
+            sourceLang: string
+            targetLang: string
+            modelId: string | number
+            aiRole: string
+            createdAt: number
+            hitCount: number
+        }>
+    > {
         if (!this.enableL2) {
             return []
         }
 
         const entries = await this.l2Cache.getAllEntries()
-        return entries.map((entry) => ({
+        return entries.map(entry => ({
             key: entry.key,
             text: entry.text,
             translation: entry.translation,
