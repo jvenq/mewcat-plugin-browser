@@ -291,3 +291,15 @@ pnpm package      # 打包为带日期的 ZIP
 - `src/background/config/hotlink-sites.generated.ts`：重新同步生成（`pnpm check:hotlink-rules` 检测到过期）
 
 **原因**：多处类型定义缺失或引用错误导致 typecheck 报 43 个错误，lint 报 1 个 error；hotlink-rules 生成文件过期
+
+---
+
+### 2026-05-19 — 新增插件 Logo 及 Prettier 自动格式化 hook
+
+**修改内容**：
+- `assets/icon.png`：替换为新设计的 mewCat 品牌 Logo——橙色圆角方形背景，扁平风格猫脸（奶油色头部、琥珀色眼睛、粉色鼻子、胡须、腮红），512×512 RGBA PNG，由 `scripts/gen-icon.js` 生成
+- `scripts/gen-icon.js`：新增图标生成脚本，使用纯 Node.js + zlib 实现抗锯齿像素绘制，无外部依赖
+- `.claude/settings.json`：新增 PostToolUse hook，在每次 Write/Edit `src/` 文件后自动执行 `pnpm format`
+- `CLAUDE.md`：新增格式规则说明
+
+**原因**：品牌视觉统一，替换旧图标；自动化 Prettier 格式检查减少人工操作
