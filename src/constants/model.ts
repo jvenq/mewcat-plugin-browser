@@ -6,8 +6,6 @@ import {
     HUNYUAN_LLM,
     MOONSHOT_LLM,
     OPENAI_LLM,
-    QWEN_LLM,
-    SystemLLMModel,
     ZHIPU_LLM,
     type LLMModel
 } from "@/types"
@@ -166,74 +164,37 @@ export const aiModelListMap = new Map<AiModel_Platform_Enum, LLMModel[]>([
 ])
 
 /**
- * 支持思考能力的模型集合
- * 包含所有具有深度推理能力的模型
+ * 支持思考能力的平台白名单
+ * 这些平台的模型可在「启用思考能力」开关中显示
  */
-export const THINKING_CAPABLE_MODELS = new Set<LLMModel>([
-    // DeepSeek 系列
-    DEEPSEEK_LLM.DEEPSEEK_REASONER,
-
-    // 月之暗面
-    MOONSHOT_LLM.KIMI_K2_2_5,
-
-    // 豆包
-    DOU_BAO_LLM.DOUBAO_SEED_1_8_251228,
-    DOU_BAO_LLM.GLM_4_7_251222,
-    DOU_BAO_LLM.DOUBAO_SEED_CODE_PREVIEW_251028,
-    DOU_BAO_LLM.DOUBAO_SEED_1_6_LITE_251015,
-    DOU_BAO_LLM.DOUBAO_SEED_1_6_FLASH_250828,
-    DOU_BAO_LLM.DOUBAO_SEED_1_6_VISION_250815,
-
-    // gemini
-    GEMINI_LLM.Gemini_3_Pro,
-    GEMINI_LLM.Gemini_3_Flash,
-    GEMINI_LLM.Gemini_2_5_Flash,
-    GEMINI_LLM.Gemini_2_5_Flash_Lite,
-    GEMINI_LLM.Gemini_2_5_Pro,
-
-    // qwen 系列（阿里云百炼）
-    QWEN_LLM.QWEN3_MAX,
-    QWEN_LLM.QWEN3_PLUS,
-    QWEN_LLM.QWEN3_TURBO
+export const THINKING_CAPABLE_PLATFORMS = new Set<AiModel_Platform_Enum>([
+    AiModel_Platform_Enum.DEEPSEEK,
+    AiModel_Platform_Enum.MOONSHOT,
+    AiModel_Platform_Enum.BAILIAN,
+    AiModel_Platform_Enum.HUOSHAN,
+    AiModel_Platform_Enum.GEMINI,
+    AiModel_Platform_Enum.ZHIPU,
+    AiModel_Platform_Enum.HUNYUAN
 ])
 
 /**
- * SystemLLMModel 枚举值到模型名称的映射
- * 用于 getLLMModelName 和 SYSTEM_LLM_MODEL_OPTIONS 标签生成
+ * 各平台官方默认 baseUrl
+ * 选择「官方模型」时使用，输入框只读展示
  */
-export const SYSTEM_LLM_MODEL_NAMES: Record<SystemLLMModel, string> = {
-    [SystemLLMModel.LLM_MODEL_UNSPECIFIED]: "未指定",
-    [SystemLLMModel.LLM_MODEL_GLM4_AIR]: "glm-4-air",
-    [SystemLLMModel.LLM_MODEL_GLM4_AIRX]: "glm-4-airx",
-    [SystemLLMModel.LLM_MODEL_GLM4_FLASHX]: "glm-4-flashx",
-    [SystemLLMModel.LLM_MODEL_GLM4_PLUS]: "glm-4-plus",
-    [SystemLLMModel.LLM_MODEL_GLM_4d5_FLASH]: "glm-4.5-flash",
-    [SystemLLMModel.LLM_MODEL_DEEPSEEK_CHAT]: "deepseek-chat",
-    [SystemLLMModel.LLM_MODEL_DEEPSEEK_R1]: "deepseek-r1",
-    [SystemLLMModel.LLM_MODEL_GPT4O_MINI]: "gpt-4o-mini",
-    [SystemLLMModel.LLM_MODEL_GPT4d1_NANO]: "gpt-4.1-nano",
-    [SystemLLMModel.LLM_MODEL_GPT4d1_MINI]: "gpt-4.1-mini",
-    [SystemLLMModel.LLM_MODEL_CLAUDE3_HAIKU]: "claude3-haiku",
-    [SystemLLMModel.LLM_MODEL_YI_LIGHTNING]: "yi-lightning",
-    [SystemLLMModel.LLM_MODEL_QWEN_2d5_32B_INSTRUCT]: "Qwen2.5-32B-Instruct",
-    [SystemLLMModel.LLM_MODEL_QWQ_PLUS_LATEST]: "qwq-plus-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_MAX_LATEST]: "qwen-max-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST_THINKING]:
-        "qwen-plus-latest-thinking",
-    [SystemLLMModel.LLM_MODEL_QWEN_PLUS_LATEST]: "qwen-plus-latest",
-    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST_THINKING]:
-        "qwen-turbo-latest-thinking",
-    [SystemLLMModel.LLM_MODEL_QWEN_TURBO_LATEST]: "qwen-turbo-latest",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_PRO]: "Doubao-1.5-pro",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_LITE_32K]: "Doubao-1.5-lite-32K",
-    [SystemLLMModel.LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415]:
-        "Doubao-1.5-thinking-pro-250415",
-    [SystemLLMModel.LLM_MODEL_GEMINI_2d0_FLASH]: "gemini-2.0-flash",
-    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH]: "gemini-2.5-flash",
-    [SystemLLMModel.LLM_MODEL_GEMINI_2d5_FLASH_LITE]: "gemini-2.5-flash-lite",
-    [SystemLLMModel.LLM_MODEL_KIMI_K2]: "Kimi-K2",
-    [SystemLLMModel.LLM_MODEL_BAAI_BGE_M3]: "BAAI/BGE-M3",
-    [SystemLLMModel.LLM_MODEL_ZHIPU_EMBEDDING_3]: "Zhipu/Embedding-3",
-    [SystemLLMModel.LLM_MODEL_BAAI_RERANK_V2_M3]: "AAI/bge-reranker-v2-m3",
-    [SystemLLMModel.LLM_MODEL_ZHIPU_RERANK]: "Zhipu/Rerank"
+export const PLATFORM_OFFICIAL_BASE_URLS: Record<
+    AiModel_Platform_Enum,
+    string
+> = {
+    [AiModel_Platform_Enum.HUOSHAN]: "https://ark.cn-beijing.volces.com/api/v3",
+    [AiModel_Platform_Enum.BAILIAN]:
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    [AiModel_Platform_Enum.ZHIPU]: "https://open.bigmodel.cn/api/paas/v4",
+    [AiModel_Platform_Enum.HUNYUAN]: "https://api.hunyuan.cloud.tencent.com/v1",
+    [AiModel_Platform_Enum.DEEPSEEK]: "https://api.deepseek.com/v1",
+    [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com/v1",
+    [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn/v1",
+    [AiModel_Platform_Enum.GEMINI]:
+        "https://generativelanguage.googleapis.com/v1beta/models",
+    [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
+    [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org"
 }

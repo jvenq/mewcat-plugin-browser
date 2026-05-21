@@ -9,15 +9,15 @@ export const AI_MODEL_UI_LIST: {
     description: string
     items: BaseModelParams[]
     testValidator:
-        | "validateHuoShanApiKey"
+        | "validateHuoshanApiKey"
         | "validateBaiLianApiKey"
         | "validateZhipuApiKey"
         | "validateDeepSeekApiKey"
         | "validateOpenAiApiKey"
         | "validateMoonshotApiKey"
         | "validateGeminiApiKey"
-        | "validateBaseModelApiKey"
-        | "validateSystemModelApiKey"
+        | "validateDeeplApiKey"
+        | "validateDeeplxApiKey"
     fields?: Partial<
         Record<
             BaseModelParams,
@@ -33,26 +33,11 @@ export const AI_MODEL_UI_LIST: {
     >
 }[] = [
     {
-        type: AiModel_Platform_Enum.SYSTEM,
-        title: "系统模型",
-        description: "使用系统模型进行翻译",
-        items: ["modelVersion"],
-        testValidator: "validateSystemModelApiKey", // 对应 ApiKeyValidator.validateDouBaoApiKey
-        fields: {
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：3.5",
-                helperText: "模型版本必须与系统模型版本一致"
-            }
-        }
-    },
-    {
         type: AiModel_Platform_Enum.HUOSHAN,
         title: "火山引擎",
         description: "使用火山引擎 AI 模型进行翻译",
-        items: ["apiKey", "endpoint", "modelVersion", "baseUrl"],
-        testValidator: "validateHuoShanApiKey", // 对应 ApiKeyValidator.validateDouBaoApiKey
+        items: ["apiKey", "endpoint", "modelName"],
+        testValidator: "validateHuoshanApiKey",
         fields: {
             apiKey: {
                 label: "火山引擎 API Key",
@@ -76,7 +61,7 @@ export const AI_MODEL_UI_LIST: {
             },
             modelName: {
                 label: "模型名称",
-                required: false,
+                required: true,
                 placeholder: "请输入模型名称，如：doubao-lite-4k",
                 helperText: "模型名称必须与接入点配置的模型一致",
                 helperLink: {
@@ -84,19 +69,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://www.volcengine.com/docs/82379/1263482"
                 },
                 defaultValue: "doubao-lite-4k"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在火山引擎控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder:
-                    "请输入基础 URL，如：https://ark.cn-beijing.volces.com/api/v3",
-                helperText: "基础 URL 可在火山引擎控制台的推理接入点页面获取"
             }
         }
     },
@@ -104,8 +76,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.BAILIAN,
         title: "阿里百炼",
         description: "使用阿里百炼 AI 进行翻译",
-        items: ["apiKey", "modelVersion", "baseUrl"],
-        testValidator: "validateBaiLianApiKey", // 对应 ApiKeyValidator.validateBaiLianApiKey
+        items: ["apiKey", "modelName"],
+        testValidator: "validateBaiLianApiKey",
         fields: {
             apiKey: {
                 label: "阿里百炼 API Key",
@@ -127,19 +99,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://help.aliyun.com/document_detail/2701262.html"
                 },
                 defaultValue: "qwen-turbo"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在阿里百炼控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder:
-                    "请输入基础 URL，如：https://open.bigmodel.cn/api/paas/v4",
-                helperText: ""
             }
         }
     },
@@ -147,8 +106,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.ZHIPU,
         title: "智谱",
         description: "使用智谱 AI 进行翻译",
-        items: ["apiKey", "modelVersion", "baseUrl"],
-        testValidator: "validateZhipuApiKey", // 对应 ApiKeyValidator.validateZhipuApiKey
+        items: ["apiKey", "modelName"],
+        testValidator: "validateZhipuApiKey",
         fields: {
             apiKey: {
                 label: "智谱 API Key",
@@ -170,20 +129,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://open.bigmodel.cn/models"
                 },
                 defaultValue: "glm-4"
-            },
-
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在智谱控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder:
-                    "请输入基础 URL，如：https://open.bigmodel.cn/api/paas/v4/chat/completions",
-                helperText: ""
             }
         }
     },
@@ -191,8 +136,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.HUNYUAN,
         title: "腾讯混元",
         description: "使用腾讯混元 AI 进行翻译",
-        items: ["apiKey", "endpoint", "modelVersion", "baseUrl"],
-        testValidator: "validateZhipuApiKey", // 对应 ApiKeyValidator 中复用的 validateZhipuApiKey（原代码逻辑）
+        items: ["apiKey", "endpoint", "modelName"],
+        testValidator: "validateZhipuApiKey",
         fields: {
             apiKey: {
                 label: "腾讯混元 API Key",
@@ -225,19 +170,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://cloud.tencent.com/document/product/1729/101850"
                 },
                 defaultValue: "hunyuan-pro"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在腾讯混元控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder:
-                    "请输入基础 URL，如：https://hunyuan.tencentcloudapi.com",
-                helperText: ""
             }
         }
     },
@@ -245,8 +177,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.DEEPSEEK,
         title: "DeepSeek",
         description: "使用深度求索 AI 进行翻译（支持通用 / 技术文本翻译）",
-        items: ["apiKey", "modelVersion", "baseUrl"],
-        testValidator: "validateDeepSeekApiKey", // 对应 ApiKeyValidator.validateDeepSeekApiKey
+        items: ["apiKey", "modelName"],
+        testValidator: "validateDeepSeekApiKey",
         fields: {
             apiKey: {
                 label: "DeepSeek API Key",
@@ -270,18 +202,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://platform.deepseek.com/models"
                 },
                 defaultValue: "deepseek-chat"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在深度求索控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder: " 默认：https://api.deepseek.com/v1",
-                helperText: "仅当需要使用代理或私有部署时修改"
             }
         }
     },
@@ -289,8 +209,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.OPENAI,
         title: "ChatGPT（OpenAI）",
         description: "使用 OpenAI ChatGPT 进行翻译（支持多语言精准翻译）",
-        items: ["apiKey", "modelVersion", "baseUrl"],
-        testValidator: "validateOpenAiApiKey", // 对应 ApiKeyValidator.validateOpenAiApiKey
+        items: ["apiKey", "modelName"],
+        testValidator: "validateOpenAiApiKey",
         fields: {
             apiKey: {
                 label: "OpenAI API Key",
@@ -314,19 +234,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://platform.openai.com/docs/models/overview"
                 },
                 defaultValue: "gpt-3.5-turbo"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在 OpenAI 控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder: " 示例：https://your-proxy-url.com/v1",
-                helperText:
-                    "国内用户需配置合规代理地址，否则无法访问 OpenAI 官方 API"
             }
         }
     },
@@ -334,8 +241,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.MOONSHOT,
         title: "Moonshot（月之暗面）",
         description: "使用月之暗面 AI 进行翻译（支持超长文本与多语言）",
-        items: ["apiKey", "modelVersion", "baseUrl"],
-        testValidator: "validateMoonshotApiKey", // 对应 ApiKeyValidator.validateMoonshotApiKey
+        items: ["apiKey", "modelName"],
+        testValidator: "validateMoonshotApiKey",
         fields: {
             apiKey: {
                 label: "Moonshot API Key",
@@ -359,18 +266,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://platform.moonshot.cn/docs/model-intro"
                 },
                 defaultValue: "moonshot-v1-8k"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在月之暗面控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder: " 默认：https://api.moonshot.cn/v1",
-                helperText: ""
             }
         }
     },
@@ -378,8 +273,8 @@ export const AI_MODEL_UI_LIST: {
         type: AiModel_Platform_Enum.GEMINI,
         title: "Gemini",
         description: "使用 Gemini 进行翻译",
-        items: ["apiKey", "modelVersion", "baseUrl"],
-        testValidator: "validateGeminiApiKey", // 对应 ApiKeyValidator.validateGeminiApiKey
+        items: ["apiKey", "modelName"],
+        testValidator: "validateGeminiApiKey",
         fields: {
             apiKey: {
                 label: "Gemini API Key",
@@ -403,20 +298,6 @@ export const AI_MODEL_UI_LIST: {
                     url: "https://ai.google.dev/docs/models/gemini"
                 },
                 defaultValue: "gemini-pro"
-            },
-            modelVersion: {
-                label: "模型版本",
-                required: true,
-                placeholder: "请输入模型版本，如：20230915",
-                helperText: "模型版本可在 Google Cloud 控制台的模型详情页面获取"
-            },
-            baseUrl: {
-                label: "基础 URL（可选,默认官方地址）",
-                required: false,
-                placeholder:
-                    " 默认：https://generativelanguage.googleapis.com/v1beta/models",
-                helperText:
-                    "仅当需要使用代理时修改，注意 URL 需包含 '/v1beta/models' 路径"
             }
         }
     },
@@ -425,7 +306,7 @@ export const AI_MODEL_UI_LIST: {
         title: "DeepL",
         description: "使用 DeepL 进行翻译（支持高质量多语言翻译）",
         items: ["apiKey"],
-        testValidator: "validateBaseModelApiKey", // 对应 ApiKeyValidator.validateBaseModelApiKey
+        testValidator: "validateDeeplApiKey",
         fields: {
             apiKey: {
                 label: "DeepL API Key",
@@ -444,7 +325,7 @@ export const AI_MODEL_UI_LIST: {
         title: "DeepLX",
         description: "使用 DeepLX 进行翻译（支持专业领域翻译）",
         items: ["apiKey"],
-        testValidator: "validateBaseModelApiKey", // 对应 ApiKeyValidator.validateBaseModelApiKey
+        testValidator: "validateDeeplxApiKey",
         fields: {
             apiKey: {
                 label: "DeepLX API Key",

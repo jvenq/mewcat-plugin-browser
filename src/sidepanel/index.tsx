@@ -1,4 +1,3 @@
-import { useAtomValue } from "jotai"
 import { clone } from "ramda"
 import * as React from "react"
 import { useCallback, useRef, useState } from "react"
@@ -7,10 +6,8 @@ import styled from "styled-components"
 import "@/styles/theme.scss"
 
 import { AUTO_DETECT_OPTION, languages } from "@/constants"
-import { accessTokenAtom } from "@/state"
 import { useConfig } from "@/state/config"
 import { TranslationServiceManager } from "@/translation/TranslationServiceManager"
-import { AiModel_Platform_Enum } from "@/types"
 
 import LoadingDots from "../components/LoadingDots"
 import NativeSelect from "../components/NativeSelect"
@@ -367,7 +364,6 @@ const SlidePanel: React.FunctionComponent = () => {
     const abortRef = useRef<AbortController | null>(null)
 
     const config = useConfig()
-    const accessToken = useAtomValue(accessTokenAtom)
 
     const sourceOptions = [AUTO_DETECT_OPTION, ...languages.languages]
     const targetOptions = languages.languages
@@ -394,12 +390,6 @@ const SlidePanel: React.FunctionComponent = () => {
 
         try {
             const newConfig = clone(config)
-            newConfig.aiModelList = newConfig.aiModelList.map(item => {
-                if (item.type === AiModel_Platform_Enum.SYSTEM) {
-                    item.params.apiKey = accessToken
-                }
-                return item
-            })
             if (sourceLang !== "auto") {
                 newConfig.detectedLanguage = sourceLang
             }
@@ -417,7 +407,7 @@ const SlidePanel: React.FunctionComponent = () => {
         } finally {
             setLoading(false)
         }
-    }, [inputText, loading, config, accessToken, sourceLang, targetLang])
+    }, [inputText, loading, config, sourceLang, targetLang])
 
     const handleSwapLang = useCallback(() => {
         if (sourceLang === "auto") return

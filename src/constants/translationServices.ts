@@ -108,6 +108,5 @@ export const platformNameMap: Record<AiModel_Platform_Enum, string> = {
     [AiModel_Platform_Enum.MOONSHOT]: "Moonshot",
     [AiModel_Platform_Enum.GEMINI]: "Gemini",
     [AiModel_Platform_Enum.DEEPL]: "DeepL",
-    [AiModel_Platform_Enum.DEEPLX]: "DeepLX",
-    [AiModel_Platform_Enum.SYSTEM]: "系统模型"
+    [AiModel_Platform_Enum.DEEPLX]: "DeepLX"
 }

@@ -47,6 +47,12 @@ const Input = styled.input<{ $isValid?: boolean }>`
         color: var(--text-tertiary);
         font-family: var(--font-family);
     }
+
+    &:disabled {
+        background: var(--gray-100);
+        color: var(--text-secondary);
+        cursor: not-allowed;
+    }
 `
 
 const ButtonWrapper = styled.div`
@@ -133,6 +139,7 @@ interface ApiKeyInputProps {
     label: string
     value: string
     disabledVisitable?: boolean
+    disabled?: boolean
     onChange: (value: string) => void
     placeholder?: string
     helperText?: string
@@ -149,6 +156,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
     value,
     onChange,
     disabledVisitable,
+    disabled,
     placeholder = "请输入API Key",
     helperText,
     helperLink,
@@ -216,6 +224,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
                     value={value}
                     onChange={handleInputChange}
                     placeholder={placeholder}
+                    disabled={disabled}
                     $isValid={isValid}
                 />
                 <ButtonWrapper>

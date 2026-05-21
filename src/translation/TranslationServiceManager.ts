@@ -1,7 +1,7 @@
 import { find } from "ramda"
 
 import { platformNameMap } from "@/constants"
-import { getLLMModelName } from "@/utils"
+import { PLATFORM_OFFICIAL_BASE_URLS } from "@/constants/model"
 import { Toast, ToastType } from "@/utils/toast"
 
 import type { AiModel_Platform_Enum } from "../types"
@@ -76,11 +76,16 @@ export class TranslationServiceManager {
                 return
             }
             try {
+                const isOfficial = model.params.isOfficial !== false
+                const baseUrl = isOfficial
+                    ? PLATFORM_OFFICIAL_BASE_URLS[model.type]
+                    : model.params.baseUrl ||
+                      PLATFORM_OFFICIAL_BASE_URLS[model.type]
                 const translator = new UniversalTranslator(model.type, {
                     apiKey: model.params.apiKey,
-                    model: getLLMModelName(model.params.modelVersion),
+                    model: model.params.modelName,
                     aiRole: this.config.aiRole,
-                    baseUrl: model.params.baseUrl,
+                    baseUrl,
                     enableThinking: this.config.enableThinking
                 })
                 this.translators.set(model.type, translator)

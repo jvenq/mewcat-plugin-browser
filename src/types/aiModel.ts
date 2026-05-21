@@ -8,8 +8,7 @@ export enum AiModel_Platform_Enum {
     MOONSHOT = "MOONSHOT",
     GEMINI = "GEMINI",
     DEEPL = "DEEPL",
-    DEEPLX = "DEEPLX",
-    SYSTEM = "SYSTEM"
+    DEEPLX = "DEEPLX"
 }
 
 export interface BaseModel {
@@ -17,22 +16,18 @@ export interface BaseModel {
     id: string
     /** 模型类型（必传） */
     type: AiModel_Platform_Enum
-    /** 是否为系统模型 */
-    isSystem?: boolean
     /** 是否可用 */
     enabled: boolean
     /** 模型名称（必传） */
     name: string
     /** 模型配置 */
     params: {
-        /** 模型名称（必传） */
-        modelName: string | number
+        /** 实际发给 API 的模型标识符（如 gpt-3.5-turbo、deepseek-chat） */
+        modelName: string
+        /** 是否使用官方默认地址（true=官方且不可编辑 baseUrl，false=自定义可编辑 baseUrl） */
+        isOfficial?: boolean
         /** 基础URL（可选） */
         baseUrl?: string
-        /** 模型版本 */
-        modelVersion: LLMModel | null
-        /** 是否开启思维链(当开启后 GLM-4.6 GLM-4.5 为模型自动判断是否思考，GLM-4.5V 为强制思考) */
-        // thinking?: boolean
         /** 接入点 */
         endpoint?: string
         /** API密钥（必传） */
@@ -121,40 +116,6 @@ export enum DOU_BAO_LLM {
     DOUBAO_SEED_1_6_LITE_251015 = 800004,
     DOUBAO_SEED_1_6_FLASH_250828 = 800005,
     DOUBAO_SEED_1_6_VISION_250815 = 800006
-}
-
-export enum SystemLLMModel {
-    LLM_MODEL_UNSPECIFIED = 0,
-    LLM_MODEL_GLM4_AIR = 1,
-    LLM_MODEL_GLM4_AIRX = 2,
-    LLM_MODEL_GLM4_FLASHX = 3,
-    LLM_MODEL_GLM4_PLUS = 4,
-    LLM_MODEL_GLM_4d5_FLASH = 5,
-    LLM_MODEL_DEEPSEEK_CHAT = 6,
-    LLM_MODEL_DEEPSEEK_R1 = 7,
-    LLM_MODEL_GPT4O_MINI = 8,
-    LLM_MODEL_GPT4d1_NANO = 9,
-    LLM_MODEL_GPT4d1_MINI = 10,
-    LLM_MODEL_CLAUDE3_HAIKU = 11,
-    LLM_MODEL_YI_LIGHTNING = 12,
-    LLM_MODEL_QWEN_2d5_32B_INSTRUCT = 13,
-    LLM_MODEL_QWQ_PLUS_LATEST = 14,
-    LLM_MODEL_QWEN_MAX_LATEST = 15,
-    LLM_MODEL_QWEN_PLUS_LATEST_THINKING = 16,
-    LLM_MODEL_QWEN_PLUS_LATEST = 17,
-    LLM_MODEL_QWEN_TURBO_LATEST_THINKING = 18,
-    LLM_MODEL_QWEN_TURBO_LATEST = 19,
-    LLM_MODEL_DOUBAO_1d5_PRO = 20,
-    LLM_MODEL_DOUBAO_1d5_LITE_32K = 21,
-    LLM_MODEL_DOUBAO_1d5_THINKING_PRO_250415 = 22,
-    LLM_MODEL_GEMINI_2d0_FLASH = 23,
-    LLM_MODEL_GEMINI_2d5_FLASH = 24,
-    LLM_MODEL_GEMINI_2d5_FLASH_LITE = 25,
-    LLM_MODEL_KIMI_K2 = 26,
-    LLM_MODEL_BAAI_BGE_M3 = 27,
-    LLM_MODEL_ZHIPU_EMBEDDING_3 = 28,
-    LLM_MODEL_BAAI_RERANK_V2_M3 = 29,
-    LLM_MODEL_ZHIPU_RERANK = 30
 }
 
 export type ModelOption = {

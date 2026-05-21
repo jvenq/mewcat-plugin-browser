@@ -17,7 +17,7 @@ import { useAtom, useSetAtom } from "jotai"
 import { nanoid } from "nanoid"
 import { move } from "ramda"
 import * as React from "react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 import {
@@ -33,18 +33,13 @@ import {
 import { AddModel } from "@/components/AddModel"
 import { DEFAULT_VALUES, platformNameMap } from "@/constants"
 import { AiRoleOptions, AiRoleSystemPrompts } from "@/constants/aiRole"
-import { aiModelListMap } from "@/constants/model"
+import { PLATFORM_OFFICIAL_BASE_URLS } from "@/constants/model"
 import { configAtom, updateAiModelConfigAtom, updateConfigAtom } from "@/state"
-import { storage } from "@/state/constants"
 import { hideScrollBar } from "@/styles/scroll"
 import { ApiKeyValidator } from "@/translation/ApiKeyValidator"
 import type { AiModel_Platform_Enum } from "@/types"
-import { AiRole, type BaseModel, type LLMModel } from "@/types"
-import {
-    getLLMModelName,
-    getModelByModelList,
-    isModelThinkingCapable
-} from "@/utils/llmModel"
+import { AiRole, type BaseModel } from "@/types"
+import { getModelByModelList, isModelThinkingCapable } from "@/utils/llmModel"
 import { Toast, ToastType } from "@/utils/toast"
 
 import { AI_MODEL_UI_LIST } from "./constants"
@@ -119,6 +114,34 @@ const ConfigForm = styled.div`
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+`
+
+const SourceToggleGroup = styled.div`
+    display: inline-flex;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+`
+
+const SourceToggleButton = styled.button<{ $active: boolean }>`
+    padding: var(--space-2) var(--space-4);
+    border: none;
+    background: ${p =>
+        p.$active ? "var(--primary-color)" : "var(--bg-secondary)"};
+    color: ${p => (p.$active ? "var(--text-inverse)" : "var(--text-primary)")};
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+
+    &:hover {
+        background: ${p =>
+            p.$active ? "var(--primary-hover)" : "var(--gray-100)"};
+    }
+
+    & + & {
+        border-left: 1px solid var(--border-color);
+    }
 `
 
 const ModelItem = styled.div<{ $selected: boolean }>`
@@ -259,6 +282,10 @@ function LeftPanelItem({
         e.stopPropagation()
     }
 
+    const subtitle =
+        model.params.modelName ||
+        (model.params.isOfficial === false ? "自定义" : "官方")
+
     return (
         <ModelItem
             key={model.type}
@@ -272,11 +299,7 @@ function LeftPanelItem({
             <StatusDot $enabled={isEnabled} />
             <ModelItemContent>
                 <ModelItemTitle>{model.name}</ModelItemTitle>
-                <ModelItemSubtitle>
-                    {model.params.modelVersion
-                        ? getLLMModelName(model.params.modelVersion)
-                        : "未绑定模型"}
-                </ModelItemSubtitle>
+                <ModelItemSubtitle>{subtitle}</ModelItemSubtitle>
             </ModelItemContent>
             <ModelItemActions onClick={handleSwitchClick}>
                 <Switch
@@ -296,7 +319,6 @@ export const TranslateServices: React.FunctionComponent = () => {
     const [dragId, setDragId] = useState<string | null>(null)
     const [activeId, setActiveId] = useState<string>(config?.aiModelList[0]?.id)
 
-    // 单个模型测试状态
     const [testStatus, setTestStatus] = useState<{
         [key: string]: "idle" | "loading" | "success" | "error"
     }>({})
@@ -307,7 +329,6 @@ export const TranslateServices: React.FunctionComponent = () => {
         [key: string]: number
     }>({})
 
-    // 使用 ref 来跟踪上一个 activeId
     const prevActiveIdRef = useRef<string | undefined>(activeId)
 
     const currentModelData: BaseModel | undefined = config?.aiModelList?.find?.(
@@ -316,26 +337,28 @@ export const TranslateServices: React.FunctionComponent = () => {
     const currentModelConfig = AI_MODEL_UI_LIST.find?.(
         m => m.type === currentModelData?.type
     )
-    const modelOptions = useMemo(() => {
-        if (!activeId) {
-            return []
+    const isOfficial = currentModelData?.params?.isOfficial !== false
+    const officialBaseUrl = currentModelData
+        ? PLATFORM_OFFICIAL_BASE_URLS[currentModelData.type]
+        : ""
+
+    const resolveBaseUrl = useCallback((model: BaseModel | undefined) => {
+        if (!model) {
+            return ""
         }
-        return (
-            aiModelListMap.get(currentModelData?.type)?.map?.(model => ({
-                value: model,
-                label: getLLMModelName(model) || "意外数据"
-            })) || []
-        )
-    }, [activeId, currentModelData?.type])
+        if (model.params.isOfficial === false) {
+            return model.params.baseUrl || ""
+        }
+        return PLATFORM_OFFICIAL_BASE_URLS[model.type] || ""
+    }, [])
 
     const handleTestModel = useCallback(() => {
         const apiKey = currentModelData.params?.apiKey || ""
         const testParams = {
             apiKey,
             type: currentModelData.type,
-            baseUrl: currentModelData.params?.baseUrl || "",
-            model:
-                getLLMModelName(currentModelData?.params?.modelVersion) || "",
+            baseUrl: resolveBaseUrl(currentModelData),
+            model: currentModelData?.params?.modelName || "",
             endpoint: currentModelData.params?.endpoint
         }
         const validatorMethod =
@@ -346,9 +369,8 @@ export const TranslateServices: React.FunctionComponent = () => {
         return testParams.apiKey
             ? validatorMethod(testParams)
             : Promise.reject(new Error("请先填写完整的配置信息"))
-    }, [currentModelConfig?.testValidator, currentModelData])
+    }, [currentModelConfig?.testValidator, currentModelData, resolveBaseUrl])
 
-    // 测试单个模型
     const handleTestSingleModel = useCallback(
         async (modelId: string) => {
             const model = getModelByModelList(
@@ -359,7 +381,6 @@ export const TranslateServices: React.FunctionComponent = () => {
                 return
             }
 
-            // 清除之前的定时器
             if (testTimers[modelId]) {
                 clearTimeout(testTimers[modelId])
             }
@@ -372,22 +393,18 @@ export const TranslateServices: React.FunctionComponent = () => {
             const startTime = Date.now()
 
             try {
-                // 动态导入 UniversalTranslator 和 AiRole
                 const { UniversalTranslator } = await import(
                     "@/translation/UniversalTranslator"
                 )
                 const { AiRole } = await import("@/types")
-                const accessToken = await storage.get<string>("accessToken")
-                // 创建 UniversalTranslator 实例
                 const translator = new UniversalTranslator(model.type, {
                     apiKey: model.params.apiKey,
-                    baseUrl: model.params.baseUrl,
-                    model: getLLMModelName(model.params.modelVersion),
+                    baseUrl: resolveBaseUrl(model),
+                    model: model.params.modelName,
                     aiRole: AiRole.DEFAULT,
                     endpoint: model.params.endpoint
                 })
 
-                // 使用 translateText 进行测试
                 const testMessage = [
                     {
                         role: "user" as const,
@@ -400,10 +417,8 @@ export const TranslateServices: React.FunctionComponent = () => {
                     config.targetLanguage
                 )
 
-                // 计算耗时
                 const duration = Date.now() - startTime
 
-                // 验证翻译结果
                 const success =
                     translatedText &&
                     translatedText.trim().length > 0 &&
@@ -414,7 +429,6 @@ export const TranslateServices: React.FunctionComponent = () => {
                     [modelId]: success ? "success" : "error"
                 }))
 
-                // 显示测试结果 toast
                 Toast.show({
                     type: success ? ToastType.SUCCESS : ToastType.ERROR,
                     message: success
@@ -423,10 +437,8 @@ export const TranslateServices: React.FunctionComponent = () => {
                     duration: 3000
                 })
 
-                // 开始倒计时
                 setTestCountdown(prev => ({ ...prev, [modelId]: 5 }))
 
-                // 每秒更新倒计时
                 let countdown = 5
                 const countdownInterval = setInterval(() => {
                     countdown -= 1
@@ -440,7 +452,6 @@ export const TranslateServices: React.FunctionComponent = () => {
                     }
                 }, 1000)
 
-                // 5秒后恢复为idle状态
                 const timer = setTimeout(() => {
                     setTestStatus(prev => ({ ...prev, [modelId]: "idle" }))
                     setTestCountdown(prev => {
@@ -460,17 +471,14 @@ export const TranslateServices: React.FunctionComponent = () => {
                 const duration = Date.now() - startTime
                 setTestStatus(prev => ({ ...prev, [modelId]: "error" }))
 
-                // 显示测试失败 toast
                 Toast.show({
                     type: ToastType.ERROR,
                     message: `${model.name} 测试失败 (${duration}ms): ${error instanceof Error ? error.message : "未知错误"}`,
                     duration: 3000
                 })
 
-                // 开始倒计时
                 setTestCountdown(prev => ({ ...prev, [modelId]: 5 }))
 
-                // 每秒更新倒计时
                 let countdown = 5
                 const countdownInterval = setInterval(() => {
                     countdown -= 1
@@ -484,7 +492,6 @@ export const TranslateServices: React.FunctionComponent = () => {
                     }
                 }, 1000)
 
-                // 5秒后恢复为idle状态
                 const timer = setTimeout(() => {
                     setTestStatus(prev => ({ ...prev, [modelId]: "idle" }))
                     setTestCountdown(prev => {
@@ -502,23 +509,24 @@ export const TranslateServices: React.FunctionComponent = () => {
                 setTestTimers(prev => ({ ...prev, [modelId]: timer }))
             }
         },
-        [config?.aiModelList, config?.targetLanguage, testTimers]
+        [
+            config?.aiModelList,
+            config?.targetLanguage,
+            testTimers,
+            resolveBaseUrl
+        ]
     )
 
-    // 清理定时器
     useEffect(() => {
         return () => {
             Object.values(testTimers).forEach(timer => clearTimeout(timer))
         }
     }, [testTimers])
 
-    // 切换模型时清空测试状态
     useEffect(() => {
         const prevActiveId = prevActiveIdRef.current
 
-        // 如果 activeId 发生变化，清空之前模型的测试状态
         if (prevActiveId && prevActiveId !== activeId) {
-            // 清除之前模型的测试状态
             setTestStatus(prev => {
                 const newStatus = { ...prev }
                 delete newStatus[prevActiveId]
@@ -529,7 +537,6 @@ export const TranslateServices: React.FunctionComponent = () => {
                 delete newCountdown[prevActiveId]
                 return newCountdown
             })
-            // 清除定时器
             if (testTimers[prevActiveId]) {
                 clearTimeout(testTimers[prevActiveId])
                 setTestTimers(prev => {
@@ -540,11 +547,9 @@ export const TranslateServices: React.FunctionComponent = () => {
             }
         }
 
-        // 更新 ref
         prevActiveIdRef.current = activeId
     }, [activeId, testTimers])
 
-    // 获取按钮文本
     const getTestButtonText = useCallback(
         (modelId: string) => {
             const status = testStatus[modelId] || "idle"
@@ -615,6 +620,11 @@ export const TranslateServices: React.FunctionComponent = () => {
 
     const handleAddModel = useCallback(
         (platform: AiModel_Platform_Enum) => {
+            const platformConfig = AI_MODEL_UI_LIST.find(
+                m => m.type === platform
+            )
+            const defaultModelName =
+                platformConfig?.fields?.modelName?.defaultValue || ""
             updateConfig({
                 aiModelList: [
                     ...(config?.aiModelList || []),
@@ -624,8 +634,8 @@ export const TranslateServices: React.FunctionComponent = () => {
                         enabled: true,
                         name: platformNameMap[platform],
                         params: {
-                            modelName: "",
-                            modelVersion: null,
+                            modelName: defaultModelName,
+                            isOfficial: true,
                             apiKey: "",
                             baseUrl: "",
                             endpoint: ""
@@ -637,8 +647,28 @@ export const TranslateServices: React.FunctionComponent = () => {
         [config?.aiModelList, updateConfig]
     )
 
-    // 当前模型选项（只显示已启用的模型）
-    const currentModelOptions = useMemo(
+    const handleSourceChange = useCallback(
+        (nextIsOfficial: boolean) => {
+            if (!currentModelData) {
+                return
+            }
+            updateAiModelConfig({
+                id: currentModelData.id,
+                params: {
+                    isOfficial: nextIsOfficial,
+                    // 切回官方时清空用户自定义 URL；切到自定义时若空则带出官方默认值作为初始值
+                    baseUrl: nextIsOfficial
+                        ? ""
+                        : currentModelData.params.baseUrl ||
+                          PLATFORM_OFFICIAL_BASE_URLS[currentModelData.type] ||
+                          ""
+                }
+            })
+        },
+        [currentModelData, updateAiModelConfig]
+    )
+
+    const currentModelOptions = React.useMemo(
         () =>
             config?.aiModelList
                 ?.filter(model => model.enabled)
@@ -649,14 +679,12 @@ export const TranslateServices: React.FunctionComponent = () => {
         [config?.aiModelList]
     )
 
-    // 处理当前模型切换
     const handleCurrentModelChange = useCallback(
         (value: string) => {
             const selectedModel = config?.aiModelList?.find(
                 model => model.id === value
             )
 
-            // 如果切换到不支持思考的模型，自动禁用思考能力
             if (selectedModel && !isModelThinkingCapable(selectedModel)) {
                 updateConfig({
                     currentModel: value,
@@ -669,7 +697,6 @@ export const TranslateServices: React.FunctionComponent = () => {
         [config?.aiModelList, updateConfig]
     )
 
-    // 监听模型删除，如果当前选中的模型被删除，自动切换到第一个可用模型
     useEffect(() => {
         const currentModel = config?.currentModel
         const modelExists = config?.aiModelList?.some(
@@ -677,12 +704,10 @@ export const TranslateServices: React.FunctionComponent = () => {
         )
 
         if (!modelExists && config?.aiModelList?.length > 0) {
-            // 找到第一个启用的模型
             const firstEnabledModel = config.aiModelList.find(
                 model => model.enabled
             )
             if (firstEnabledModel) {
-                // 如果新模型不支持思考，自动禁用思考能力
                 if (!isModelThinkingCapable(firstEnabledModel)) {
                     updateConfig({
                         currentModel: firstEnabledModel.id,
@@ -701,8 +726,7 @@ export const TranslateServices: React.FunctionComponent = () => {
         }
     }, [activeId, config?.aiModelList])
 
-    // 检查当前模型是否支持思考能力
-    const currentModelSupportsThinking = useMemo(() => {
+    const currentModelSupportsThinking = React.useMemo(() => {
         const currentModel = config?.aiModelList?.find(
             model => model.id === activeId
         )
@@ -819,45 +843,68 @@ export const TranslateServices: React.FunctionComponent = () => {
                                     </ModelHeaderActions>
                                 </ModelHeader>
                                 <ConfigForm>
+                                    <FormRow
+                                        label="模型类型"
+                                        description="官方模型使用平台默认请求地址；选择自定义可填写代理或私有部署地址"
+                                    >
+                                        <SourceToggleGroup>
+                                            <SourceToggleButton
+                                                type="button"
+                                                $active={isOfficial}
+                                                onClick={() =>
+                                                    handleSourceChange(true)
+                                                }
+                                            >
+                                                官方模型
+                                            </SourceToggleButton>
+                                            <SourceToggleButton
+                                                type="button"
+                                                $active={!isOfficial}
+                                                onClick={() =>
+                                                    handleSourceChange(false)
+                                                }
+                                            >
+                                                自定义
+                                            </SourceToggleButton>
+                                        </SourceToggleGroup>
+                                    </FormRow>
+                                    <FormRow
+                                        label="请求地址"
+                                        required={!isOfficial}
+                                    >
+                                        <ApiKeyInput
+                                            label="请求地址"
+                                            value={
+                                                isOfficial
+                                                    ? officialBaseUrl
+                                                    : currentModelData.params
+                                                          .baseUrl || ""
+                                            }
+                                            disabledVisitable={true}
+                                            disabled={isOfficial}
+                                            onChange={value =>
+                                                updateAiModelConfig({
+                                                    id: currentModelData.id,
+                                                    params: { baseUrl: value }
+                                                })
+                                            }
+                                            placeholder={
+                                                isOfficial
+                                                    ? officialBaseUrl
+                                                    : "请输入自定义请求地址（如代理或私有部署）"
+                                            }
+                                            helperText={
+                                                isOfficial
+                                                    ? "已选择官方模型，使用平台默认地址"
+                                                    : "自定义请求地址生效，请确保地址可用"
+                                            }
+                                        />
+                                    </FormRow>
                                     {currentModelConfig?.items?.map(item => {
                                         const fieldConfig =
                                             currentModelConfig.fields[item]
                                         if (!fieldConfig) {
                                             return null
-                                        }
-                                        if (item === "modelVersion") {
-                                            return (
-                                                <FormRow
-                                                    key={item}
-                                                    label={fieldConfig.label}
-                                                    required={
-                                                        fieldConfig.required
-                                                    }
-                                                >
-                                                    <CustomSelect
-                                                        value={
-                                                            currentModelData
-                                                                ?.params?.[item]
-                                                        }
-                                                        onChange={value =>
-                                                            typeof value ===
-                                                                "number" &&
-                                                            updateAiModelConfig(
-                                                                {
-                                                                    id: currentModelData.id,
-                                                                    params: {
-                                                                        modelVersion:
-                                                                            value as LLMModel
-                                                                    }
-                                                                }
-                                                            )
-                                                        }
-                                                        withinPortal
-                                                        options={modelOptions}
-                                                        placeholder="选择翻译模型"
-                                                    />
-                                                </FormRow>
-                                            )
                                         }
                                         return (
                                             <FormRow

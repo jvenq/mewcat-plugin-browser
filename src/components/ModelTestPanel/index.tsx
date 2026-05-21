@@ -2,10 +2,9 @@ import React from "react"
 import styled from "styled-components"
 
 import { Button } from "@/components"
-import { storage } from "@/state/constants"
+import { PLATFORM_OFFICIAL_BASE_URLS } from "@/constants/model"
 import { UniversalTranslator } from "@/translation/UniversalTranslator"
-import { AiRole, type BaseModel, type LLMModel } from "@/types"
-import { getLLMModelName } from "@/utils"
+import { AiRole, type BaseModel } from "@/types"
 
 const SCxContainer = styled.div`
     width: 100%;
@@ -191,7 +190,7 @@ export interface TestSummary {
  * 模型测试结果
  */
 export interface ModelTestResult {
-    model: LLMModel
+    model: string
     modelName: string
     success: boolean
     translatedText?: string
@@ -221,20 +220,21 @@ const ModelTestPanel: React.FC<ModelTestPanelProps> = ({
         ) => void
     ): Promise<ModelTestResult[]> => {
         if (modelList && modelList.length > 0) {
-            const accessToken = await storage.get<string>("accessToken")
             const testResults: ModelTestResult[] = []
             for (let i = 0; i < modelList.length; i++) {
                 const model = modelList[i]
                 const startTime = Date.now()
 
+                const isOfficial = model.params.isOfficial !== false
+                const baseUrl = isOfficial
+                    ? PLATFORM_OFFICIAL_BASE_URLS[model.type]
+                    : model.params.baseUrl ||
+                      PLATFORM_OFFICIAL_BASE_URLS[model.type]
+
                 const translator = new UniversalTranslator(model.type, {
-                    apiKey: model.isSystem
-                        ? accessToken || ""
-                        : model.params.apiKey,
-                    baseUrl: model.params.baseUrl,
-                    model: model.isSystem
-                        ? model.params.modelVersion
-                        : getLLMModelName(model.params.modelVersion),
+                    apiKey: model.params.apiKey,
+                    baseUrl,
+                    model: model.params.modelName,
                     aiRole: AiRole.DEFAULT,
                     endpoint: model.params.endpoint
                 })
@@ -254,7 +254,7 @@ const ModelTestPanel: React.FC<ModelTestPanelProps> = ({
                     setResults(prev => [
                         ...prev,
                         {
-                            model: model.params.modelVersion,
+                            model: model.params.modelName,
                             modelName: model.name,
                             success: true,
                             translatedText,
@@ -266,7 +266,7 @@ const ModelTestPanel: React.FC<ModelTestPanelProps> = ({
                     setResults(prev => [
                         ...prev,
                         {
-                            model: model.params.modelVersion,
+                            model: model.params.modelName,
                             modelName: model.name,
                             success: false,
                             error:
