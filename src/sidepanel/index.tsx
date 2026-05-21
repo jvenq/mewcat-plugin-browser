@@ -11,7 +11,6 @@ import { TranslationServiceManager } from "@/translation/TranslationServiceManag
 
 import LoadingDots from "../components/LoadingDots"
 import NativeSelect from "../components/NativeSelect"
-import SettingsPanel from "../components/SettingsPanel"
 import iconImg from "~/assets/icon.png"
 
 // ============================================
@@ -53,42 +52,7 @@ const HeaderTitle = styled.h1`
 `
 
 // ============================================
-// Tabs
-// ============================================
-
-const TabBar = styled.div`
-    display: flex;
-    border-bottom: 1px solid var(--border-light);
-    background: var(--bg-secondary);
-    flex-shrink: 0;
-`
-
-const Tab = styled.button<{ $active: boolean }>`
-    flex: 1;
-    padding: var(--space-3) var(--space-4);
-    border: none;
-    background: transparent;
-    font-size: var(--font-size-sm);
-    font-weight: ${p =>
-        p.$active
-            ? "var(--font-weight-semibold)"
-            : "var(--font-weight-normal)"};
-    color: ${p =>
-        p.$active ? "var(--primary-color)" : "var(--text-secondary)"};
-    cursor: pointer;
-    border-bottom: 2px solid
-        ${p => (p.$active ? "var(--primary-color)" : "transparent")};
-    transition: all var(--transition-fast);
-    margin-bottom: -1px;
-
-    &:hover {
-        color: var(--primary-color);
-        background: var(--primary-light);
-    }
-`
-
-// ============================================
-// Quick Translate Tab
+// Quick Translate
 // ============================================
 
 const TranslatePane = styled.div`
@@ -334,26 +298,10 @@ const LoadingBox = styled.div`
 `
 
 // ============================================
-// Settings Tab
-// ============================================
-
-const SettingsPane = styled.div`
-    flex: 1;
-    overflow-y: auto;
-    padding: var(--space-4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
-
-// ============================================
 // Component
 // ============================================
 
-type TabId = "translate" | "settings"
-
 const SlidePanel: React.FunctionComponent = () => {
-    const [activeTab, setActiveTab] = useState<TabId>("translate")
     const [inputText, setInputText] = useState("")
     const [result, setResult] = useState("")
     const [loading, setLoading] = useState(false)
@@ -440,23 +388,7 @@ const SlidePanel: React.FunctionComponent = () => {
                 <HeaderTitle>翻译侧边栏</HeaderTitle>
             </Header>
 
-            <TabBar>
-                <Tab
-                    $active={activeTab === "translate"}
-                    onClick={() => setActiveTab("translate")}
-                >
-                    快捷翻译
-                </Tab>
-                <Tab
-                    $active={activeTab === "settings"}
-                    onClick={() => setActiveTab("settings")}
-                >
-                    设置
-                </Tab>
-            </TabBar>
-
-            {activeTab === "translate" && (
-                <TranslatePane>
+            <TranslatePane>
                     <LanguageRow>
                         <LangBox>
                             <NativeSelect
@@ -618,13 +550,6 @@ const SlidePanel: React.FunctionComponent = () => {
                         )}
                     </ResultBox>
                 </TranslatePane>
-            )}
-
-            {activeTab === "settings" && (
-                <SettingsPane>
-                    <SettingsPanel />
-                </SettingsPane>
-            )}
         </Container>
     )
 }

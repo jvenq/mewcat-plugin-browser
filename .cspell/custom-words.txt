@@ -32,6 +32,7 @@ kidrue
 KIMI
 kimi
 Kimi
+paas
 Lian
 logprobs
 mewcat
