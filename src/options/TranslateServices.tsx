@@ -349,7 +349,7 @@ export const TranslateServices: React.FunctionComponent = () => {
         if (model.params.isOfficial === false) {
             return model.params.baseUrl || ""
         }
-        return PLATFORM_OFFICIAL_BASE_URLS[model.type] || ""
+        return ""
     }, [])
 
     const handleTestModel = useCallback(() => {
@@ -656,12 +656,11 @@ export const TranslateServices: React.FunctionComponent = () => {
                 id: currentModelData.id,
                 params: {
                     isOfficial: nextIsOfficial,
-                    // 切回官方时清空用户自定义 URL；切到自定义时若空则带出官方默认值作为初始值
+                    // 官方模式不持久化 baseUrl（运行时通过 PLATFORM_OFFICIAL_BASE_URLS 映射）；
+                    // 切到自定义时仅保留用户已填的值，留空让用户主动填写
                     baseUrl: nextIsOfficial
                         ? ""
-                        : currentModelData.params.baseUrl ||
-                          PLATFORM_OFFICIAL_BASE_URLS[currentModelData.type] ||
-                          ""
+                        : currentModelData.params.baseUrl || ""
                 }
             })
         },

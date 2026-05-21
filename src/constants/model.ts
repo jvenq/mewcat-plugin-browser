@@ -190,7 +190,7 @@ export const PLATFORM_OFFICIAL_BASE_URLS: Record<
         "https://dashscope.aliyuncs.com/compatible-mode/v1",
     [AiModel_Platform_Enum.ZHIPU]: "https://open.bigmodel.cn/api/paas/v4",
     [AiModel_Platform_Enum.HUNYUAN]: "https://api.hunyuan.cloud.tencent.com/v1",
-    [AiModel_Platform_Enum.DEEPSEEK]: "https://api.deepseek.com/v1",
+    [AiModel_Platform_Enum.DEEPSEEK]: "https://api.deepseek.com",
     [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com/v1",
     [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn/v1",
     [AiModel_Platform_Enum.GEMINI]:

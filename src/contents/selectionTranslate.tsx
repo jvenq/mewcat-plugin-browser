@@ -112,6 +112,7 @@ const SCxCloseButton = styled.button`
 const SCxContent = styled.div``
 
 const SelectionTranslate = () => {
+    return null
     const [config] = useAtom(configAtom)
 
     const getRootElement = () =>

@@ -16,6 +16,7 @@ import {
 
 import { languages } from "../constants"
 import { AiRoleSystemPrompts, RULE_PROMPT } from "../constants/aiRole"
+import { PLATFORM_OFFICIAL_BASE_URLS } from "../constants/model"
 import type { Response } from "../services/request"
 
 /**
@@ -75,29 +76,12 @@ export class UniversalTranslator {
         provider: AiModel_Platform_Enum,
         customUrl?: string
     ): string {
-        if (customUrl) {
-            return customUrl
+        const trimmed = customUrl?.trim()
+        if (trimmed) {
+            return trimmed
         }
 
-        const baseUrls: Partial<Record<AiModel_Platform_Enum, string>> = {
-            [AiModel_Platform_Enum.HUOSHAN]:
-                "https://ark.cn-beijing.volces.com/api/v3",
-            [AiModel_Platform_Enum.BAILIAN]:
-                "https://dashscope.aliyuncs.com/compatible-mode/v1",
-            [AiModel_Platform_Enum.ZHIPU]:
-                "https://open.bigmodel.cn/api/paas/v4",
-            [AiModel_Platform_Enum.HUNYUAN]:
-                "https://api.hunyuan.cloud.tencent.com/v1",
-            [AiModel_Platform_Enum.DEEPSEEK]: "https://api.deepseek.com/v1",
-            [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com/v1",
-            [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn/v1",
-            [AiModel_Platform_Enum.GEMINI]:
-                "https://generativelanguage.googleapis.com/v1beta/models",
-            [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
-            [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org"
-        }
-
-        const url = baseUrls[provider]
+        const url = PLATFORM_OFFICIAL_BASE_URLS[provider]
         if (!url) {
             throw new Error(`Unsupported AI provider: ${provider}`)
         }

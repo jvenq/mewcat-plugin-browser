@@ -2,7 +2,6 @@ import React from "react"
 import styled from "styled-components"
 
 import { Button } from "@/components"
-import { PLATFORM_OFFICIAL_BASE_URLS } from "@/constants/model"
 import { UniversalTranslator } from "@/translation/UniversalTranslator"
 import { AiRole, type BaseModel } from "@/types"
 
@@ -226,10 +225,7 @@ const ModelTestPanel: React.FC<ModelTestPanelProps> = ({
                 const startTime = Date.now()
 
                 const isOfficial = model.params.isOfficial !== false
-                const baseUrl = isOfficial
-                    ? PLATFORM_OFFICIAL_BASE_URLS[model.type]
-                    : model.params.baseUrl ||
-                      PLATFORM_OFFICIAL_BASE_URLS[model.type]
+                const baseUrl = isOfficial ? undefined : model.params.baseUrl
 
                 const translator = new UniversalTranslator(model.type, {
                     apiKey: model.params.apiKey,

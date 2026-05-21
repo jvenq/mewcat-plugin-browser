@@ -101,13 +101,12 @@ export const GENERATED_HOTLINK_SITE_RULES: GeneratedHotlinkSiteRule[] = [
         matchHostPattern: "^viewer\\.comic-growl\\.com$",
         referer: "https://viewer.comic-growl.com/",
         priority: 101
-    }
+    },
 ]
 
 export const GENERATED_HOTLINK_SITE_RULES_META = {
     sourcePath: "assets\\request_modifier_rule.json",
-    sourceHash:
-        "66c8102fbc9aede459aa823324e0d8e7f76ec0a46aeeddb5e5d1e37ee134c113",
+    sourceHash: "8071ce44a4dee100203a028937b32b1c1cbda4210cea7bb7cda0f85e25aa6345",
     totalInputRules: 16,
     totalOutputRules: 15,
     skippedRules: 1

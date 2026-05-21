@@ -389,167 +389,161 @@ const SlidePanel: React.FunctionComponent = () => {
             </Header>
 
             <TranslatePane>
-                    <LanguageRow>
-                        <LangBox>
-                            <NativeSelect
-                                value={sourceLang}
-                                onChange={setSourceLang}
-                                options={sourceOptions}
-                                placeholder="源语言"
-                                size="sm"
-                            />
-                        </LangBox>
-                        <SwapButton
-                            onClick={handleSwapLang}
-                            title="交换语言"
-                            disabled={sourceLang === "auto"}
-                        >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            >
-                                <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
-                            </svg>
-                        </SwapButton>
-                        <LangBox>
-                            <NativeSelect
-                                value={targetLang}
-                                onChange={setTargetLang}
-                                options={targetOptions}
-                                placeholder="目标语言"
-                                size="sm"
-                            />
-                        </LangBox>
-                    </LanguageRow>
-
-                    <TextAreaWrapper>
-                        <StyledTextarea
-                            value={inputText}
-                            onChange={e => setInputText(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="输入或粘贴要翻译的文本…&#10;Ctrl+Enter 快速翻译"
-                            rows={5}
+                <LanguageRow>
+                    <LangBox>
+                        <NativeSelect
+                            value={sourceLang}
+                            onChange={setSourceLang}
+                            options={sourceOptions}
+                            placeholder="源语言"
+                            size="sm"
                         />
-                        {inputText && (
-                            <ClearButton
-                                onClick={() => {
-                                    setInputText("")
-                                    setResult("")
-                                    setError("")
-                                }}
-                                title="清空"
-                            >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2.5"
-                                >
-                                    <path d="M18 6L6 18M6 6l12 12" />
-                                </svg>
-                            </ClearButton>
-                        )}
-                    </TextAreaWrapper>
+                    </LangBox>
+                    <SwapButton
+                        onClick={handleSwapLang}
+                        title="交换语言"
+                        disabled={sourceLang === "auto"}
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
+                        </svg>
+                    </SwapButton>
+                    <LangBox>
+                        <NativeSelect
+                            value={targetLang}
+                            onChange={setTargetLang}
+                            options={targetOptions}
+                            placeholder="目标语言"
+                            size="sm"
+                        />
+                    </LangBox>
+                </LanguageRow>
 
-                    <ActionRow>
-                        <PasteButton onClick={handlePaste}>
+                <TextAreaWrapper>
+                    <StyledTextarea
+                        value={inputText}
+                        onChange={e => setInputText(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="输入或粘贴要翻译的文本…&#10;Ctrl+Enter 快速翻译"
+                        rows={5}
+                    />
+                    {inputText && (
+                        <ClearButton
+                            onClick={() => {
+                                setInputText("")
+                                setResult("")
+                                setError("")
+                            }}
+                            title="清空"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                            >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                        </ClearButton>
+                    )}
+                </TextAreaWrapper>
+
+                <ActionRow>
+                    <PasteButton onClick={handlePaste}>
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                            <rect x="9" y="3" width="6" height="4" rx="1" />
+                        </svg>
+                        粘贴
+                    </PasteButton>
+                    <TranslateButton
+                        onClick={handleTranslate}
+                        $loading={loading}
+                        disabled={loading || !inputText.trim()}
+                    >
+                        {loading ? (
+                            <LoadingDots loading color="#fff" size={4} />
+                        ) : (
                             <svg
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
                             >
-                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-                                <rect x="9" y="3" width="6" height="4" rx="1" />
+                                <path d="M5 3l14 9-14 9V3z" />
                             </svg>
-                            粘贴
-                        </PasteButton>
-                        <TranslateButton
-                            onClick={handleTranslate}
-                            $loading={loading}
-                            disabled={loading || !inputText.trim()}
-                        >
-                            {loading ? (
-                                <LoadingDots loading color="#fff" size={4} />
-                            ) : (
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <path d="M5 3l14 9-14 9V3z" />
-                                </svg>
-                            )}
-                            {loading ? "翻译中…" : "翻译"}
-                        </TranslateButton>
-                    </ActionRow>
-
-                    <Divider />
-
-                    <ResultBox>
-                        {loading ? (
-                            <LoadingBox>
-                                <LoadingDots
-                                    loading
-                                    color="var(--primary-color)"
-                                    size={4}
-                                />
-                                翻译中…
-                            </LoadingBox>
-                        ) : (
-                            <ResultText
-                                $empty={!result && !error}
-                                $error={!!error}
-                            >
-                                {error || result || "翻译结果将显示在这里"}
-                            </ResultText>
                         )}
-                        {result && !loading && (
-                            <ResultActions>
-                                <IconButton
-                                    $success={copied}
-                                    onClick={handleCopy}
-                                >
-                                    {copied ? (
-                                        <>
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2.5"
-                                            >
-                                                <path d="M20 6L9 17l-5-5" />
-                                            </svg>
-                                            已复制
-                                        </>
-                                    ) : (
-                                        <>
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                            >
-                                                <rect
-                                                    x="9"
-                                                    y="9"
-                                                    width="13"
-                                                    height="13"
-                                                    rx="2"
-                                                />
-                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                            </svg>
-                                            复制
-                                        </>
-                                    )}
-                                </IconButton>
-                            </ResultActions>
-                        )}
-                    </ResultBox>
-                </TranslatePane>
+                        {loading ? "翻译中…" : "翻译"}
+                    </TranslateButton>
+                </ActionRow>
+
+                <Divider />
+
+                <ResultBox>
+                    {loading ? (
+                        <LoadingBox>
+                            <LoadingDots
+                                loading
+                                color="var(--primary-color)"
+                                size={4}
+                            />
+                            翻译中…
+                        </LoadingBox>
+                    ) : (
+                        <ResultText $empty={!result && !error} $error={!!error}>
+                            {error || result || "翻译结果将显示在这里"}
+                        </ResultText>
+                    )}
+                    {result && !loading && (
+                        <ResultActions>
+                            <IconButton $success={copied} onClick={handleCopy}>
+                                {copied ? (
+                                    <>
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2.5"
+                                        >
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        已复制
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                        >
+                                            <rect
+                                                x="9"
+                                                y="9"
+                                                width="13"
+                                                height="13"
+                                                rx="2"
+                                            />
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                        </svg>
+                                        复制
+                                    </>
+                                )}
+                            </IconButton>
+                        </ResultActions>
+                    )}
+                </ResultBox>
+            </TranslatePane>
         </Container>
     )
 }
