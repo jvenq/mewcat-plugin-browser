@@ -67,22 +67,26 @@ const Section = styled.div`
     flex-direction: column;
     gap: 0;
     margin-bottom: var(--space-4);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
 `
 
 const ListItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-2) 0;
+    padding: var(--space-2) var(--space-3);
     border-bottom: 1px solid var(--border-light);
+    transition: background var(--transition-fast);
 
     &:last-child {
         border-bottom: none;
-        padding-bottom: 0;
     }
 
-    &:first-child {
-        padding-top: 0;
+    &:hover {
+        background: var(--gray-50);
     }
 `
 
@@ -127,9 +131,9 @@ const LanguageRow = styled.div`
     gap: var(--space-3);
     margin-top: var(--space-1);
     padding: var(--space-3);
-    background: rgba(119, 72, 249, 0.04);
+    background: var(--primary-light);
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-light);
+    border: 1px solid rgba(249, 115, 22, 0.15);
 `
 
 const LanguageBox = styled.div`
@@ -164,14 +168,14 @@ const ArrowIcon = styled.span`
 
 const SettingsButton = styled.button`
     width: 100%;
-    margin-top: var(--space-5);
+    margin-top: var(--space-3);
     padding: var(--space-3);
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    border: 1px dashed var(--border-color);
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -180,15 +184,15 @@ const SettingsButton = styled.button`
     transition: all var(--transition-fast);
 
     svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
     }
 
     &:hover {
         background: var(--primary-light);
         border-color: var(--primary-color);
+        border-style: solid;
         color: var(--primary-color);
-        box-shadow: var(--shadow-sm);
     }
 `
 

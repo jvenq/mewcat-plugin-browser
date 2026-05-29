@@ -31,15 +31,15 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-4);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--border-light);
     background: var(--bg-secondary);
     flex-shrink: 0;
 `
 
 const Logo = styled.img`
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: var(--radius-md);
 `
 
@@ -51,6 +51,16 @@ const HeaderTitle = styled.h1`
     flex: 1;
 `
 
+const HeaderBadge = styled.span`
+    font-size: var(--font-size-xs);
+    color: var(--primary-color);
+    background: var(--primary-light);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    border-radius: var(--radius-full);
+    padding: 1px 8px;
+    font-weight: var(--font-weight-medium);
+`
+
 // ============================================
 // Quick Translate
 // ============================================
@@ -59,9 +69,10 @@ const TranslatePane = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: var(--space-4);
+    padding: var(--space-3) var(--space-4) var(--space-4);
     gap: var(--space-3);
     overflow-y: auto;
+    min-height: 0;
 `
 
 const LanguageRow = styled.div`
@@ -130,7 +141,7 @@ const StyledTextarea = styled.textarea`
     &:focus {
         outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(119, 72, 249, 0.1);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
     }
 `
 
@@ -237,6 +248,7 @@ const ResultBox = styled.div`
     min-height: 100px;
     padding: var(--space-3);
     position: relative;
+    flex: 1;
 `
 
 const ResultText = styled.div<{ $empty?: boolean; $error?: boolean }>`
@@ -385,7 +397,8 @@ const SlidePanel: React.FunctionComponent = () => {
         <Container>
             <Header>
                 <Logo src={iconImg} alt="mewCat" />
-                <HeaderTitle>翻译侧边栏</HeaderTitle>
+                <HeaderTitle>快捷翻译</HeaderTitle>
+                <HeaderBadge>译趣喵</HeaderBadge>
             </Header>
 
             <TranslatePane>

@@ -32,40 +32,38 @@ const SCxContainer = styled.div.withConfig({
 
 const SCxFloatingButton = styled.div`
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    opacity: 0.7;
-    /* background: linear-gradient(135deg, #f0eaff 0%, #7748f9 100%); */
-    background: #f0eaff;
-    box-shadow: 0 4px 12px rgba(119, 72, 249, 0.25);
+    opacity: 0.85;
+    background: var(--bg-secondary, #ffffff);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(249, 115, 22, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     user-select: none;
-    border: 1px solid #e2e8f0;
+    border: 1.5px solid rgba(249, 115, 22, 0.25);
 
     &:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 20px rgba(119, 72, 249, 0.35);
-        /* background: linear-gradient(135deg, #f0eaff 0%, #6b3fd9 100%); */
-        /* border-color: #6b3fd9; */
+        opacity: 1;
+        transform: scale(1.08);
+        box-shadow: 0 4px 16px rgba(249, 115, 22, 0.2), 0 0 0 1px rgba(249, 115, 22, 0.3);
+        border-color: rgba(249, 115, 22, 0.5);
     }
 
     &:active {
-        transform: scale(0.95);
+        transform: scale(0.94);
     }
 `
 
 const SCxIcon = styled.img`
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
     -webkit-user-drag: none;
     user-select: none;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 `
 
 const SCxTickIcon = styled.div`
@@ -107,10 +105,10 @@ const SCxSettingsIcon = styled.div.withConfig({
     pointer-events: ${props => (props.visible ? "auto" : "none")};
 
     &:hover {
-        background: var(--primary-light);
-        border-color: var(--primary-color);
+        background: var(--primary-light, #fff7ed);
+        border-color: var(--primary-color, #f97316);
         transform: translateX(-50%) scale(1.1);
-        box-shadow: 0 4px 12px rgba(119, 72, 249, 0.25);
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
 
         svg {
             color: var(--primary-color);
