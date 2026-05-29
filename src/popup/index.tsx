@@ -15,18 +15,30 @@ import Tooltip from "../components/Tooltip"
 import iconImg from "~/assets/icon.png"
 
 // ============================================
-// Styled Components - Modern Minimalist Design
+// 夜·琥珀 — Popup
 // ============================================
 
 const PopupContainer = styled.div`
     width: 320px;
-    min-height: 400px;
+    min-height: 420px;
     padding: var(--space-4);
     display: flex;
     flex-direction: column;
     background: var(--bg-primary);
     font-family: var(--font-family);
     color: var(--text-primary);
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gradient-amber);
+        opacity: 0.8;
+    }
 `
 
 const Header = styled.div`
@@ -39,10 +51,10 @@ const Header = styled.div`
 `
 
 const Logo = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-primary-sm);
 `
 
 const HeaderInfo = styled.div`
@@ -50,26 +62,49 @@ const HeaderInfo = styled.div`
 `
 
 const HeaderTitle = styled.h1`
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
     font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
-    margin: 0 0 var(--space-1) 0;
+    margin: 0 0 2px 0;
     line-height: var(--line-height-tight);
+    letter-spacing: -0.01em;
 `
 
 const HeaderSubtitle = styled.span`
     font-size: var(--font-size-xs);
     color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+`
+
+const HeaderDot = styled.span`
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+    animation: amberPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+
+    @keyframes amberPulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.4;
+        }
+    }
 `
 
 const Section = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 0;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     overflow: hidden;
 `
 
@@ -77,7 +112,7 @@ const ListItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-2) var(--space-3);
+    padding: 10px var(--space-3);
     border-bottom: 1px solid var(--border-light);
     transition: background var(--transition-fast);
 
@@ -86,13 +121,13 @@ const ListItem = styled.div`
     }
 
     &:hover {
-        background: var(--gray-50);
+        background: var(--primary-muted);
     }
 `
 
 const ListItemLabel = styled.span`
     font-size: var(--font-size-sm);
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-weight: var(--font-weight-normal);
     display: flex;
     align-items: center;
@@ -108,7 +143,7 @@ const HelpIcon = styled.span`
     border-radius: 50%;
     border: 1px solid var(--text-tertiary);
     color: var(--text-tertiary);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: var(--font-weight-bold);
     cursor: help;
     transition: all var(--transition-fast);
@@ -128,12 +163,12 @@ const ModelSelectWrapper = styled.div`
 const LanguageRow = styled.div`
     display: flex;
     align-items: flex-end;
-    gap: var(--space-3);
-    margin-top: var(--space-1);
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
     padding: var(--space-3);
-    background: var(--primary-light);
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(249, 115, 22, 0.15);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
 `
 
 const LanguageBox = styled.div`
@@ -143,10 +178,13 @@ const LanguageBox = styled.div`
 
 const LanguageLabel = styled.label`
     display: block;
-    font-size: var(--font-size-xs);
+    font-size: 10px;
     color: var(--text-tertiary);
-    margin-bottom: var(--space-2);
+    margin-bottom: 6px;
     font-weight: var(--font-weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
 `
 
 const LanguageLabelRight = styled(LanguageLabel)`
@@ -154,10 +192,10 @@ const LanguageLabelRight = styled(LanguageLabel)`
 `
 
 const ArrowIcon = styled.span`
-    color: var(--text-tertiary);
+    color: var(--text-amber-dim);
     display: flex;
     align-items: flex-end;
-    padding-bottom: var(--space-1);
+    padding-bottom: 4px;
     flex-shrink: 0;
 
     svg {
@@ -168,13 +206,13 @@ const ArrowIcon = styled.span`
 
 const SettingsButton = styled.button`
     width: 100%;
-    margin-top: var(--space-3);
     padding: var(--space-3);
     background: transparent;
-    border: 1px dashed var(--border-color);
-    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
+    font-family: var(--font-family);
     color: var(--text-tertiary);
     cursor: pointer;
     display: flex;
@@ -190,9 +228,9 @@ const SettingsButton = styled.button`
 
     &:hover {
         background: var(--primary-light);
-        border-color: var(--primary-color);
-        border-style: solid;
+        border-color: var(--border-amber);
         color: var(--primary-color);
+        box-shadow: var(--primary-glow-sm);
     }
 `
 
@@ -276,6 +314,7 @@ function IndexPopup() {
                     <HeaderTitle>译趣喵</HeaderTitle>
                     <HeaderSubtitle>智能翻译助手</HeaderSubtitle>
                 </HeaderInfo>
+                <HeaderDot />
             </Header>
 
             <Section>

@@ -37,7 +37,9 @@ const SCxFloatingButton = styled.div`
     border-radius: 50%;
     opacity: 0.85;
     background: var(--bg-secondary, #ffffff);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(249, 115, 22, 0.15);
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(249, 115, 22, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,7 +51,9 @@ const SCxFloatingButton = styled.div`
     &:hover {
         opacity: 1;
         transform: scale(1.08);
-        box-shadow: 0 4px 16px rgba(249, 115, 22, 0.2), 0 0 0 1px rgba(249, 115, 22, 0.3);
+        box-shadow:
+            0 4px 16px rgba(249, 115, 22, 0.2),
+            0 0 0 1px rgba(249, 115, 22, 0.3);
         border-color: rgba(249, 115, 22, 0.5);
     }
 
@@ -59,8 +63,8 @@ const SCxFloatingButton = styled.div`
 `
 
 const SCxIcon = styled.img`
-    width: 24px;
-    height: 24px;
+    width: 45px;
+    height: 45px;
     object-fit: contain;
     -webkit-user-drag: none;
     user-select: none;
@@ -89,8 +93,8 @@ const SCxSettingsIcon = styled.div.withConfig({
     bottom: -45px;
     left: 50%;
     transform: translateX(-50%);
-    width: 32px;
-    height: 32px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
@@ -462,7 +466,7 @@ const TranslationControlCenter: React.FunctionComponent = () => {
                     onMouseEnter={handleSettingsIconMouseEnter}
                 >
                     <svg
-                        viewBox="0 0 24 24"
+                        viewBox="0 0 45 45"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"

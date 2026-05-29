@@ -71,7 +71,10 @@ export type UnifiedRequestBody =
           type: RequestType.TRANSLATION_ENGINE
           config: TranslationEngineRequestConfig
       }
-    | { type: RequestType.GOOGLE_TRANSLATE; config: GoogleTranslateRequestConfig }
+    | {
+          type: RequestType.GOOGLE_TRANSLATE
+          config: GoogleTranslateRequestConfig
+      }
     | { type: RequestType.ABORT; config: null }
 
 /**

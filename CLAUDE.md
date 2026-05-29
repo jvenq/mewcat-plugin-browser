@@ -394,4 +394,29 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：旧实现里官方 baseUrl 在三处重复硬编码（`UniversalTranslator.getBaseUrl` 内联表、`PLATFORM_OFFICIAL_BASE_URLS`、以及 `handleSourceChange` 切到自定义时塞进 `config.aiModelList[].params.baseUrl` 的持久化数据），改地址需要三处同步。本次统一以 `PLATFORM_OFFICIAL_BASE_URLS` 为唯一数据源——`UniversalTranslator` 内部 fallback、UI 显示「官方模式」时只读展示、调用方 `isOfficial` 时不传 baseUrl，均指向这一个常量。持久化层只保留用户真正填写的自定义地址，避免「修改官方默认值要同步修改用户旧数据」的耦合。`TranslateServices.tsx` 中「请求地址」FormRow 官方模式下的展示值仍走 `PLATFORM_OFFICIAL_BASE_URLS` 映射，纯 UI 展示不写回 config。存量用户：之前切过自定义然后切回官方的模型，`baseUrl` 字段可能残留官方 URL 字符串，但由于调用方在 `isOfficial=true` 时已忽略该字段直接走 fallback，无功能影响，不做迁移。
 
+---
+
+### 2026-05-29 — UI 大范围重构：夜·琥珀深色主题（Amber Nightdesk）
+
+**修改内容**：
+- `src/styles/theme.scss`（整体重写）：配色由「浅色 + 橙色点缀」改为「深墨底色 + 琥珀强调」的暗色系。
+  - 背景层 `--bg-base #0e0c09` → `--bg-elevated #2a2318`（暖黑墨色，非冷灰），新增 `--bg-glass`/`--bg-overlay`
+  - 主色改琥珀 `--primary-color #f5a623`，新增光晕变量 `--primary-glow`/`--primary-glow-sm` 与 `--gradient-amber`
+  - 文字改暖羊皮纸色阶 `--text-primary #ede0c4` → `--text-tertiary #7a6e52`，新增 `--text-amber`/`--text-amber-dim`
+  - `--gray-*` 灰阶整体反转为暖暗色；功能色（success/warning/error/info）改为暗背景适配的半透明底 + 边框
+  - 边框改琥珀微透 `rgba(245,166,35,*)`，新增 `--border-amber`
+  - 阴影加深（深色场景）并新增 `--shadow-primary` 琥珀辉光；字体改 `--font-family: "Sora"` 显示体 + `--font-mono: "DM Mono"` 等宽体（均带系统回退，未引入远程 `@import`，规避 MV3/CSP）
+  - mixin（`btn-primary`/`btn-secondary`/`btn-danger`/`input-base`/`card-*`/`list-item`/`divider`）全部改暗色 + 琥珀 hover；新增 `amber-scrollbar`、`amber-badge` 两个 mixin 及 `amberPulse` 关键帧
+- `src/styles/popup.scss`、`src/styles/options.scss`：body 背景改深色，新增字体平滑；options 滚动条改用 `@include amber-scrollbar`，所有增强类（按钮/状态/标签/shimmer/空状态）改暗色琥珀适配
+- `src/components/Switch/index.tsx`：轨道未选中态改 `--bg-elevated` + 边框，选中态琥珀填充 + `--primary-glow-sm`，hover 放大辉光
+- `src/components/LoadingDots/index.tsx`：脉冲动画改「呼吸」`keyframes`（styled-components `keyframes` 导入），每个点带琥珀光晕，默认色改 `--primary-color`，节奏放慢到 1.4s
+- `src/components/OptionsSidebar/index.tsx`：深色渐变侧栏，右缘竖向琥珀渐变线，激活项琥珀左条 + 发光圆点 + 边框，标题首字母琥珀色，副标题等宽大写
+- `src/components/OptionsContentHeader/index.tsx`：标题加大加粗、首字母琥珀，描述前缀竖条改琥珀渐变 + 辉光
+- `src/popup/index.tsx`（重写）：深色容器 + 顶部琥珀渐变条，header 加呼吸状态点，分组卡片/列表项/语言切换框/设置按钮全部改暗色琥珀样式
+- `src/sidepanel/index.tsx`（重写）：深色渐变背景 + header 发光分隔线，徽标改琥珀脉冲 badge（内联样式，非 SCSS mixin），输入框/结果框/按钮改暗色，翻译按钮用琥珀渐变；顺手补齐 3 处 `if` 大括号消除 lint warning
+- `.plasmo/index.d.ts`、`.plasmo/messaging.d.ts`：恢复（清理 Parcel 缓存锁时被误删），重新声明 `MessagesMetadata` 模块扩充，修复 `sendToBackground` 的 `name` 字段被推断为 `never` 的 typecheck 报错
+- `src/background/config/hotlink-sites.generated.ts`：重新同步生成
+
+**原因**：用户要求大范围重构 UI。原界面是「系统字体 + 浅色 + 扁平橙色」的通用 SaaS 极简风，缺乏品牌个性，与「译趣喵 / mewCat」playful 翻译猫的定位脱节。本次确定方向为 **夜·琥珀（Amber Nightdesk）**——暖黑墨底色 + 琥珀辉光 + Sora/DM Mono 字体的精致暗色风格，既减少长文阅读/翻译场景的眼睛疲劳，又通过统一的 token 体系（CSS 变量 + SCSS mixin）让 40+ 组件自动继承新观感，仅需改动 token、mixin 与 3 个外壳布局（popup / options / sidepanel）。页面注入的划词/沉浸式 UI 本次保持克制不动（避免在任意网站上喧宾夺主）。字体采用本地系统回退而非远程 `@import`，规避 MV3 CSP 限制。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。生产 `pnpm build` 因 Parcel 缓存文件（`.plasmo/cache/parcel/*.mdb`）被本机正在运行的 `pnpm dev` 进程占用而无法执行，与本次改动无关，待 dev 进程释放后可正常打包。
+
 

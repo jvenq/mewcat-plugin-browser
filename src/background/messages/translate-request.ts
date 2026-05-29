@@ -77,7 +77,10 @@ async function executeFetch(
     const [controller, timeoutId] = createAbortController(timeout)
 
     try {
-        const response = await fetch(url, { ...init, signal: controller.signal })
+        const response = await fetch(url, {
+            ...init,
+            signal: controller.signal
+        })
 
         const responseHeaders: Record<string, string> = {}
         response.headers.forEach((value, key) => {

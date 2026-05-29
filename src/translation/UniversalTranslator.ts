@@ -559,11 +559,17 @@ export class UniversalTranslator {
             msg.content ? msg.content.split(SEPARATOR) : [""]
         )
 
-        const requestBody = this.buildGoogleTranslateConfig(segments, targetLang)
+        const requestBody = this.buildGoogleTranslateConfig(
+            segments,
+            targetLang
+        )
         const response = await this.sendRequest(requestBody)
 
         const translations = response.content
-            ? this.parseGoogleTranslateResponse(response.content, segments.length)
+            ? this.parseGoogleTranslateResponse(
+                  response.content,
+                  segments.length
+              )
             : Array(segments.length).fill("")
 
         return translations.join(SEPARATOR)
@@ -597,7 +603,10 @@ export class UniversalTranslator {
     async checkConnection(): Promise<boolean> {
         // Google 翻译测试
         if (this.provider === AiModel_Platform_Enum.GOOGLE) {
-            const requestBody = this.buildGoogleTranslateConfig(["Hello"], "zh-CN")
+            const requestBody = this.buildGoogleTranslateConfig(
+                ["Hello"],
+                "zh-CN"
+            )
             const response = await this.sendRequest(requestBody)
             const results = response.content
                 ? this.parseGoogleTranslateResponse(response.content, 1)

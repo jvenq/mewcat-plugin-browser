@@ -33,7 +33,10 @@ import {
 import { AddModel } from "@/components/AddModel"
 import { DEFAULT_VALUES, platformNameMap } from "@/constants"
 import { AiRoleOptions, AiRoleSystemPrompts } from "@/constants/aiRole"
-import { PLATFORM_OFFICIAL_BASE_URLS, PLATFORM_OFFICIAL_MODEL_NAMES } from "@/constants/model"
+import {
+    PLATFORM_OFFICIAL_BASE_URLS,
+    PLATFORM_OFFICIAL_MODEL_NAMES
+} from "@/constants/model"
 import { configAtom, updateAiModelConfigAtom, updateConfigAtom } from "@/state"
 import { hideScrollBar } from "@/styles/scroll"
 import { ApiKeyValidator } from "@/translation/ApiKeyValidator"
