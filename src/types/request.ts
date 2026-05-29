@@ -12,6 +12,8 @@ export enum RequestType {
     AI_HTTP = "ai_http",
     /** 翻译引擎请求 (DEEPL/DEEPLX) */
     TRANSLATION_ENGINE = "translation_engine",
+    /** 谷歌翻译请求 */
+    GOOGLE_TRANSLATE = "google_translate",
     /** 中断所有请求 */
     ABORT = "abort"
 }
@@ -49,6 +51,18 @@ export interface TranslationEngineRequestConfig {
 }
 
 /**
+ * 谷歌翻译请求配置（translateHtml POST API）
+ * 请求体格式：[[segments[], sourceLang, targetLang], "te_lib"]
+ */
+export interface GoogleTranslateRequestConfig {
+    url: string
+    /** POST body: [[["seg1","seg2",...], sourceLang, targetLang], "te_lib"] */
+    body: [[[...string[]], string, string], string]
+    apiKey: string
+    timeout?: number
+}
+
+/**
  * 统一请求体
  */
 export type UnifiedRequestBody =
@@ -57,6 +71,7 @@ export type UnifiedRequestBody =
           type: RequestType.TRANSLATION_ENGINE
           config: TranslationEngineRequestConfig
       }
+    | { type: RequestType.GOOGLE_TRANSLATE; config: GoogleTranslateRequestConfig }
     | { type: RequestType.ABORT; config: null }
 
 /**

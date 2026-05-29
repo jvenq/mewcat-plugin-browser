@@ -3,8 +3,7 @@ import { find } from "ramda"
 import { platformNameMap } from "@/constants"
 import { Toast, ToastType } from "@/utils/toast"
 
-import type { AiModel_Platform_Enum } from "../types"
-import { type Message } from "../types"
+import { AiModel_Platform_Enum, type Message } from "../types"
 import type { ExtensionConfig } from "../types/config"
 import { UniversalTranslator } from "./UniversalTranslator"
 
@@ -67,7 +66,10 @@ export class TranslationServiceManager {
         )
 
         if (model) {
-            if (!model?.params?.apiKey?.trim()) {
+            if (
+                model.type !== AiModel_Platform_Enum.GOOGLE &&
+                !model?.params?.apiKey?.trim()
+            ) {
                 Toast.show({
                     type: ToastType.ERROR,
                     message: `${model.name || platformNameMap[model.type]} 配置不完整，缺少：API Key，请在设置中填写后再使用。`

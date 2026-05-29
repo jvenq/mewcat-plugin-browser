@@ -92,6 +92,12 @@ export const AI_TRANSLATION_SERVICES: TranslationService[] = [
         name: "DeepLX",
         description: "使用DeepLX进行翻译",
         type: AiModel_Platform_Enum.DEEPLX
+    },
+    {
+        key: "google",
+        name: "谷歌翻译",
+        description: "使用谷歌翻译进行翻译（免费，无需 API Key）",
+        type: AiModel_Platform_Enum.GOOGLE
     }
 ]
 
@@ -108,5 +114,6 @@ export const platformNameMap: Record<AiModel_Platform_Enum, string> = {
     [AiModel_Platform_Enum.MOONSHOT]: "Moonshot",
     [AiModel_Platform_Enum.GEMINI]: "Gemini",
     [AiModel_Platform_Enum.DEEPL]: "DeepL",
-    [AiModel_Platform_Enum.DEEPLX]: "DeepLX"
+    [AiModel_Platform_Enum.DEEPLX]: "DeepLX",
+    [AiModel_Platform_Enum.GOOGLE]: "谷歌翻译"
 }

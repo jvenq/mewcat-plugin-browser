@@ -10,13 +10,17 @@ import {
 } from "@/types"
 import {
     RequestType,
+    type AiHttpRequestConfig,
     type UnifiedRequestBody,
     type UnifiedResponse
 } from "@/types/request"
 
 import { languages } from "../constants"
 import { AiRoleSystemPrompts, RULE_PROMPT } from "../constants/aiRole"
-import { PLATFORM_OFFICIAL_BASE_URLS } from "../constants/model"
+import {
+    PLATFORM_OFFICIAL_BASE_URLS,
+    PLATFORM_OFFICIAL_MODEL_NAMES
+} from "../constants/model"
 import type { Response } from "../services/request"
 
 /**
@@ -59,7 +63,8 @@ export class UniversalTranslator {
     ) {
         this.provider = provider
         this.apiKey = config.apiKey
-        this.model = config.model
+        this.model =
+            config.model || PLATFORM_OFFICIAL_MODEL_NAMES[provider] || ""
         this.aiRole = config.aiRole
         this.enableThinking = config.enableThinking || false
         this.baseUrl = this.getBaseUrl(provider, config.baseUrl)
@@ -133,6 +138,8 @@ export class UniversalTranslator {
                 const cleanBaseUrl = this.baseUrl.replace(/\/$/, "")
                 return `${cleanBaseUrl}/${this.apiKey}/translate`
             }
+            case AiModel_Platform_Enum.GOOGLE:
+                return this.baseUrl
             default:
                 return `${this.baseUrl}/chat/completions`
         }
@@ -182,9 +189,7 @@ export class UniversalTranslator {
                     }
                 }
 
-            case AiModel_Platform_Enum.DEEPSEEK:
-            case AiModel_Platform_Enum.HUOSHAN:
-            case AiModel_Platform_Enum.MOONSHOT: {
+            case AiModel_Platform_Enum.HUOSHAN: {
                 return {
                     thinking: {
                         type: this.enableThinking ? "enabled" : "disabled"
@@ -294,6 +299,41 @@ export class UniversalTranslator {
                 headers: this.buildHeaders()
             }
         }
+    }
+
+    /**
+     * 构建谷歌翻译批量请求配置
+     * 请求体格式：[[segments[], sourceLang, targetLang], "te_lib"]
+     */
+    private buildGoogleTranslateConfig(
+        segments: string[],
+        targetLang: string
+    ): UnifiedRequestBody {
+        return {
+            type: RequestType.GOOGLE_TRANSLATE,
+            config: {
+                url: this.buildRequestUrl(),
+                apiKey: "AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520",
+                body: [[segments, "auto", targetLang], "te_lib"],
+                timeout: UniversalTranslator.timeout
+            }
+        }
+    }
+
+    /**
+     * 解析谷歌翻译响应
+     * 响应格式：[["译文1", "译文2", ...]]
+     */
+    private parseGoogleTranslateResponse(
+        responseData: unknown,
+        segmentCount: number
+    ): string[] {
+        const data = responseData as Array<unknown>
+        if (!Array.isArray(data) || !Array.isArray(data[0])) {
+            return Array(segmentCount).fill("")
+        }
+        const translations = data[0] as string[]
+        return translations.map(t => (typeof t === "string" ? t : ""))
     }
 
     /**
@@ -429,6 +469,10 @@ export class UniversalTranslator {
             return ""
         }
 
+        if (this.provider === AiModel_Platform_Enum.GOOGLE) {
+            return this.googleTranslateBatch(messages, targetLang)
+        }
+
         const aiMessages = this.buildAiMessages(messages, targetLang, false)
         const requestBody = this.buildAiRequestConfig(aiMessages)
         const response = await this.sendRequest(requestBody)
@@ -497,12 +541,45 @@ export class UniversalTranslator {
     }
 
     /**
+     * 谷歌翻译批量翻译
+     * 将 ImmersiveTranslator 传入的 %% 拼接文本拆分为段落，一次 POST 请求批量翻译，再拼回。
+     */
+    async googleTranslateBatch(
+        messages: Message[],
+        targetLang: string
+    ): Promise<string> {
+        if (messages.length === 0) {
+            return ""
+        }
+
+        const SEPARATOR = "\n\n%%\n\n"
+
+        // 展开所有消息内容为独立段落
+        const segments = messages.flatMap(msg =>
+            msg.content ? msg.content.split(SEPARATOR) : [""]
+        )
+
+        const requestBody = this.buildGoogleTranslateConfig(segments, targetLang)
+        const response = await this.sendRequest(requestBody)
+
+        const translations = response.content
+            ? this.parseGoogleTranslateResponse(response.content, segments.length)
+            : Array(segments.length).fill("")
+
+        return translations.join(SEPARATOR)
+    }
+
+    /**
      * 批量翻译（自动选择 AI 或翻译引擎）
      */
     async translateBatch(
         messages: Message[],
         targetLang: string
     ): Promise<string> {
+        if (this.provider === AiModel_Platform_Enum.GOOGLE) {
+            return this.googleTranslateBatch(messages, targetLang)
+        }
+
         const isTranslationEngine = [
             AiModel_Platform_Enum.DEEPLX,
             AiModel_Platform_Enum.DEEPL
@@ -518,6 +595,16 @@ export class UniversalTranslator {
      * 检查连接
      */
     async checkConnection(): Promise<boolean> {
+        // Google 翻译测试
+        if (this.provider === AiModel_Platform_Enum.GOOGLE) {
+            const requestBody = this.buildGoogleTranslateConfig(["Hello"], "zh-CN")
+            const response = await this.sendRequest(requestBody)
+            const results = response.content
+                ? this.parseGoogleTranslateResponse(response.content, 1)
+                : []
+            return results.length > 0 && results[0].length > 0
+        }
+
         const url = this.buildRequestUrl()
 
         // DEEPL/DEEPLX 测试
@@ -556,7 +643,7 @@ export class UniversalTranslator {
             headers: _h,
             timeout: _t,
             ...apiPayload
-        } = requestBody.config
+        } = requestBody.config as AiHttpRequestConfig
 
         const response = await axios.post<unknown, Response<unknown>>(
             url,

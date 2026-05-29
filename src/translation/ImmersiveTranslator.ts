@@ -994,7 +994,8 @@ export class ImmersiveTranslator {
         // 检查是否有可用的 AI 翻译器
         const translateEngineMap = new Set([
             AiModel_Platform_Enum.DEEPL,
-            AiModel_Platform_Enum.DEEPLX
+            AiModel_Platform_Enum.DEEPLX,
+            AiModel_Platform_Enum.GOOGLE
         ])
 
         return (

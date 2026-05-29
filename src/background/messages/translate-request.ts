@@ -2,6 +2,7 @@ import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import type {
     AiHttpRequestConfig,
+    GoogleTranslateRequestConfig,
     TranslationEngineRequestConfig,
     UnifiedRequestBody,
     UnifiedResponse
@@ -64,32 +65,20 @@ function sendError(
     } as UnifiedResponse)
 }
 
-// ============================================================================
-// AI 普通 HTTP 请求处理器
-// ============================================================================
-
-/** 处理 AI 普通 HTTP 请求 */
-async function handleAiHttpRequest(
-    config: AiHttpRequestConfig,
-    res: PlasmoMessaging.Response
+/**
+ * 通用 fetch 执行器：处理 abort 检测、响应头提取、错误转发
+ */
+async function executeFetch(
+    url: string,
+    init: RequestInit,
+    res: PlasmoMessaging.Response,
+    timeout?: number
 ): Promise<void> {
-    const { apiKey, baseUrl, headers = {}, timeout, ...requestBody } = config
-
     const [controller, timeoutId] = createAbortController(timeout)
 
     try {
-        const response = await fetch(baseUrl, {
-            method: "POST",
-            headers: {
-                ...headers,
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(requestBody),
-            signal: controller.signal
-        })
+        const response = await fetch(url, { ...init, signal: controller.signal })
 
-        // 提取响应头
         const responseHeaders: Record<string, string> = {}
         response.headers.forEach((value, key) => {
             responseHeaders[key] = value
@@ -109,18 +98,45 @@ async function handleAiHttpRequest(
         if (controller.signal.aborted) {
             throw new Error("Request timeout")
         }
-        // 传递响应头到错误处理
         if (error && typeof error === "object" && "headers" in error) {
-            const errorWithHeaders = error as {
-                headers?: Record<string, string>
-            }
-            sendError(res, error, errorWithHeaders.headers)
+            sendError(
+                res,
+                error,
+                (error as { headers?: Record<string, string> }).headers
+            )
             return
         }
         throw error
     } finally {
         cleanupAbortController(controller, timeoutId)
     }
+}
+
+// ============================================================================
+// AI 普通 HTTP 请求处理器
+// ============================================================================
+
+/** 处理 AI 普通 HTTP 请求 */
+async function handleAiHttpRequest(
+    config: AiHttpRequestConfig,
+    res: PlasmoMessaging.Response
+): Promise<void> {
+    const { apiKey, baseUrl, headers = {}, timeout, ...requestBody } = config
+
+    await executeFetch(
+        baseUrl,
+        {
+            method: "POST",
+            headers: {
+                ...headers,
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(requestBody)
+        },
+        res,
+        timeout
+    )
 }
 
 // ============================================================================
@@ -134,49 +150,37 @@ async function handleTranslationEngineRequest(
 ): Promise<void> {
     const { baseUrl, headers = {}, timeout, ...translationData } = config
 
-    const [controller, timeoutId] = createAbortController(timeout)
-
-    try {
-        const response = await fetch(baseUrl, {
+    await executeFetch(
+        baseUrl,
+        {
             method: "POST",
-            headers: {
-                ...headers,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(translationData),
-            signal: controller.signal
-        })
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify(translationData)
+        },
+        res,
+        timeout
+    )
+}
 
-        const responseHeaders: Record<string, string> = {}
-        response.headers.forEach((value, key) => {
-            responseHeaders[key] = value
-        })
+// ============================================================================
+// 谷歌翻译请求处理器
+// ============================================================================
 
-        if (!response.ok) {
-            const error = new Error(
-                `Translation engine error! status: ${response.status}`
-            ) as Error & { headers?: Record<string, string> }
-            error.headers = responseHeaders
-            throw error
-        }
-
-        const result = await response.json()
-        sendSuccess(res, result, responseHeaders)
-    } catch (error) {
-        if (controller.signal.aborted) {
-            throw new Error("Request timeout")
-        }
-        if (error && typeof error === "object" && "headers" in error) {
-            const errorWithHeaders = error as {
-                headers?: Record<string, string>
-            }
-            sendError(res, error, errorWithHeaders.headers)
-            return
-        }
-        throw error
-    } finally {
-        cleanupAbortController(controller, timeoutId)
-    }
+/** 处理谷歌翻译 POST 请求 */
+async function handleGoogleTranslateRequest(
+    config: GoogleTranslateRequestConfig,
+    res: PlasmoMessaging.Response
+): Promise<void> {
+    await executeFetch(
+        `${config.url}?key=${config.apiKey}`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json+protobuf" },
+            body: JSON.stringify(config.body)
+        },
+        res,
+        config.timeout
+    )
 }
 
 // ============================================================================
@@ -204,6 +208,9 @@ const handle: PlasmoMessaging.PortHandler = async (req, res) => {
                 break
             case "translation_engine":
                 await handleTranslationEngineRequest(body.config, res)
+                break
+            case "google_translate":
+                await handleGoogleTranslateRequest(body.config, res)
                 break
             case "abort":
                 handleAbortRequest(res)

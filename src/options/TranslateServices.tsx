@@ -33,7 +33,7 @@ import {
 import { AddModel } from "@/components/AddModel"
 import { DEFAULT_VALUES, platformNameMap } from "@/constants"
 import { AiRoleOptions, AiRoleSystemPrompts } from "@/constants/aiRole"
-import { PLATFORM_OFFICIAL_BASE_URLS } from "@/constants/model"
+import { PLATFORM_OFFICIAL_BASE_URLS, PLATFORM_OFFICIAL_MODEL_NAMES } from "@/constants/model"
 import { configAtom, updateAiModelConfigAtom, updateConfigAtom } from "@/state"
 import { hideScrollBar } from "@/styles/scroll"
 import { ApiKeyValidator } from "@/translation/ApiKeyValidator"
@@ -341,6 +341,9 @@ export const TranslateServices: React.FunctionComponent = () => {
     const officialBaseUrl = currentModelData
         ? PLATFORM_OFFICIAL_BASE_URLS[currentModelData.type]
         : ""
+    const officialModelName = currentModelData
+        ? (PLATFORM_OFFICIAL_MODEL_NAMES[currentModelData.type] ?? "")
+        : ""
 
     const resolveBaseUrl = useCallback((model: BaseModel | undefined) => {
         if (!model) {
@@ -366,8 +369,9 @@ export const TranslateServices: React.FunctionComponent = () => {
         if (typeof validatorMethod !== "function") {
             throw new Error(`未找到${currentModelData.name}的API Key验证方法`)
         }
-        return testParams.apiKey
-            ? validatorMethod(testParams)
+        const requiresApiKey = currentModelConfig.items?.includes("apiKey")
+        return requiresApiKey && !testParams.apiKey
+            ? Promise.reject(new Error("请先填写完整的配置信息"))
             : Promise.reject(new Error("请先填写完整的配置信息"))
     }, [currentModelConfig?.testValidator, currentModelData, resolveBaseUrl])
 
@@ -656,11 +660,14 @@ export const TranslateServices: React.FunctionComponent = () => {
                 id: currentModelData.id,
                 params: {
                     isOfficial: nextIsOfficial,
-                    // 官方模式不持久化 baseUrl（运行时通过 PLATFORM_OFFICIAL_BASE_URLS 映射）；
+                    // 官方模式不持久化 baseUrl / modelName（运行时通过常量映射）；
                     // 切到自定义时仅保留用户已填的值，留空让用户主动填写
                     baseUrl: nextIsOfficial
                         ? ""
-                        : currentModelData.params.baseUrl || ""
+                        : currentModelData.params.baseUrl || "",
+                    modelName: nextIsOfficial
+                        ? ""
+                        : currentModelData.params.modelName || ""
                 }
             })
         },
@@ -905,6 +912,13 @@ export const TranslateServices: React.FunctionComponent = () => {
                                         if (!fieldConfig) {
                                             return null
                                         }
+                                        const isModelNameField =
+                                            item === "modelName"
+                                        const hasOfficialDefault =
+                                            isModelNameField &&
+                                            !!officialModelName
+                                        const modelNameDisabled =
+                                            isOfficial && hasOfficialDefault
                                         return (
                                             <FormRow
                                                 key={item}
@@ -914,19 +928,24 @@ export const TranslateServices: React.FunctionComponent = () => {
                                                 <ApiKeyInput
                                                     label={fieldConfig.label}
                                                     value={
-                                                        currentModelData
-                                                            ?.params?.[item]
-                                                            ? String(
-                                                                  currentModelData
-                                                                      ?.params?.[
-                                                                      item
-                                                                  ]
-                                                              )
-                                                            : ""
+                                                        modelNameDisabled
+                                                            ? officialModelName
+                                                            : currentModelData
+                                                                    ?.params?.[
+                                                                    item
+                                                                ]
+                                                              ? String(
+                                                                    currentModelData
+                                                                        ?.params?.[
+                                                                        item
+                                                                    ]
+                                                                )
+                                                              : ""
                                                     }
                                                     disabledVisitable={
                                                         item !== "apiKey"
                                                     }
+                                                    disabled={modelNameDisabled}
                                                     onChange={value => {
                                                         updateAiModelConfig({
                                                             id: currentModelData.id,
@@ -936,10 +955,14 @@ export const TranslateServices: React.FunctionComponent = () => {
                                                         })
                                                     }}
                                                     placeholder={
-                                                        fieldConfig.placeholder
+                                                        modelNameDisabled
+                                                            ? officialModelName
+                                                            : fieldConfig.placeholder
                                                     }
                                                     helperText={
-                                                        fieldConfig.helperText
+                                                        modelNameDisabled
+                                                            ? "已选择官方模型，使用平台默认模型名称"
+                                                            : fieldConfig.helperText
                                                     }
                                                     helperLink={
                                                         fieldConfig.helperLink

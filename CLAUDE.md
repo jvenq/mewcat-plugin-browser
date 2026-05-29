@@ -355,7 +355,35 @@ pnpm package      # 打包为带日期的 ZIP
 
 ---
 
-### 2026-05-21 — 官方模型 baseUrl 不再持久化，统一从 PLATFORM_OFFICIAL_BASE_URLS 取
+### 2026-05-29 — 谷歌翻译改用 translateHtml POST API
+
+**修改内容**：
+- `src/constants/model.ts`：`PLATFORM_OFFICIAL_BASE_URLS[GOOGLE]` 改为 `https://translate-pa.googleapis.com/v1/translateHtml`
+- `src/types/request.ts`：`GoogleTranslateRequestConfig` 新增 `body`（批量请求体）和 `apiKey` 字段，移除旧的 `url` 单字段结构
+- `src/background/messages/translate-request.ts`：`handleGoogleTranslateRequest` 改为 POST，`Content-Type: application/json+protobuf`，apiKey 附在 URL query 参数
+- `src/translation/UniversalTranslator.ts`：`buildGoogleTranslateConfig` 接收 `segments[]` 构建批量请求体 `[[segments, "auto", targetLang], "te_lib"]`；`parseGoogleTranslateResponse` 解析新响应格式 `[["译文1","译文2",...], ...]`，返回 `string[]`；`googleTranslateBatch` 改为一次 POST 翻译所有段落，不再逐条并行；`checkConnection` 同步更新
+
+**原因**：旧实现使用非官方 GET API（`translate.googleapis.com/translate_a/single`），逐条并行请求，存在 400 错误和 `%%` 分隔符被翻译破坏的问题。新 API（`translate-pa.googleapis.com/v1/translateHtml`）支持批量 POST，一次请求翻译所有段落，响应格式更简洁，架构更合理。
+
+**修改内容**：
+- `src/types/aiModel.ts`：`AiModel_Platform_Enum` 新增 `GOOGLE = "GOOGLE"` 成员
+- `src/types/request.ts`：`RequestType` 新增 `GOOGLE_TRANSLATE = "google_translate"`；新增 `GoogleTranslateRequestConfig` 接口（`{ url: string; timeout?: number }`）；`UnifiedRequestBody` 联合类型新增 `GOOGLE_TRANSLATE` 分支
+- `src/background/messages/translate-request.ts`：新增 `handleGoogleTranslateRequest` 函数（GET 请求，无认证头）；`switch` 新增 `"google_translate"` 分支
+- `src/constants/model.ts`：`PLATFORM_OFFICIAL_BASE_URLS` 新增 `GOOGLE` 条目（`https://translate.googleapis.com/translate_a/single`）
+- `src/constants/translationServices.ts`：`platformNameMap` 新增 `GOOGLE: "谷歌翻译"`；`AI_TRANSLATION_SERVICES` 新增谷歌翻译条目
+- `src/options/constants.ts`：`AI_MODEL_UI_LIST` 新增 Google 条目（`items: []`，无需填写任何字段）；`testValidator` 联合类型新增 `"validateGoogleApiKey"`
+- `src/translation/ApiKeyValidator.ts`：新增 `validateGoogleApiKey` 静态方法（直接发一次翻译请求验证连通性）
+- `src/translation/UniversalTranslator.ts`：`buildRequestUrl` 新增 `GOOGLE` case；新增 `buildGoogleTranslateConfig`（构建 GET URL，含 `client=gtx&sl=auto&tl=...&dt=t&q=...` 参数）；新增 `parseGoogleTranslateResponse`（解析 `[[["译文","原文",...],...],...] ` 格式）；新增 `googleTranslateBatch`（逐条并行请求，结果用 `\n\n%%\n\n` 拼接）；`translateBatch` 新增 `GOOGLE` 路由分支；`checkConnection` 新增 `GOOGLE` 分支；导入 `AiHttpRequestConfig` 类型
+
+**原因**：用户要求添加谷歌翻译渠道。采用免费非官方 API（`translate.googleapis.com`），无需 API Key，与现有 `enableGoogleTranslate: true` 默认开启的设计一致。谷歌翻译不支持批量请求，采用逐条并行发送的方式处理多段文本。
+
+**修改内容**：
+- `src/constants/model.ts`：新增 `PLATFORM_OFFICIAL_MODEL_NAMES: Partial<Record<AiModel_Platform_Enum, string>>`，覆盖 DEEPSEEK / OPENAI / MOONSHOT / GEMINI / BAILIAN / ZHIPU / HUNYUAN 七个平台的官方默认模型名称；HUOSHAN 因依赖 endpoint 配置不设默认值
+- `src/translation/UniversalTranslator.ts`：导入 `PLATFORM_OFFICIAL_MODEL_NAMES`；构造函数中 `this.model` 赋值改为 `config.model || PLATFORM_OFFICIAL_MODEL_NAMES[provider] || config.model`，官方模式下 `modelName` 为空时自动 fallback 到常量值
+- `src/options/TranslateServices.tsx`：导入 `PLATFORM_OFFICIAL_MODEL_NAMES`；新增 `officialModelName` 计算变量；`modelName` 字段渲染时若 `isOfficial && officialModelName` 则 `disabled=true` 并展示常量值（与 `baseUrl` 官方只读模式完全一致）；`handleSourceChange` 切回官方时同步清空 `params.modelName`（不持久化官方值）
+- `src/background/config/hotlink-sites.generated.ts`：重新同步生成
+
+**原因**：官方模式下 `modelName` 此前始终可编辑，用户可能填入错误值导致 API 调用失败；参照 `baseUrl` 的「官方只读 / 自定义可编辑」二态，为有官方默认值的平台在官方模式下锁定模型名称，运行时通过 `PLATFORM_OFFICIAL_MODEL_NAMES` fallback 保证即使存量数据 `modelName` 为空也能正常调用。HUOSHAN 的 `modelName` 与 endpoint 强绑定，保持始终可编辑。
 
 **修改内容**：
 - `src/translation/UniversalTranslator.ts`：删除 `getBaseUrl` 内部硬编码的 `baseUrls` 字面量（与 `PLATFORM_OFFICIAL_BASE_URLS` 重复），改为从 `@/constants/model` 导入；`customUrl` 改用 `trim()` 后非空判断，空字符串/纯空白也会回退到 `PLATFORM_OFFICIAL_BASE_URLS[provider]`

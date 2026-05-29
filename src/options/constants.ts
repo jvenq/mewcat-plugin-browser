@@ -18,6 +18,7 @@ export const AI_MODEL_UI_LIST: {
         | "validateGeminiApiKey"
         | "validateDeeplApiKey"
         | "validateDeeplxApiKey"
+        | "validateGoogleApiKey"
     fields?: Partial<
         Record<
             BaseModelParams,
@@ -338,5 +339,13 @@ export const AI_MODEL_UI_LIST: {
                 }
             }
         }
+    },
+    {
+        type: AiModel_Platform_Enum.GOOGLE,
+        title: "谷歌翻译",
+        description: "使用谷歌翻译进行翻译（免费，无需 API Key）",
+        items: [],
+        testValidator: "validateGoogleApiKey",
+        fields: {}
     }
 ]

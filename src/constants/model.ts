@@ -178,6 +178,22 @@ export const THINKING_CAPABLE_PLATFORMS = new Set<AiModel_Platform_Enum>([
 ])
 
 /**
+ * 各平台官方默认模型名称
+ * 选择「官方模型」时使用，输入框只读展示；HUOSHAN 依赖 endpoint 配置，不设默认值
+ */
+export const PLATFORM_OFFICIAL_MODEL_NAMES: Partial<
+    Record<AiModel_Platform_Enum, string>
+> = {
+    [AiModel_Platform_Enum.DEEPSEEK]: "deepseek-chat",
+    [AiModel_Platform_Enum.OPENAI]: "gpt-5",
+    [AiModel_Platform_Enum.MOONSHOT]: "kimi-k2-0905-preview",
+    [AiModel_Platform_Enum.GEMINI]: "gemini-3-pro-preview",
+    [AiModel_Platform_Enum.BAILIAN]: "doubao-seed-1.8-251228",
+    [AiModel_Platform_Enum.ZHIPU]: "glm-4-plus",
+    [AiModel_Platform_Enum.HUNYUAN]: "hunyuan-translation"
+}
+
+/**
  * 各平台官方默认 baseUrl
  * 选择「官方模型」时使用，输入框只读展示
  */
@@ -196,5 +212,7 @@ export const PLATFORM_OFFICIAL_BASE_URLS: Record<
     [AiModel_Platform_Enum.GEMINI]:
         "https://generativelanguage.googleapis.com/v1beta/models",
     [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
-    [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org"
+    [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org",
+    [AiModel_Platform_Enum.GOOGLE]:
+        "https://translate-pa.googleapis.com/v1/translateHtml"
 }
