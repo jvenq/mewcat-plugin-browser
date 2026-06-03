@@ -225,6 +225,25 @@ export class ApiKeyValidator {
         }
     }
 
+    static async validateGoogleApiKey(
+        _params: ValidateApiKeyParams
+    ): Promise<boolean> {
+        try {
+            const translator = new UniversalTranslator(
+                AiModel_Platform_Enum.GOOGLE,
+                {
+                    apiKey: "",
+                    model: "",
+                    aiRole: AiRole.DEFAULT
+                }
+            )
+            return await translator.checkConnection()
+        } catch (error) {
+            console.error("谷歌翻译连接验证失败:", error)
+            return false
+        }
+    }
+
     // ------------------------------
     // 扩展：批量验证所有AI模型API Key
     // ------------------------------

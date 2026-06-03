@@ -12,7 +12,9 @@ body {
     font-size: var(--font-size-base);
     font-family: var(--font-family);
     color: var(--text-primary);
-    background: var(--gray-100);
+    background: var(--bg-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #__plasmo {
@@ -20,6 +22,7 @@ body {
     width: 100vw;
     overflow: hidden;
 }
+
 *,
 *:before,
 *:after {
@@ -46,38 +49,16 @@ a {
     line-height: 1.5;
 }
 
-// 滚动条样式
+// 琥珀滚动条
 .options-scrollbar {
-    &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: var(--gray-100);
-        border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: var(--gray-400);
-        border-radius: 3px;
-        transition: var(--transition-base);
-
-        &:hover {
-            background: var(--gray-500);
-        }
-    }
-
-    &::-webkit-scrollbar-corner {
-        background: var(--gray-100);
-    }
+    @include amber-scrollbar;
 }
 
 // 导航项图标
 .nav-icon {
     width: 16px;
     height: 16px;
-    margin-right: var(--spacing-sm);
+    margin-right: var(--space-2);
     opacity: 0.7;
     transition: var(--transition-base);
 }
@@ -97,8 +78,8 @@ a {
         left: 0;
         right: 0;
         height: 2px;
-        background: var(--gradient-header);
-        border-radius: var(--border-radius-small) var(--border-radius-small) 0 0;
+        background: var(--gradient-amber);
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
         opacity: 0;
         transition: var(--transition-base);
     }
@@ -117,7 +98,7 @@ a {
 
         &.active {
             background: var(--primary-color);
-            box-shadow: var(--shadow-primary);
+            box-shadow: var(--primary-glow-sm);
         }
     }
 
@@ -127,7 +108,7 @@ a {
         transition: var(--transition-base);
 
         &.active {
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-md);
         }
     }
 }
@@ -144,59 +125,35 @@ a {
 
 // 删除按钮增强
 .delete-button-enhanced {
-    background: var(--error-background);
-    color: var(--error-color);
-    border: 1px solid var(--error-light);
-    border-radius: var(--border-radius-small);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--error-bg);
+    color: var(--error);
+    border: 1px solid var(--error-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     cursor: pointer;
     transition: var(--transition-base);
 
     &:hover {
-        background: var(--error-color);
-        color: var(--text-inverse);
-        border-color: var(--error-color);
-        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+        background: var(--error);
+        color: #fff;
+        border-color: var(--error);
+        box-shadow: 0 2px 8px rgba(224, 92, 92, 0.3);
     }
 }
 
 // 添加按钮增强
 .add-button-enhanced {
-    background: var(--primary-color);
-    color: var(--text-inverse);
-    border: none;
-    border-radius: var(--border-radius-small);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    cursor: pointer;
-    transition: var(--transition-base);
-
-    &:hover {
-        background: var(--primary-dark);
-        box-shadow: var(--shadow-primary-md);
-    }
-
-    &:active {
-        transform: translateY(1px);
-    }
-
-    &:disabled {
-        background: var(--gray-300);
-        color: var(--text-disabled);
-        cursor: not-allowed;
-        transform: none;
-    }
+    @include btn-primary;
 }
 
 // 样式预览区域
 .style-preview {
-    background: var(--gradient-primary);
-    border: 1px solid var(--border-light);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-lg);
+    background: var(--gradient-primary-soft);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
     position: relative;
     overflow: hidden;
 
@@ -207,62 +164,62 @@ a {
         left: 0;
         right: 0;
         height: 2px;
-        background: var(--gradient-header);
+        background: var(--gradient-amber);
         opacity: 0.8;
     }
 }
 
 // 版本信息样式
 .version-info {
-    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-    background: var(--gray-50);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-small);
-    font-size: var(--font-size-sm);
+    font-family: var(--font-mono);
+    background: var(--bg-tertiary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
     color: var(--primary-color);
-    border: 1px solid rgba(25, 118, 210, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 // 描述文本增强
 .description-enhanced {
     color: var(--text-secondary);
     font-size: var(--font-size-sm);
-    line-height: 1.4;
-    margin-top: var(--spacing-xs);
+    line-height: 1.5;
+    margin-top: var(--space-2);
 
     &.with-icon::before {
         content: "ℹ️";
-        margin-right: var(--spacing-xs);
+        margin-right: var(--space-2);
     }
 }
 
 // 成功状态
 .status-success {
-    color: var(--success-color);
-    background: var(--success-background);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-small);
+    color: var(--success);
+    background: var(--success-bg);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
     font-size: var(--font-size-sm);
-    border: 1px solid var(--success-light);
+    border: 1px solid var(--success-border);
 }
 
 // 警告状态
 .status-warning {
-    color: var(--warning-color);
-    background: var(--warning-background);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-small);
+    color: var(--warning);
+    background: var(--warning-bg);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
     font-size: var(--font-size-sm);
-    border: 1px solid var(--warning-light);
+    border: 1px solid var(--warning-border);
 }
 
 // 加载状态
 .loading-shimmer {
     background: linear-gradient(
         90deg,
-        var(--gray-200) 25%,
-        var(--gray-100) 50%,
-        var(--gray-200) 75%
+        var(--bg-tertiary) 25%,
+        var(--bg-elevated) 50%,
+        var(--bg-tertiary) 75%
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
@@ -280,13 +237,13 @@ a {
 // 空状态样式
 .empty-state {
     text-align: center;
-    padding: var(--spacing-3xl) var(--spacing-xl);
-    color: var(--text-disabled);
+    padding: var(--space-10) var(--space-6);
+    color: var(--text-tertiary);
     font-size: var(--font-size-sm);
 
     .empty-icon {
         font-size: 24px;
-        margin-bottom: var(--spacing-md);
+        margin-bottom: var(--space-4);
         opacity: 0.5;
     }
 }
@@ -294,27 +251,27 @@ a {
 // 标签样式
 .tag {
     display: inline-block;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    background: var(--primary-background);
+    padding: var(--space-1) var(--space-2);
+    background: var(--primary-light);
     color: var(--primary-color);
-    border-radius: var(--border-radius-small);
+    border-radius: var(--radius-sm);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     margin: 2px;
 
     &.tag-success {
-        background: var(--success-background);
-        color: var(--success-color);
+        background: var(--success-bg);
+        color: var(--success);
     }
 
     &.tag-warning {
-        background: var(--warning-background);
-        color: var(--warning-color);
+        background: var(--warning-bg);
+        color: var(--warning);
     }
 
     &.tag-error {
-        background: var(--error-background);
-        color: var(--error-color);
+        background: var(--error-bg);
+        color: var(--error);
     }
 }
 
@@ -326,11 +283,11 @@ a {
         }
 
         .content {
-            padding: var(--spacing-lg);
+            padding: var(--space-4);
         }
 
         .section {
-            padding: var(--spacing-lg);
+            padding: var(--space-4);
         }
     }
 }
@@ -347,12 +304,12 @@ a {
         .nav {
             display: flex;
             overflow-x: auto;
-            padding: var(--spacing-sm);
+            padding: var(--space-2);
 
             .nav-item {
                 white-space: nowrap;
                 min-width: auto;
-                padding: var(--spacing-sm) var(--spacing-lg);
+                padding: var(--space-2) var(--space-4);
             }
         }
     }

@@ -178,6 +178,22 @@ export const THINKING_CAPABLE_PLATFORMS = new Set<AiModel_Platform_Enum>([
 ])
 
 /**
+ * 各平台官方默认模型名称
+ * 选择「官方模型」时使用，输入框只读展示；HUOSHAN 依赖 endpoint 配置，不设默认值
+ */
+export const PLATFORM_OFFICIAL_MODEL_NAMES: Partial<
+    Record<AiModel_Platform_Enum, string>
+> = {
+    [AiModel_Platform_Enum.DEEPSEEK]: "deepseek-chat",
+    [AiModel_Platform_Enum.OPENAI]: "gpt-5",
+    [AiModel_Platform_Enum.MOONSHOT]: "kimi-k2-0905-preview",
+    [AiModel_Platform_Enum.GEMINI]: "gemini-3-pro-preview",
+    [AiModel_Platform_Enum.BAILIAN]: "doubao-seed-1.8-251228",
+    [AiModel_Platform_Enum.ZHIPU]: "glm-4-plus",
+    [AiModel_Platform_Enum.HUNYUAN]: "hunyuan-translation"
+}
+
+/**
  * 各平台官方默认 baseUrl
  * 选择「官方模型」时使用，输入框只读展示
  */
@@ -185,16 +201,18 @@ export const PLATFORM_OFFICIAL_BASE_URLS: Record<
     AiModel_Platform_Enum,
     string
 > = {
-    [AiModel_Platform_Enum.HUOSHAN]: "https://ark.cn-beijing.volces.com/api/v3",
+    [AiModel_Platform_Enum.HUOSHAN]: "https://ark.cn-beijing.volces.com",
     [AiModel_Platform_Enum.BAILIAN]:
-        "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    [AiModel_Platform_Enum.ZHIPU]: "https://open.bigmodel.cn/api/paas/v4",
-    [AiModel_Platform_Enum.HUNYUAN]: "https://api.hunyuan.cloud.tencent.com/v1",
+        "https://dashscope.aliyuncs.com/compatible-mode",
+    [AiModel_Platform_Enum.ZHIPU]: "https://open.bigmodel.cn",
+    [AiModel_Platform_Enum.HUNYUAN]: "https://api.hunyuan.cloud.tencent.com",
     [AiModel_Platform_Enum.DEEPSEEK]: "https://api.deepseek.com",
-    [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com/v1",
-    [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn/v1",
+    [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com",
+    [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn",
     [AiModel_Platform_Enum.GEMINI]:
         "https://generativelanguage.googleapis.com/v1beta/models",
-    [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
-    [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org"
+    [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com",
+    [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org",
+    [AiModel_Platform_Enum.GOOGLE]:
+        "https://translate-pa.googleapis.com/v1/translateHtml"
 }

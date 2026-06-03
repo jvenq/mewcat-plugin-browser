@@ -355,7 +355,35 @@ pnpm package      # 打包为带日期的 ZIP
 
 ---
 
-### 2026-05-21 — 官方模型 baseUrl 不再持久化，统一从 PLATFORM_OFFICIAL_BASE_URLS 取
+### 2026-05-29 — 谷歌翻译改用 translateHtml POST API
+
+**修改内容**：
+- `src/constants/model.ts`：`PLATFORM_OFFICIAL_BASE_URLS[GOOGLE]` 改为 `https://translate-pa.googleapis.com/v1/translateHtml`
+- `src/types/request.ts`：`GoogleTranslateRequestConfig` 新增 `body`（批量请求体）和 `apiKey` 字段，移除旧的 `url` 单字段结构
+- `src/background/messages/translate-request.ts`：`handleGoogleTranslateRequest` 改为 POST，`Content-Type: application/json+protobuf`，apiKey 附在 URL query 参数
+- `src/translation/UniversalTranslator.ts`：`buildGoogleTranslateConfig` 接收 `segments[]` 构建批量请求体 `[[segments, "auto", targetLang], "te_lib"]`；`parseGoogleTranslateResponse` 解析新响应格式 `[["译文1","译文2",...], ...]`，返回 `string[]`；`googleTranslateBatch` 改为一次 POST 翻译所有段落，不再逐条并行；`checkConnection` 同步更新
+
+**原因**：旧实现使用非官方 GET API（`translate.googleapis.com/translate_a/single`），逐条并行请求，存在 400 错误和 `%%` 分隔符被翻译破坏的问题。新 API（`translate-pa.googleapis.com/v1/translateHtml`）支持批量 POST，一次请求翻译所有段落，响应格式更简洁，架构更合理。
+
+**修改内容**：
+- `src/types/aiModel.ts`：`AiModel_Platform_Enum` 新增 `GOOGLE = "GOOGLE"` 成员
+- `src/types/request.ts`：`RequestType` 新增 `GOOGLE_TRANSLATE = "google_translate"`；新增 `GoogleTranslateRequestConfig` 接口（`{ url: string; timeout?: number }`）；`UnifiedRequestBody` 联合类型新增 `GOOGLE_TRANSLATE` 分支
+- `src/background/messages/translate-request.ts`：新增 `handleGoogleTranslateRequest` 函数（GET 请求，无认证头）；`switch` 新增 `"google_translate"` 分支
+- `src/constants/model.ts`：`PLATFORM_OFFICIAL_BASE_URLS` 新增 `GOOGLE` 条目（`https://translate.googleapis.com/translate_a/single`）
+- `src/constants/translationServices.ts`：`platformNameMap` 新增 `GOOGLE: "谷歌翻译"`；`AI_TRANSLATION_SERVICES` 新增谷歌翻译条目
+- `src/options/constants.ts`：`AI_MODEL_UI_LIST` 新增 Google 条目（`items: []`，无需填写任何字段）；`testValidator` 联合类型新增 `"validateGoogleApiKey"`
+- `src/translation/ApiKeyValidator.ts`：新增 `validateGoogleApiKey` 静态方法（直接发一次翻译请求验证连通性）
+- `src/translation/UniversalTranslator.ts`：`buildRequestUrl` 新增 `GOOGLE` case；新增 `buildGoogleTranslateConfig`（构建 GET URL，含 `client=gtx&sl=auto&tl=...&dt=t&q=...` 参数）；新增 `parseGoogleTranslateResponse`（解析 `[[["译文","原文",...],...],...] ` 格式）；新增 `googleTranslateBatch`（逐条并行请求，结果用 `\n\n%%\n\n` 拼接）；`translateBatch` 新增 `GOOGLE` 路由分支；`checkConnection` 新增 `GOOGLE` 分支；导入 `AiHttpRequestConfig` 类型
+
+**原因**：用户要求添加谷歌翻译渠道。采用免费非官方 API（`translate.googleapis.com`），无需 API Key，与现有 `enableGoogleTranslate: true` 默认开启的设计一致。谷歌翻译不支持批量请求，采用逐条并行发送的方式处理多段文本。
+
+**修改内容**：
+- `src/constants/model.ts`：新增 `PLATFORM_OFFICIAL_MODEL_NAMES: Partial<Record<AiModel_Platform_Enum, string>>`，覆盖 DEEPSEEK / OPENAI / MOONSHOT / GEMINI / BAILIAN / ZHIPU / HUNYUAN 七个平台的官方默认模型名称；HUOSHAN 因依赖 endpoint 配置不设默认值
+- `src/translation/UniversalTranslator.ts`：导入 `PLATFORM_OFFICIAL_MODEL_NAMES`；构造函数中 `this.model` 赋值改为 `config.model || PLATFORM_OFFICIAL_MODEL_NAMES[provider] || config.model`，官方模式下 `modelName` 为空时自动 fallback 到常量值
+- `src/options/TranslateServices.tsx`：导入 `PLATFORM_OFFICIAL_MODEL_NAMES`；新增 `officialModelName` 计算变量；`modelName` 字段渲染时若 `isOfficial && officialModelName` 则 `disabled=true` 并展示常量值（与 `baseUrl` 官方只读模式完全一致）；`handleSourceChange` 切回官方时同步清空 `params.modelName`（不持久化官方值）
+- `src/background/config/hotlink-sites.generated.ts`：重新同步生成
+
+**原因**：官方模式下 `modelName` 此前始终可编辑，用户可能填入错误值导致 API 调用失败；参照 `baseUrl` 的「官方只读 / 自定义可编辑」二态，为有官方默认值的平台在官方模式下锁定模型名称，运行时通过 `PLATFORM_OFFICIAL_MODEL_NAMES` fallback 保证即使存量数据 `modelName` 为空也能正常调用。HUOSHAN 的 `modelName` 与 endpoint 强绑定，保持始终可编辑。
 
 **修改内容**：
 - `src/translation/UniversalTranslator.ts`：删除 `getBaseUrl` 内部硬编码的 `baseUrls` 字面量（与 `PLATFORM_OFFICIAL_BASE_URLS` 重复），改为从 `@/constants/model` 导入；`customUrl` 改用 `trim()` 后非空判断，空字符串/纯空白也会回退到 `PLATFORM_OFFICIAL_BASE_URLS[provider]`
@@ -365,5 +393,30 @@ pnpm package      # 打包为带日期的 ZIP
 - `src/background/config/hotlink-sites.generated.ts`：重新同步生成
 
 **原因**：旧实现里官方 baseUrl 在三处重复硬编码（`UniversalTranslator.getBaseUrl` 内联表、`PLATFORM_OFFICIAL_BASE_URLS`、以及 `handleSourceChange` 切到自定义时塞进 `config.aiModelList[].params.baseUrl` 的持久化数据），改地址需要三处同步。本次统一以 `PLATFORM_OFFICIAL_BASE_URLS` 为唯一数据源——`UniversalTranslator` 内部 fallback、UI 显示「官方模式」时只读展示、调用方 `isOfficial` 时不传 baseUrl，均指向这一个常量。持久化层只保留用户真正填写的自定义地址，避免「修改官方默认值要同步修改用户旧数据」的耦合。`TranslateServices.tsx` 中「请求地址」FormRow 官方模式下的展示值仍走 `PLATFORM_OFFICIAL_BASE_URLS` 映射，纯 UI 展示不写回 config。存量用户：之前切过自定义然后切回官方的模型，`baseUrl` 字段可能残留官方 URL 字符串，但由于调用方在 `isOfficial=true` 时已忽略该字段直接走 fallback，无功能影响，不做迁移。
+
+---
+
+### 2026-05-29 — UI 大范围重构：夜·琥珀深色主题（Amber Nightdesk）
+
+**修改内容**：
+- `src/styles/theme.scss`（整体重写）：配色由「浅色 + 橙色点缀」改为「深墨底色 + 琥珀强调」的暗色系。
+  - 背景层 `--bg-base #0e0c09` → `--bg-elevated #2a2318`（暖黑墨色，非冷灰），新增 `--bg-glass`/`--bg-overlay`
+  - 主色改琥珀 `--primary-color #f5a623`，新增光晕变量 `--primary-glow`/`--primary-glow-sm` 与 `--gradient-amber`
+  - 文字改暖羊皮纸色阶 `--text-primary #ede0c4` → `--text-tertiary #7a6e52`，新增 `--text-amber`/`--text-amber-dim`
+  - `--gray-*` 灰阶整体反转为暖暗色；功能色（success/warning/error/info）改为暗背景适配的半透明底 + 边框
+  - 边框改琥珀微透 `rgba(245,166,35,*)`，新增 `--border-amber`
+  - 阴影加深（深色场景）并新增 `--shadow-primary` 琥珀辉光；字体改 `--font-family: "Sora"` 显示体 + `--font-mono: "DM Mono"` 等宽体（均带系统回退，未引入远程 `@import`，规避 MV3/CSP）
+  - mixin（`btn-primary`/`btn-secondary`/`btn-danger`/`input-base`/`card-*`/`list-item`/`divider`）全部改暗色 + 琥珀 hover；新增 `amber-scrollbar`、`amber-badge` 两个 mixin 及 `amberPulse` 关键帧
+- `src/styles/popup.scss`、`src/styles/options.scss`：body 背景改深色，新增字体平滑；options 滚动条改用 `@include amber-scrollbar`，所有增强类（按钮/状态/标签/shimmer/空状态）改暗色琥珀适配
+- `src/components/Switch/index.tsx`：轨道未选中态改 `--bg-elevated` + 边框，选中态琥珀填充 + `--primary-glow-sm`，hover 放大辉光
+- `src/components/LoadingDots/index.tsx`：脉冲动画改「呼吸」`keyframes`（styled-components `keyframes` 导入），每个点带琥珀光晕，默认色改 `--primary-color`，节奏放慢到 1.4s
+- `src/components/OptionsSidebar/index.tsx`：深色渐变侧栏，右缘竖向琥珀渐变线，激活项琥珀左条 + 发光圆点 + 边框，标题首字母琥珀色，副标题等宽大写
+- `src/components/OptionsContentHeader/index.tsx`：标题加大加粗、首字母琥珀，描述前缀竖条改琥珀渐变 + 辉光
+- `src/popup/index.tsx`（重写）：深色容器 + 顶部琥珀渐变条，header 加呼吸状态点，分组卡片/列表项/语言切换框/设置按钮全部改暗色琥珀样式
+- `src/sidepanel/index.tsx`（重写）：深色渐变背景 + header 发光分隔线，徽标改琥珀脉冲 badge（内联样式，非 SCSS mixin），输入框/结果框/按钮改暗色，翻译按钮用琥珀渐变；顺手补齐 3 处 `if` 大括号消除 lint warning
+- `.plasmo/index.d.ts`、`.plasmo/messaging.d.ts`：恢复（清理 Parcel 缓存锁时被误删），重新声明 `MessagesMetadata` 模块扩充，修复 `sendToBackground` 的 `name` 字段被推断为 `never` 的 typecheck 报错
+- `src/background/config/hotlink-sites.generated.ts`：重新同步生成
+
+**原因**：用户要求大范围重构 UI。原界面是「系统字体 + 浅色 + 扁平橙色」的通用 SaaS 极简风，缺乏品牌个性，与「译趣喵 / mewCat」playful 翻译猫的定位脱节。本次确定方向为 **夜·琥珀（Amber Nightdesk）**——暖黑墨底色 + 琥珀辉光 + Sora/DM Mono 字体的精致暗色风格，既减少长文阅读/翻译场景的眼睛疲劳，又通过统一的 token 体系（CSS 变量 + SCSS mixin）让 40+ 组件自动继承新观感，仅需改动 token、mixin 与 3 个外壳布局（popup / options / sidepanel）。页面注入的划词/沉浸式 UI 本次保持克制不动（避免在任意网站上喧宾夺主）。字体采用本地系统回退而非远程 `@import`，规避 MV3 CSP 限制。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。生产 `pnpm build` 因 Parcel 缓存文件（`.plasmo/cache/parcel/*.mdb`）被本机正在运行的 `pnpm dev` 进程占用而无法执行，与本次改动无关，待 dev 进程释放后可正常打包。
 
 

@@ -14,7 +14,7 @@ import NativeSelect from "../components/NativeSelect"
 import iconImg from "~/assets/icon.png"
 
 // ============================================
-// Layout
+// 夜·琥珀 — Side Panel
 // ============================================
 
 const Container = styled.div`
@@ -22,7 +22,11 @@ const Container = styled.div`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg-primary);
+    background: linear-gradient(
+        180deg,
+        var(--bg-primary) 0%,
+        var(--bg-base) 100%
+    );
     font-family: var(--font-family);
     color: var(--text-primary);
 `
@@ -31,24 +35,79 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--border-light);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border-color);
     background: var(--bg-secondary);
     flex-shrink: 0;
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: var(--space-4);
+        right: var(--space-4);
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            var(--primary-color) 50%,
+            transparent 100%
+        );
+        opacity: 0.28;
+    }
 `
 
 const Logo = styled.img`
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: var(--radius-md);
+    box-shadow: var(--shadow-primary-sm);
 `
 
 const HeaderTitle = styled.h1`
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
     margin: 0;
     flex: 1;
+    letter-spacing: -0.01em;
+`
+
+const HeaderBadge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px var(--space-2);
+    color: var(--primary-color);
+    background: var(--primary-light);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    &::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        box-shadow: 0 0 6px var(--primary-color);
+        animation: amberBadgePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes amberBadgePulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.45;
+        }
+    }
 `
 
 // ============================================
@@ -59,9 +118,23 @@ const TranslatePane = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: var(--space-4);
+    padding: var(--space-3) var(--space-4) var(--space-4);
     gap: var(--space-3);
     overflow-y: auto;
+    min-height: 0;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--border-amber);
+        border-radius: var(--radius-full);
+    }
 `
 
 const LanguageRow = styled.div`
@@ -94,10 +167,16 @@ const SwapButton = styled.button`
         height: 14px;
     }
 
-    &:hover {
-        border-color: var(--primary-color);
+    &:hover:not(:disabled) {
+        border-color: var(--border-amber);
         color: var(--primary-color);
-        background: var(--primary-light);
+        background: var(--primary-muted);
+        box-shadow: var(--primary-glow-sm);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
     }
 `
 
@@ -114,14 +193,15 @@ const StyledTextarea = styled.textarea`
     padding-right: var(--space-8);
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     font-size: var(--font-size-sm);
     font-family: var(--font-family);
     line-height: var(--line-height-relaxed);
     color: var(--text-primary);
     resize: vertical;
     box-sizing: border-box;
-    transition: border-color var(--transition-fast);
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-xs);
 
     &::placeholder {
         color: var(--text-tertiary);
@@ -130,7 +210,10 @@ const StyledTextarea = styled.textarea`
     &:focus {
         outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(119, 72, 249, 0.1);
+        background: var(--bg-tertiary);
+        box-shadow:
+            0 0 0 3px rgba(245, 166, 35, 0.12),
+            var(--shadow-sm);
     }
 `
 
@@ -140,8 +223,8 @@ const ClearButton = styled.button`
     right: var(--space-2);
     width: 20px;
     height: 20px;
-    border: none;
-    background: var(--gray-200);
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
     border-radius: 50%;
     color: var(--text-tertiary);
     cursor: pointer;
@@ -156,8 +239,9 @@ const ClearButton = styled.button`
     }
 
     &:hover {
-        background: var(--gray-300);
-        color: var(--text-primary);
+        background: var(--error-bg);
+        border-color: var(--error-border);
+        color: var(--error);
     }
 `
 
@@ -187,23 +271,23 @@ const PasteButton = styled.button`
     }
 
     &:hover {
-        border-color: var(--primary-color);
+        border-color: var(--border-amber);
         color: var(--primary-color);
-        background: var(--primary-light);
+        background: var(--primary-muted);
     }
 `
 
 const TranslateButton = styled.button<{ $loading?: boolean }>`
     flex: 2;
     padding: var(--space-2) var(--space-4);
-    background: var(--primary-color);
+    background: var(--gradient-amber);
     border: none;
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: #fff;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-inverse);
     cursor: ${p => (p.$loading ? "not-allowed" : "pointer")};
-    opacity: ${p => (p.$loading ? 0.7 : 1)};
+    opacity: ${p => (p.$loading ? 0.8 : 1)};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -216,8 +300,8 @@ const TranslateButton = styled.button<{ $loading?: boolean }>`
     }
 
     &:hover:not(:disabled) {
-        background: var(--primary-hover);
-        box-shadow: var(--shadow-primary-sm);
+        box-shadow: var(--shadow-primary);
+        transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
@@ -227,16 +311,23 @@ const TranslateButton = styled.button<{ $loading?: boolean }>`
 
 const Divider = styled.div`
     height: 1px;
-    background: var(--border-light);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--border-color) 50%,
+        transparent 100%
+    );
 `
 
 const ResultBox = styled.div`
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     min-height: 100px;
     padding: var(--space-3);
     position: relative;
+    flex: 1;
+    box-shadow: var(--shadow-xs);
 `
 
 const ResultText = styled.div<{ $empty?: boolean; $error?: boolean }>`
@@ -262,13 +353,12 @@ const ResultActions = styled.div`
 
 const IconButton = styled.button<{ $success?: boolean }>`
     padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--border-color);
+    border: 1px solid
+        ${p => (p.$success ? "var(--success-border)" : "var(--border-color)")};
     border-radius: var(--radius-sm);
-    background: transparent;
+    background: ${p => (p.$success ? "var(--success-bg)" : "transparent")};
     font-size: var(--font-size-xs);
     color: ${p => (p.$success ? "var(--success)" : "var(--text-tertiary)")};
-    border-color: ${p =>
-        p.$success ? "var(--success-border)" : "var(--border-color)"};
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -282,8 +372,8 @@ const IconButton = styled.button<{ $success?: boolean }>`
 
     &:hover {
         color: var(--primary-color);
-        border-color: var(--primary-color);
-        background: var(--primary-light);
+        border-color: var(--border-amber);
+        background: var(--primary-muted);
     }
 `
 
@@ -327,7 +417,9 @@ const SlidePanel: React.FunctionComponent = () => {
 
     const handleTranslate = useCallback(async () => {
         const text = inputText.trim()
-        if (!text || loading) return
+        if (!text || loading) {
+            return
+        }
 
         abortRef.current?.abort()
         abortRef.current = new AbortController()
@@ -358,7 +450,9 @@ const SlidePanel: React.FunctionComponent = () => {
     }, [inputText, loading, config, sourceLang, targetLang])
 
     const handleSwapLang = useCallback(() => {
-        if (sourceLang === "auto") return
+        if (sourceLang === "auto") {
+            return
+        }
         setSourceLang(targetLang)
         setTargetLang(sourceLang)
         setInputText(result)
@@ -366,7 +460,9 @@ const SlidePanel: React.FunctionComponent = () => {
     }, [sourceLang, targetLang, result])
 
     const handleCopy = useCallback(async () => {
-        if (!result) return
+        if (!result) {
+            return
+        }
         await navigator.clipboard.writeText(result)
         setCopied(true)
         setTimeout(() => setCopied(false), 1500)
@@ -385,7 +481,8 @@ const SlidePanel: React.FunctionComponent = () => {
         <Container>
             <Header>
                 <Logo src={iconImg} alt="mewCat" />
-                <HeaderTitle>翻译侧边栏</HeaderTitle>
+                <HeaderTitle>快捷翻译</HeaderTitle>
+                <HeaderBadge>mewCat</HeaderBadge>
             </Header>
 
             <TranslatePane>
@@ -429,7 +526,9 @@ const SlidePanel: React.FunctionComponent = () => {
                         value={inputText}
                         onChange={e => setInputText(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="输入或粘贴要翻译的文本…&#10;Ctrl+Enter 快速翻译"
+                        placeholder={
+                            "输入或粘贴要翻译的文本…\nCtrl+Enter 快速翻译"
+                        }
                         rows={5}
                     />
                     {inputText && (
@@ -472,7 +571,11 @@ const SlidePanel: React.FunctionComponent = () => {
                         disabled={loading || !inputText.trim()}
                     >
                         {loading ? (
-                            <LoadingDots loading color="#fff" size={4} />
+                            <LoadingDots
+                                loading
+                                color="var(--text-inverse)"
+                                size={4}
+                            />
                         ) : (
                             <svg
                                 viewBox="0 0 24 24"

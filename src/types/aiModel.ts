@@ -8,7 +8,8 @@ export enum AiModel_Platform_Enum {
     MOONSHOT = "MOONSHOT",
     GEMINI = "GEMINI",
     DEEPL = "DEEPL",
-    DEEPLX = "DEEPLX"
+    DEEPLX = "DEEPLX",
+    GOOGLE = "GOOGLE"
 }
 
 export interface BaseModel {
