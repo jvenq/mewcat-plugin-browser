@@ -136,12 +136,22 @@ export class UniversalTranslator {
                     return this.baseUrl
                 }
                 const cleanBaseUrl = this.baseUrl.replace(/\/$/, "")
-                return `${cleanBaseUrl}/${this.apiKey}/translate`
+                return `${cleanBaseUrl}/v2/${this.apiKey}/translate`
             }
             case AiModel_Platform_Enum.GOOGLE:
                 return this.baseUrl
+            case AiModel_Platform_Enum.BAILIAN:
+            case AiModel_Platform_Enum.DEEPSEEK:
+            case AiModel_Platform_Enum.OPENAI:
+            case AiModel_Platform_Enum.HUNYUAN:
+            case AiModel_Platform_Enum.MOONSHOT:
+                return `${this.baseUrl}/v1/chat/completions`
+            case AiModel_Platform_Enum.ZHIPU:
+                return `${this.baseUrl}/api/paas/v4`
+            case AiModel_Platform_Enum.HUOSHAN:
+                return `${this.baseUrl}/api/v3`
             default:
-                return `${this.baseUrl}/chat/completions`
+                return `${this.baseUrl}/v1/chat/completions`
         }
     }
 

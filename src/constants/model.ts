@@ -201,17 +201,17 @@ export const PLATFORM_OFFICIAL_BASE_URLS: Record<
     AiModel_Platform_Enum,
     string
 > = {
-    [AiModel_Platform_Enum.HUOSHAN]: "https://ark.cn-beijing.volces.com/api/v3",
+    [AiModel_Platform_Enum.HUOSHAN]: "https://ark.cn-beijing.volces.com",
     [AiModel_Platform_Enum.BAILIAN]:
-        "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    [AiModel_Platform_Enum.ZHIPU]: "https://open.bigmodel.cn/api/paas/v4",
-    [AiModel_Platform_Enum.HUNYUAN]: "https://api.hunyuan.cloud.tencent.com/v1",
+        "https://dashscope.aliyuncs.com/compatible-mode",
+    [AiModel_Platform_Enum.ZHIPU]: "https://open.bigmodel.cn",
+    [AiModel_Platform_Enum.HUNYUAN]: "https://api.hunyuan.cloud.tencent.com",
     [AiModel_Platform_Enum.DEEPSEEK]: "https://api.deepseek.com",
-    [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com/v1",
-    [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn/v1",
+    [AiModel_Platform_Enum.OPENAI]: "https://api.openai.com",
+    [AiModel_Platform_Enum.MOONSHOT]: "https://api.moonshot.cn",
     [AiModel_Platform_Enum.GEMINI]:
         "https://generativelanguage.googleapis.com/v1beta/models",
-    [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com/v2",
+    [AiModel_Platform_Enum.DEEPL]: "https://api-free.deepl.com",
     [AiModel_Platform_Enum.DEEPLX]: "https://api.deeplx.org",
     [AiModel_Platform_Enum.GOOGLE]:
         "https://translate-pa.googleapis.com/v1/translateHtml"
