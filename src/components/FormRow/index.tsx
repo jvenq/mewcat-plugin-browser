@@ -4,8 +4,14 @@ import styled, { css } from "styled-components"
 import type { FormRowProps } from "./types"
 
 const FormRow = styled.div`
-    margin-bottom: var(--space-3);
-    padding: var(--space-1) var(--space-3);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
     transition: all var(--transition-fast);
 
     &:last-child {
@@ -13,37 +19,22 @@ const FormRow = styled.div`
     }
 
     &:hover {
-        background: var(--gray-50);
-        border-radius: var(--radius-md);
+        background: var(--bg-tertiary);
+        border-color: var(--border-light);
     }
 `
 
 const Label = styled.label<{ required: boolean }>`
     display: block;
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
-    margin-bottom: var(--space-2);
-    position: relative;
-    padding-left: var(--space-3);
-
-    &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--gray-400);
-    }
 
     ${({ required }) =>
         required &&
         css`
             &::after {
-                margin-left: 8px;
+                margin-left: 6px;
                 content: "*";
                 color: var(--error);
                 font-size: var(--font-size-xs);
@@ -53,8 +44,8 @@ const Label = styled.label<{ required: boolean }>`
 
 const Description = styled.p`
     font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    margin: var(--space-1) 0 0 0;
+    color: var(--text-tertiary);
+    margin: 0;
     line-height: var(--line-height-normal);
 `
 
@@ -69,8 +60,8 @@ const FormRowComponent: React.FC<FormRowProps> = ({
     return (
         <FormRow className={className} style={style}>
             <Label required={required}>{label}</Label>
-            {children}
             {description && <Description>{description}</Description>}
+            {children}
         </FormRow>
     )
 }

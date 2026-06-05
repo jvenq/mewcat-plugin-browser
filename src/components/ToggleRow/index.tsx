@@ -15,35 +15,38 @@ const SCxToggleRow = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-4) var(--space-5);
-    border-bottom: 1px solid var(--border-light);
-    transition: var(--transition-base);
+    gap: var(--space-4);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    margin-bottom: var(--space-2);
+    transition: all var(--transition-fast);
 
     &:last-child {
-        border-bottom: none;
+        margin-bottom: 0;
     }
 
     &:hover {
-        background: var(--gray-50);
-        border-radius: var(--radius-md);
+        background: var(--bg-tertiary);
+        border-color: var(--border-light);
     }
 `
 
 const SCxToggleLabel = styled.div`
     flex: 1;
-    padding-right: var(--space-4);
+    min-width: 0;
 `
 
 const SCxToggleTitle = styled.div`
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
     margin-bottom: var(--space-1);
 `
 
 const SCxToggleDescription = styled.div`
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
     line-height: var(--line-height-normal);
 `
 

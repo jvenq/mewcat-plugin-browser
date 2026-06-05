@@ -9,35 +9,41 @@ interface InfoDisplayProps {
 }
 
 const SCxInfoRow = styled.div`
-    margin-bottom: var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-light);
 
     &:last-child {
-        margin-bottom: 0;
+        border-bottom: none;
     }
 `
 
 const SCxLabel = styled.label`
-    display: block;
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+    flex-shrink: 0;
 `
 
 const SCxValue = styled.span<{ valueType: string }>`
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     color: var(--text-primary);
     font-weight: var(--font-weight-normal);
+    text-align: right;
+    word-break: break-word;
 
     ${props =>
         props.valueType === "version" &&
         `
-        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-        background: var(--gray-50);
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border-radius: var(--border-radius-small);
-        color: var(--primary-color);
-        border: 1px solid rgba(25, 118, 210, 0.1);
+        font-family: var(--font-mono);
+        background: var(--bg-tertiary);
+        padding: 2px var(--space-2);
+        border-radius: var(--radius-sm);
+        color: var(--text-amber);
+        border: 1px solid var(--border-color);
         display: inline-block;
     `}
 
@@ -45,6 +51,7 @@ const SCxValue = styled.span<{ valueType: string }>`
         props.valueType === "strong" &&
         `
         font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
     `}
 `
 

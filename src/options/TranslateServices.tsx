@@ -121,6 +121,7 @@ const ConfigForm = styled.div`
 
 const SourceToggleGroup = styled.div`
     display: inline-flex;
+    align-self: flex-start;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;

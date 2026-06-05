@@ -12,14 +12,16 @@ interface OptionsSectionProps {
 const Section = styled.div`
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
-    padding: var(--space-4) var(--space-5);
-    margin-bottom: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    margin-bottom: var(--space-5);
     border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
     position: relative;
     transition: all var(--transition-base);
 
     &:hover {
-        border-color: var(--gray-300);
+        border-color: var(--border-citrus);
+        box-shadow: var(--shadow-md);
     }
 `
 
@@ -28,29 +30,28 @@ const SectionHeader = styled.div`
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-light);
-    margin: 0 0 var(--space-4) 0;
-    padding-bottom: var(--space-3);
+    margin: 0 0 var(--space-5) 0;
+    padding-bottom: var(--space-4);
 `
 
 const SectionTitle = styled.h3`
-    font-size: var(--font-size-base);
+    font-family: var(--font-display);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
     display: flex;
-    justify-content: baseline;
+    align-items: center;
     gap: var(--space-2);
-    position: relative;
+    letter-spacing: -0.01em;
     margin: 0;
 
     &::before {
         content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        margin-right: var(--space-2);
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        background: var(--gradient-citrus);
         flex-shrink: 0;
-        margin-top: 5px;
     }
 `
 
@@ -69,12 +70,12 @@ const SectionContent = styled.div<{ layout?: string }>`
     ${props =>
         props.layout === "grid" &&
         `
-        grid-template-columns: 1fr 1fr;
-        gap: var(--space-4);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-5);
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             grid-template-columns: 1fr;
-            gap: var(--space-3);
+            gap: var(--space-4);
         }
     `}
 

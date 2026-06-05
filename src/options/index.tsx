@@ -33,10 +33,15 @@ const SidebarWrapper = styled.div`
 
 const MainContent = styled.main`
     flex: 1;
-    padding: var(--space-6) var(--space-8);
+    padding: var(--space-8) var(--space-8) var(--space-10);
     overflow-y: auto;
     background: var(--bg-primary);
     ${hideScrollBar}
+`
+
+const ContentInner = styled.div`
+    max-width: 880px;
+    margin: 0 auto;
 `
 
 const IndexOptions: React.FunctionComponent = () => {
@@ -90,13 +95,15 @@ const IndexOptions: React.FunctionComponent = () => {
             </SidebarWrapper>
 
             <MainContent className="content options-scrollbar">
-                <OptionsContentHeader
-                    title={contentInfo.title}
-                    description={contentInfo.description}
-                />
-                <ErrorBoundary fallbackRender={ErrorFallback}>
-                    {renderContent()}
-                </ErrorBoundary>
+                <ContentInner>
+                    <OptionsContentHeader
+                        title={contentInfo.title}
+                        description={contentInfo.description}
+                    />
+                    <ErrorBoundary fallbackRender={ErrorFallback}>
+                        {renderContent()}
+                    </ErrorBoundary>
+                </ContentInner>
             </MainContent>
         </Container>
     )

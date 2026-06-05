@@ -446,4 +446,18 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：用户要求对 popup / options / sidepanel 三个外壳走「全新视觉方向」，从上一版「夜·琥珀暗色」彻底切换。经方向选择确定为 **阳光柑橘（Sunlit Citrus）**——清亮暖白 + 柑橘→鲜绿招牌渐变 + 大圆角 + 柔和漫射暖阴影 + 圆润显示体，明亮、友好、通透，贴合「译趣喵」playful 翻译猫的定位。沿用既有 token 驱动架构：**保留所有 CSS 变量名、只替换值**，并为更名的渐变/边框/mixin 保留别名，让 40+ 组件自动级联新观感，仅需手动重写三个外壳内联的专属渐变/辉光、`OptionsSidebar` 写死的深色，以及顺手清理一批历史残留的紫/旧橙焦点环。页面注入的划词/沉浸式/图片翻译 UI 本次仍保持克制不动。字体沿用「命名 + 系统回退」不打包远程文件。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。
 
+---
+
+### 2026-06-05 — options/popup/sidepanel 排版与结构优化（含修复 InfoDisplay 失效变量 bug）
+
+**修改内容**：
+- `src/components/InfoDisplay/index.tsx`（**修复真 bug**）：原组件引用了主题中**根本不存在**的 CSS 变量 `--spacing-xl`/`--spacing-sm`/`--spacing-xs`/`--border-radius-small`，导致 margin/padding/radius 全部失效（回退为 0），「关于」页信息行塌成一坨；version 类型还残留旧蓝边 `rgba(25,118,210,0.1)`。改为：失效变量全部换成实际存在的 `--space-*`/`--radius-*`；布局由「label 上、value 下」竖排改为 **label/value 左右对齐的信息行**（`flex + space-between` + 底部发丝线分隔）；version 徽标用 `--font-mono` + `--bg-tertiary` 底 + `--text-amber` 字 + 柑橘边
+- `src/components/OptionsSection/index.tsx`：section 标题层级增强——字号 `base`(13px) → `lg`(14px) 并改 `--font-display` 圆润显示体、首部圆点改为柑橘渐变小方块；内距 `16/20` → `20/24` 更舒展，section 间距 `--space-4` → `--space-5`；新增 `--shadow-sm` 卡片阴影、hover 改柑橘边 + `--shadow-md`（与全局卡片观感统一）；grid 断点由 `768px` 调整为 `900px`（窄 options 视口下双列更早回落单列），`1fr 1fr` → `repeat(2, minmax(0,1fr))` 防止内容溢出撑列
+- `src/components/FormRow/index.tsx`：改为 `flex column + gap` 统一垂直节奏；**描述移到 label 下方、控件之上**（先读说明再操作，更符合阅读顺序）；移除 label 左侧多余的灰圆点（与 section 圆点、nav 圆点语义重复），label 加粗到 `semibold`；hover 背景改 `--bg-tertiary` + 透明边框 → 柔和发丝边，描述字色降到 `--text-tertiary` 弱化层级
+- `src/components/ToggleRow/index.tsx`：内距/圆角/hover 与新版 `FormRow` 对齐（`--space-3` + `--radius-md` + `--bg-tertiary` hover），去掉底部硬分隔线改为卡片式行；标题/描述字号层级与 FormRow 统一（`sm` 标题 semibold + `xs` 描述 `--text-tertiary`）
+- `src/options/index.tsx`：`MainContent` 内容区新增 `ContentInner`（`max-width: 880px` + `margin: 0 auto`）——宽屏显示器下内容不再拉满整行损害可读性，居中成舒适阅读宽度；主区上下内距加大（`--space-8`/`--space-10`）
+- `src/background/config/hotlink-sites.generated.ts`：重新同步生成（`pnpm check:hotlink-rules` 检测到过期，与本次改动无关）
+
+**原因**：用户要求在保持阳光柑橘配色不变的前提下，优化 options/popup/sidepanel 的**排版与结构**。排查发现五个 options 子页全部由共享原语（`OptionsSection`/`FormRow`/`ToggleRow`/`InfoDisplay`）拼装，排版质量的杠杆点集中在这几个原语——改原语即可级联到所有子页，无需逐页改。过程中发现 `InfoDisplay` 引用了一批从未在主题中定义的 `--spacing-*`/`--border-radius-*` 变量（疑似从早期某版主题遗留、改主题时未同步），是「关于」页排版塌陷的真因，一并修复。整体优化方向：统一垂直节奏与内距、增强 section 标题层级、描述前置符合阅读顺序、弱化重复的装饰圆点、宽屏内容居中限宽。仅动排版/结构/失效变量，不改任何业务逻辑、props 与数据流。`pnpm check` 全量通过（0 error，仅余存量 warning）。
+
 
