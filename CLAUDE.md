@@ -460,4 +460,15 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：用户要求在保持阳光柑橘配色不变的前提下，优化 options/popup/sidepanel 的**排版与结构**。排查发现五个 options 子页全部由共享原语（`OptionsSection`/`FormRow`/`ToggleRow`/`InfoDisplay`）拼装，排版质量的杠杆点集中在这几个原语——改原语即可级联到所有子页，无需逐页改。过程中发现 `InfoDisplay` 引用了一批从未在主题中定义的 `--spacing-*`/`--border-radius-*` 变量（疑似从早期某版主题遗留、改主题时未同步），是「关于」页排版塌陷的真因，一并修复。整体优化方向：统一垂直节奏与内距、增强 section 标题层级、描述前置符合阅读顺序、弱化重复的装饰圆点、宽屏内容居中限宽。仅动排版/结构/失效变量，不改任何业务逻辑、props 与数据流。`pnpm check` 全量通过（0 error，仅余存量 warning）。
 
+---
+
+### 2026-06-05 — 页面注入的翻译 loading 与错误提示 UI 主题化（阳光柑橘）
+
+**修改内容**（均在 `src/utils/dom.ts`，注入页面，主题 CSS 变量不可用，全部使用字面色值）：
+- `createLoadingELement`：原 loading 是蓝灰 border 转圈（`#f3f3f3` 轨 + `#3498db` 蓝顶），改为 **阳光柑橘渐变彗星圆环**——用 `conic-gradient`（橙→黄→绿，尾部透明渐隐）+ `radial-gradient` mask 裁出圆环（厚度按尺寸 `max(3, size*0.12)` 自适应）+ `drop-shadow` 柑橘柔光，旋转时呈现渐变扫尾的阳光感；动画关键帧 `spin` 改名 `meowSpin`（避免与宿主页或其它组件的同名 keyframe 冲突；经核查 `TranslateServices` 的 `spin` 是 styled-component 内部作用域，互不影响）
+- `createTranslationErrorUI` 内联重试/错误原因按钮：紫色 `#7748f9`/`#6b3fd9`/`#f0eaff` → 柑橘 `#e0760f`/`#c4630a`/`#fff3e6`，加粗、加大圆角与内距
+- 错误详情弹窗：遮罩由冷板岩 `rgba(15,23,42,0.5)` 改暖墨 `rgba(43,30,12,0.45)`；弹窗卡片改暖白 `#fffdf8` + 柑橘描边 + 暖色柔阴影 + 圆角 16 + 顶部柑橘渐变饰条（新增 `mewcat-error-modal-accent` 元素）+ 圆润字体栈；关闭按钮、错误标题、详情区配色全部改为阳光柑橘暖色系（详情区改奶油内嵌 `#f6efe1`，标题保留语义红 `#e5484d`）
+
+**原因**：用户要求页面注入的翻译 loading 与错误提示也跟上阳光柑橘主题，并特别希望 loading 旋转时有「渐变的阳光柑橘」质感、错误提示按主题自由发挥。这是首次将沉浸式翻译过程中的注入态 UI（loading / 错误）纳入主题，与悬浮按钮一道完成品牌一致性收口；划词/图片等其余注入 UI 仍暂不改。`pnpm check` 全量通过（0 error，仅余存量 warning）。
+
 

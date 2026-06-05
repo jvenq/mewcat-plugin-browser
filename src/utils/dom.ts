@@ -112,17 +112,28 @@ export function createTranslationDisplayElement(
 }
 
 export function createLoadingELement(size = 30) {
-    // 创建旋转的loading元素
+    // 创建旋转的 loading 元素（阳光柑橘渐变彗星圆环）
+    // 注入页面，主题 CSS 变量不可用，使用字面色值
+    const thickness = Math.max(3, Math.round(size * 0.12))
     const spinner = document.createElement("div")
     spinner.className = "meow-loading"
     spinner.style.cssText = `
             width: ${size}px;
             height: ${size}px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
             border-radius: 50%;
             display: inline-block;
-            animation: spin 1s linear infinite;
+            box-sizing: border-box;
+            background: conic-gradient(
+                from 140deg,
+                rgba(255, 122, 30, 0) 0deg,
+                rgba(255, 194, 46, 0.55) 150deg,
+                #ff8a1e 290deg,
+                #ff7a1e 360deg
+            );
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - ${thickness}px), #000 calc(100% - ${thickness}px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - ${thickness}px), #000 calc(100% - ${thickness}px));
+            filter: drop-shadow(0 0 3px rgba(255, 138, 30, 0.35));
+            animation: meowSpin 0.85s linear infinite;
         `
 
     // 创建动画样式
@@ -135,7 +146,7 @@ export function createLoadingELement(size = 30) {
 
     if (!isCreatedLoadingStyleSheet) {
         styleSheet.textContent = `
-            @keyframes spin {
+            @keyframes meowSpin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
@@ -213,18 +224,19 @@ export function createTranslationErrorUI(
         const button = document.createElement("span")
         button.className = className
         button.style.cssText = `
-            color: #7748f9;
+            color: #e0760f;
             cursor: pointer;
             user-select: none;
             ${className === "mewcat-retry-btn" ? "margin-right: 6px;" : ""}
             font-size: 0.75em;
+            font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 2px;
             transition: all 0.15s ease;
-            padding: 2px 4px;
-            border-radius: 4px;
+            padding: 2px 6px;
+            border-radius: 6px;
         `
         button.setAttribute("title", title)
         button.appendChild(icon)
@@ -232,11 +244,11 @@ export function createTranslationErrorUI(
 
         // 悬停效果
         button.addEventListener("mouseenter", () => {
-            button.style.color = "#6b3fd9"
-            button.style.backgroundColor = "#f0eaff"
+            button.style.color = "#c4630a"
+            button.style.backgroundColor = "#fff3e6"
         })
         button.addEventListener("mouseleave", () => {
-            button.style.color = "#7748f9"
+            button.style.color = "#e0760f"
             button.style.backgroundColor = "transparent"
         })
 
@@ -284,7 +296,7 @@ export function createTranslationErrorUI(
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(15, 23, 42, 0.5);
+        background: rgba(43, 30, 12, 0.45);
         backdrop-filter: blur(4px);
         z-index: 999999;
         justify-content: center;
@@ -296,14 +308,29 @@ export function createTranslationErrorUI(
     const errorModalContent = document.createElement("div")
     errorModalContent.className = "mewcat-error-modal-content"
     errorModalContent.style.cssText = `
-        background: #ffffff;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        background: #fffdf8;
+        padding: 26px 24px 24px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 138, 30, 0.18);
+        box-shadow: 0 24px 60px rgba(120, 86, 30, 0.22), 0 8px 20px rgba(120, 86, 30, 0.12);
         max-width: 500px;
         min-width: 400px;
         position: relative;
+        overflow: hidden;
+        font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, sans-serif;
         animation: slideUp 0.3s ease;
+    `
+
+    // 顶部柑橘渐变饰条
+    const accentBar = document.createElement("div")
+    accentBar.className = "mewcat-error-modal-accent"
+    accentBar.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #ff7a1e 0%, #ffc22e 52%, #8bc53f 100%);
     `
 
     // 关闭按钮
@@ -318,18 +345,18 @@ export function createTranslationErrorUI(
         border: none;
         font-size: 20px;
         cursor: pointer;
-        color: #94a3b8;
+        color: #9e907a;
         padding: 4px 8px;
-        border-radius: 6px;
+        border-radius: 8px;
         transition: all 0.15s ease;
         line-height: 1;
     `
     closeButton.addEventListener("mouseenter", () => {
-        closeButton.style.color = "#1e293b"
-        closeButton.style.backgroundColor = "#f1f5f9"
+        closeButton.style.color = "#2b2117"
+        closeButton.style.backgroundColor = "#f6efe1"
     })
     closeButton.addEventListener("mouseleave", () => {
-        closeButton.style.color = "#94a3b8"
+        closeButton.style.color = "#9e907a"
         closeButton.style.backgroundColor = "transparent"
     })
 
@@ -338,31 +365,33 @@ export function createTranslationErrorUI(
     errorTypeTitle.style.cssText = `
         margin: 0 0 16px 0;
         font-size: 18px;
-        font-weight: 600;
-        color: #ef4444;
+        font-weight: 700;
+        color: #e5484d;
         display: flex;
         align-items: center;
         gap: 8px;
+        letter-spacing: -0.01em;
     `
     errorTypeTitle.textContent = errorType
 
     // 错误详情内容
     const errorDetailsContent = document.createElement("div")
     errorDetailsContent.style.cssText = `
-        color: #64748b;
+        color: #6e614e;
         font-size: 14px;
         line-height: 1.6;
         word-break: break-word;
         max-height: 300px;
         overflow-y: auto;
-        padding: 12px;
-        background: #f8fafc;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
+        padding: 14px;
+        background: #f6efe1;
+        border-radius: 10px;
+        border: 1px solid rgba(70, 50, 25, 0.12);
     `
     errorDetailsContent.textContent = errorDetails
 
     // 组装弹窗内容
+    errorModalContent.appendChild(accentBar)
     errorModalContent.appendChild(closeButton)
     errorModalContent.appendChild(errorTypeTitle)
     errorModalContent.appendChild(errorDetailsContent)
