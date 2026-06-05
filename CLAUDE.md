@@ -445,20 +445,12 @@ pnpm package      # 打包为带日期的 ZIP
 
 ---
 
-### 2026-06-05 — 清除旧品牌 doc2x 的全部残留
+### 2026-06-05 — docs 文档瘦身：只保留核心参考文档
 
-**修改内容**：
-- `assets/rule.json`：删除 `id: "doc2x"` 的沉浸式翻译站点规则块（`matches: ["doc2x.com", "doc2x.noedgeai.com"]`，excludeSelectors `#md-scroll-top-dom`）
-- `package.json`：`manifest.host_permissions` 移除旧后端域名 `https://v2c.doc2x.noedgeai.com/*`；`scripts` 删除 `test:rpc`（`npx tsx ./test/test-rpc.ts`）与 `test:rpc:web`（`node ./test/test-server.mjs`）两条已失效脚本（对应测试文件已删除）
-- `CLAUDE.md`：SYSTEM 模型说明移除 `PLASMO_PUBLIC_DOC2X_API_DOMAIN` 引用（该变量源码实际从未使用）；「环境变量」表的唯一一行 DOC2X 替换为源码真实使用的 `PLASMO_PUBLIC_ENABLE_CANVAS_REBUILD` / `PLASMO_PUBLIC_CANVAS_ROLLOUT_PERCENT`（来自 `src/background/config/canvas-sites.ts`），避免留空表
-- 删除文件（以旧 doc2x 后端 RPC 为核心、已无意义）：`test/test-rpc.html`、`test/test-server.mjs`（`test/test-rpc.ts` 此前已在删除暂存中）
-- 文本抹除（文件本身服务于其它用途，仅含 doc2x 字符串，故保留文件只改文本）：
-  - `test/README.md`：删除整段「RPC 调用测试」章节、对应运行说明、注意事项里的 test-rpc.ts 行、相关文档里的 doc2x API 链接，并把剩余测试小节重新编号
-  - `test/401-interceptor-report.md`：`doc2xRequest` → `mewCatRequest`
-  - `docs/commit-69f246e-analysis-report.md`：`__doc2xCanvasHookState__` → `__mewCatCanvasHookState__`（与现行代码一致）
-  - `docs/manga-sites-rollout-plan.md`：通信频道 `doc2x-canvas-hook` → `mewcat-canvas-hook`
-  - `docs/cache/{completion-report,delivery-report,final-summary,project-summary}`：页脚旧项目名 `Doc2X 浏览器翻译插件` → `mewCat（译趣喵）浏览器翻译插件`
+**修改内容**：删除 `docs/` 下 21 个一次性过程产物与冗余文档，仅保留 6 份描述当前架构/代码模块的参考文档。
+- 删除：`docs/.DS_Store`（macOS 垃圾文件）；`docs/cache/` 整个目录（9 份分层翻译缓存系统的交付/完成/总结/快速开始/索引等「🎉 庆祝式」重复文档，功能已落地在 `src/translation/cache/`，文档无长期参考价值）；`docs/BUILD_OPTIMIZATION.md`；`docs/commit-69f246e-analysis-report.md`（单 commit 分析报告）；`docs/google-translate.md`；`docs/image-capture-implementation-plan.md`（落地方案）；`docs/image-translation-implementation-report.md`（实施快照）；`docs/manga-sites-rollout-plan.md`（rollout 方案）；`docs/mutationObserver.md`（951 行「实现提示词」prompt）；`docs/state-sync-test.md`（测试笔记）；`docs/thinking-capability-feature.md`；`docs/translation/HtmlStandardTranslator.md`、`docs/translation/VolcanoConfigUpgrade.md`（一次性升级迁移指南）
+- 保留：`docs/aiModels.md`、`docs/DOM_PROCESSING_LOGIC.md`（核心 DOM 处理逻辑设计）、`docs/MutationObserverManager.md`、`docs/translation/{ApiKeyValidator,ImmersiveTranslator,UniversalTranslator}.md`
 
-**原因**：用户要求删除项目中与旧品牌/旧后端 doc2x 相关的一切内容。doc2x 是项目更名为 mewCat 之前的旧品牌与后端域名（`*.doc2x.noedgeai.com`）。排查确认 `src/` 源码已无任何 doc2x 引用、`PLASMO_PUBLIC_DOC2X_API_DOMAIN` 也从未被代码读取，残留集中在：扩展实际打包的站点规则与后台域名权限（功能性，编辑移除）、以及一批历史文档/测试文件的字符串提及。对真正以 doc2x 后端为核心的 RPC 测试文件采取整文件删除；对 `docs/cache/*` 缓存系统文档与 `test/README.md` 等「仅在页脚/链接处提及 doc2x、主体与 doc2x 无关」的文件，仅抹除 doc2x 文本并保留文件——整删会损坏一套完整的缓存文档集（`docs/cache/INDEX.md` 仍索引这些报告）且丢失无关成果。清理后全仓 `grep -i doc2x` 零命中，`pnpm check` 全量通过（0 error）。
+**原因**：用户要求删除 docs 中多余/无用文档，只保留关键文档，选定「激进」力度。`docs/` 长期积累了大量一次性过程产物——针对单个功能/commit 的方案（plan）、报告（report）、交付总结（summary/completion/delivery），以及给 AI 的实现提示词（prompt）和一次性迁移指南，任务完成即失效，且与代码同步成本高、易过时误导。`docs/cache/` 一个已落地功能竟有 9 份高度重复的交付文档，是冗余重灾区。仅保留描述当前架构与现存代码模块（对应 `src/translation/` 下仍在用的类）的参考文档。删除后核对：保留文档之间无指向被删文档的悬空内部链接，`pnpm check` 全量通过（0 error）。
 
 
