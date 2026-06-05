@@ -419,4 +419,31 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：用户要求大范围重构 UI。原界面是「系统字体 + 浅色 + 扁平橙色」的通用 SaaS 极简风，缺乏品牌个性，与「译趣喵 / mewCat」playful 翻译猫的定位脱节。本次确定方向为 **夜·琥珀（Amber Nightdesk）**——暖黑墨底色 + 琥珀辉光 + Sora/DM Mono 字体的精致暗色风格，既减少长文阅读/翻译场景的眼睛疲劳，又通过统一的 token 体系（CSS 变量 + SCSS mixin）让 40+ 组件自动继承新观感，仅需改动 token、mixin 与 3 个外壳布局（popup / options / sidepanel）。页面注入的划词/沉浸式 UI 本次保持克制不动（避免在任意网站上喧宾夺主）。字体采用本地系统回退而非远程 `@import`，规避 MV3 CSP 限制。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。生产 `pnpm build` 因 Parcel 缓存文件（`.plasmo/cache/parcel/*.mdb`）被本机正在运行的 `pnpm dev` 进程占用而无法执行，与本次改动无关，待 dev 进程释放后可正常打包。
 
+---
+
+### 2026-06-05 — UI 大范围重构：阳光柑橘亮色主题（Sunlit Citrus）
+
+**修改内容**：
+- `src/styles/theme.scss`（整体重写）：配色由「夜·琥珀暗色」翻转为 **阳光柑橘亮色**——清亮暖白底 + 柑橘橙主色 + 鲜绿点缀 + 大圆角 + 柔和漫射暖阴影。
+  - 背景层全部转浅色：`--bg-base #fbf6ec`（暖奶白页面）→ `--bg-primary #fffdf8` → `--bg-secondary #ffffff`（纯白卡片）→ `--bg-tertiary #f6efe1`（内嵌/输入填充）；新增 `--sun-glow`（右上角阳光氛围径向光晕，供外壳引用）
+  - 主色改柑橘橙 `--primary-color #ff8a1e`；新增鲜绿点缀 `--accent-green #5fb84c`/`--accent-green-deep`/`--accent-yellow`；招牌渐变 `--gradient-citrus`（`135deg, #ff7a1e → #ffc22e → #8bc53f`，日→果→叶，中段走黄不发浑），`--gradient-amber` 保留为指向 `--gradient-citrus` 的别名（兼容历史组件）
+  - 文字改暖墨色阶 `--text-primary #2b2117` → `--text-tertiary #9e907a`；`--text-amber` 取更深柑橘 `#e07712` 保证浅底对比度；`--gray-*` 灰阶整体翻为暖浅色
+  - 功能色（success/warning/error/info）改为亮底适配；边框改暖发丝线 `rgba(70,50,25,*)`，新增 `--border-citrus`/`--border-strong`（`--border-amber` 保留为别名）
+  - 圆角整体放大（`sm 8 / md 12 / lg 16 / xl 22`）走「圆润友好」；阴影改 **柔和漫射暖阴影** `rgba(120,86,30,*)`（非黑色硬阴影），`--shadow-primary` 改柑橘辉光
+  - 字体改 `--font-family: "Plus Jakarta Sans"` 清晰无衬正文 + 新增 `--font-display`（`ui-rounded`/`SF Pro Rounded`/`Baloo 2` 圆润显示体，macOS 直接拿系统圆体）+ `--font-mono: "DM Mono"`（均带系统回退，未引入远程 `@import`，规避 MV3/CSP）
+  - mixin（`btn-*`/`input-base`/`card-*`/`list-item`/`divider`）全部转亮色柑橘；新增 `citrus-scrollbar`/`citrus-badge`/`citrusPulse`，旧名 `amber-scrollbar`/`amber-badge`/`amberPulse` 保留为别名 mixin/关键帧（兼容历史引用）
+- `src/popup/index.tsx`（重写样式）：浅色容器 + `--sun-glow` 阳光氛围 + 顶部柑橘渐变条；标题改圆润显示体，header chip 带鲜绿呼吸点；分组卡白底柔阴影；语言行箭头改柑橘渐变圆形徽章；设置按钮亮色柑橘 hover
+- `src/sidepanel/index.tsx`：容器叠加 `--sun-glow`；标题改显示体；徽标 border/color 转柑橘；输入框 focus 环改柑橘 `rgba(255,138,30,*)`
+- `src/components/OptionsSidebar/index.tsx`：写死的深色 `#18140f` 渐变侧栏 → 暖奶白侧栏 + `--sun-glow`，右缘竖线与激活轨改柑橘，标题改显示体放大
+- `src/components/OptionsContentHeader/index.tsx`：标题改显示体 `--font-display` 并放大到 `4xl`，首字母/描述竖条经别名自动转柑橘
+- `src/options/index.tsx`：固定容器叠加 `--sun-glow` 阳光氛围
+- `src/components/Switch/index.tsx`：未选中轨道改浅灰 `--gray-300` + 白色滑块（亮色态正确观感），阴影改暖色 `rgba(120,86,30,*)`，hover 光环改柑橘
+- `src/components/{NativeSelect,Select,NumberInput,ApiKeyInput,UrlManager}/index.tsx`：清理残留的旧紫色焦点环 `rgba(119,72,249,0.1)` → 柑橘 `rgba(255,138,30,0.14)`
+- `src/components/SettingsPanel/index.tsx`：语言行边框旧橙 `rgba(249,115,22,0.15)` → 柑橘 `rgba(255,138,30,0.18)`
+- `src/contents/TranslationControlCenter.tsx`：页面注入的悬浮翻译按钮——仅做颜色对齐（不动行为/布局），残留的旧橙 `rgba(249,115,22,*)` 光环/边框 → 柑橘 `rgba(255,138,30,*)`，stale fallback `#f97316`/`#fff7ed` → `#ff8a1e`/`#fff3e6`，已翻译勾选徽标绿色对齐 `var(--accent-green)`，中性阴影改暖色。此为唯一一处「破例」改动的页面注入 UI，因品牌悬浮按钮出现在所有网页上，需与新主色一致
+- `.cspell/custom-words.txt`：新增 `Maru`/`Baloo`/`ProN`（字体名片段）
+- `src/background/config/hotlink-sites.generated.ts`：重新同步生成（`pnpm check:hotlink-rules` 检测到过期，与本次改动无关）
+
+**原因**：用户要求对 popup / options / sidepanel 三个外壳走「全新视觉方向」，从上一版「夜·琥珀暗色」彻底切换。经方向选择确定为 **阳光柑橘（Sunlit Citrus）**——清亮暖白 + 柑橘→鲜绿招牌渐变 + 大圆角 + 柔和漫射暖阴影 + 圆润显示体，明亮、友好、通透，贴合「译趣喵」playful 翻译猫的定位。沿用既有 token 驱动架构：**保留所有 CSS 变量名、只替换值**，并为更名的渐变/边框/mixin 保留别名，让 40+ 组件自动级联新观感，仅需手动重写三个外壳内联的专属渐变/辉光、`OptionsSidebar` 写死的深色，以及顺手清理一批历史残留的紫/旧橙焦点环。页面注入的划词/沉浸式/图片翻译 UI 本次仍保持克制不动。字体沿用「命名 + 系统回退」不打包远程文件。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。
+
 

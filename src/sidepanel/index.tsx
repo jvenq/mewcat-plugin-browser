@@ -27,6 +27,9 @@ const Container = styled.div`
         var(--bg-primary) 0%,
         var(--bg-base) 100%
     );
+    background-image:
+        var(--sun-glow),
+        linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-base) 100%);
     font-family: var(--font-family);
     color: var(--text-primary);
 `
@@ -66,8 +69,9 @@ const Logo = styled.img`
 `
 
 const HeaderTitle = styled.h1`
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0;
     flex: 1;
@@ -79,9 +83,9 @@ const HeaderBadge = styled.span`
     align-items: center;
     gap: 4px;
     padding: 2px var(--space-2);
-    color: var(--primary-color);
+    color: var(--text-amber);
     background: var(--primary-light);
-    border: 1px solid rgba(245, 166, 35, 0.2);
+    border: 1px solid rgba(255, 138, 30, 0.24);
     border-radius: var(--radius-full);
     font-family: var(--font-mono);
     font-size: var(--font-size-xs);
@@ -210,9 +214,9 @@ const StyledTextarea = styled.textarea`
     &:focus {
         outline: none;
         border-color: var(--primary-color);
-        background: var(--bg-tertiary);
+        background: var(--bg-secondary);
         box-shadow:
-            0 0 0 3px rgba(245, 166, 35, 0.12),
+            0 0 0 3px rgba(255, 138, 30, 0.14),
             var(--shadow-sm);
     }
 `

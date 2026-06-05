@@ -13,12 +13,12 @@ const HeaderContainer = styled.div`
 `
 
 const ContentTitle = styled.h2`
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0 0 var(--space-3) 0;
     line-height: var(--line-height-tight);
-    font-family: var(--font-family);
+    font-family: var(--font-display);
     letter-spacing: -0.02em;
 
     &::first-letter {

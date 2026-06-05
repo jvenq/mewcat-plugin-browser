@@ -19,7 +19,9 @@ interface OptionsSidebarProps {
 const SidebarContainer = styled.aside`
     width: 280px;
     height: 100%;
-    background: linear-gradient(180deg, #18140f 0%, #14100b 100%);
+    background: linear-gradient(180deg, #fffdf8 0%, #fbf6ec 100%);
+    background-image:
+        var(--sun-glow), linear-gradient(180deg, #fffdf8 0%, #fbf6ec 100%);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -36,7 +38,7 @@ const SidebarContainer = styled.aside`
         background: linear-gradient(
             180deg,
             transparent 0%,
-            rgba(245, 166, 35, 0.1) 50%,
+            rgba(255, 138, 30, 0.22) 50%,
             transparent 100%
         );
         pointer-events: none;
@@ -66,13 +68,13 @@ const SidebarHeader = styled.div`
 `
 
 const SidebarTitle = styled.h1`
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0 0 var(--space-2) 0;
     line-height: var(--line-height-tight);
     letter-spacing: -0.01em;
-    font-family: var(--font-family);
+    font-family: var(--font-display);
 
     &::first-letter {
         color: var(--primary-color);

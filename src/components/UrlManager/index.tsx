@@ -116,7 +116,7 @@ const SCxInput = styled.input`
     &:focus {
         outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(119, 72, 249, 0.1);
+        box-shadow: 0 0 0 3px rgba(255, 138, 30, 0.14);
     }
 
     &::placeholder {

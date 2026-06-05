@@ -38,23 +38,22 @@ const SCxFloatingButton = styled.div`
     opacity: 0.85;
     background: var(--bg-secondary, #ffffff);
     box-shadow:
-        0 2px 10px rgba(0, 0, 0, 0.12),
-        0 0 0 1px rgba(249, 115, 22, 0.15);
+        0 2px 10px rgba(120, 86, 30, 0.16),
+        0 0 0 1px rgba(255, 138, 30, 0.18);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.25s ease;
     user-select: none;
-    border: 1.5px solid rgba(249, 115, 22, 0.25);
 
     &:hover {
         opacity: 1;
         transform: scale(1.08);
         box-shadow:
-            0 4px 16px rgba(249, 115, 22, 0.2),
-            0 0 0 1px rgba(249, 115, 22, 0.3);
-        border-color: rgba(249, 115, 22, 0.5);
+            0 4px 16px rgba(255, 138, 30, 0.28),
+            0 0 0 1px rgba(255, 138, 30, 0.4);
+        border-color: rgba(255, 138, 30, 0.5);
     }
 
     &:active {
@@ -63,11 +62,13 @@ const SCxFloatingButton = styled.div`
 `
 
 const SCxIcon = styled.img`
-    width: 45px;
-    height: 45px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     -webkit-user-drag: none;
     user-select: none;
+    overflow: hidden;
+    border-radius: 100%;
 `
 
 const SCxTickIcon = styled.div`
@@ -80,10 +81,10 @@ const SCxTickIcon = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #68cd52;
+    background-color: var(--accent-green, #5fb84c);
     border-radius: 100%;
     z-index: 1;
-    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 2px 4px rgba(95, 184, 76, 0.35);
 `
 
 const SCxSettingsIcon = styled.div.withConfig({
@@ -98,7 +99,7 @@ const SCxSettingsIcon = styled.div.withConfig({
     border-radius: 50%;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(120, 86, 30, 0.14);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,10 +110,10 @@ const SCxSettingsIcon = styled.div.withConfig({
     pointer-events: ${props => (props.visible ? "auto" : "none")};
 
     &:hover {
-        background: var(--primary-light, #fff7ed);
-        border-color: var(--primary-color, #f97316);
+        background: var(--primary-light, #fff3e6);
+        border-color: var(--primary-color, #ff8a1e);
         transform: translateX(-50%) scale(1.1);
-        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        box-shadow: 0 4px 12px rgba(255, 138, 30, 0.24);
 
         svg {
             color: var(--primary-color);

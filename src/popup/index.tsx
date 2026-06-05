@@ -15,7 +15,7 @@ import Tooltip from "../components/Tooltip"
 import iconImg from "~/assets/icon.png"
 
 // ============================================
-// 夜·琥珀 — Popup
+// 阳光柑橘 — Popup
 // ============================================
 
 const PopupContainer = styled.div`
@@ -25,9 +25,11 @@ const PopupContainer = styled.div`
     display: flex;
     flex-direction: column;
     background: var(--bg-primary);
+    background-image: var(--sun-glow);
     font-family: var(--font-family);
     color: var(--text-primary);
     position: relative;
+    overflow: hidden;
 
     &::before {
         content: "";
@@ -35,9 +37,8 @@ const PopupContainer = styled.div`
         top: 0;
         left: 0;
         right: 0;
-        height: 2px;
-        background: var(--gradient-amber);
-        opacity: 0.8;
+        height: 4px;
+        background: var(--gradient-citrus);
     }
 `
 
@@ -46,24 +47,26 @@ const Header = styled.div`
     align-items: center;
     gap: var(--space-3);
     margin-bottom: var(--space-4);
-    padding-bottom: var(--space-3);
+    padding-bottom: var(--space-4);
     border-bottom: 1px solid var(--border-light);
 `
 
 const Logo = styled.img`
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-md);
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
     box-shadow: var(--shadow-primary-sm);
 `
 
 const HeaderInfo = styled.div`
     flex: 1;
+    min-width: 0;
 `
 
 const HeaderTitle = styled.h1`
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0 0 2px 0;
     line-height: var(--line-height-tight);
@@ -71,23 +74,39 @@ const HeaderTitle = styled.h1`
 `
 
 const HeaderSubtitle = styled.span`
-    font-size: var(--font-size-xs);
+    font-size: 10px;
     color: var(--text-tertiary);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-family: var(--font-mono);
 `
 
-const HeaderDot = styled.span`
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    box-shadow: 0 0 8px var(--primary-color);
-    animation: amberPulse 2s ease-in-out infinite;
+const HeaderChip = styled.span`
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px var(--space-2);
+    border-radius: var(--radius-full);
+    background: var(--primary-light);
+    border: 1px solid rgba(255, 138, 30, 0.24);
+    color: var(--text-amber);
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     flex-shrink: 0;
 
-    @keyframes amberPulse {
+    &::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-green);
+        box-shadow: 0 0 8px var(--accent-green);
+        animation: popupPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes popupPulse {
         0%,
         100% {
             opacity: 1;
@@ -105,6 +124,7 @@ const Section = styled.div`
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 `
 
@@ -112,7 +132,7 @@ const ListItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px var(--space-3);
+    padding: 12px var(--space-4);
     border-bottom: 1px solid var(--border-light);
     transition: background var(--transition-fast);
 
@@ -126,9 +146,9 @@ const ListItem = styled.div`
 `
 
 const ListItemLabel = styled.span`
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
-    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-medium);
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -138,8 +158,8 @@ const HelpIcon = styled.span`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     border: 1px solid var(--text-tertiary);
     color: var(--text-tertiary);
@@ -165,10 +185,11 @@ const LanguageRow = styled.div`
     align-items: flex-end;
     gap: var(--space-2);
     margin-bottom: var(--space-3);
-    padding: var(--space-3);
+    padding: var(--space-4);
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
 `
 
 const LanguageBox = styled.div`
@@ -180,9 +201,9 @@ const LanguageLabel = styled.label`
     display: block;
     font-size: 10px;
     color: var(--text-tertiary);
-    margin-bottom: 6px;
-    font-weight: var(--font-weight-medium);
-    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-family: var(--font-mono);
 `
@@ -192,28 +213,34 @@ const LanguageLabelRight = styled(LanguageLabel)`
 `
 
 const ArrowIcon = styled.span`
-    color: var(--text-amber-dim);
     display: flex;
-    align-items: flex-end;
-    padding-bottom: 4px;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gradient-citrus);
+    color: #fff;
     flex-shrink: 0;
+    margin-bottom: 3px;
+    box-shadow: var(--shadow-primary-sm);
 
     svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
     }
 `
 
 const SettingsButton = styled.button`
     width: 100%;
     padding: var(--space-3);
-    background: transparent;
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
     font-family: var(--font-family);
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -222,15 +249,20 @@ const SettingsButton = styled.button`
     transition: all var(--transition-fast);
 
     svg {
-        width: 14px;
-        height: 14px;
+        width: 15px;
+        height: 15px;
     }
 
     &:hover {
         background: var(--primary-light);
-        border-color: var(--border-amber);
-        color: var(--primary-color);
-        box-shadow: var(--primary-glow-sm);
+        border-color: var(--border-citrus);
+        color: var(--text-amber);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    &:active {
+        transform: translateY(0) scale(0.99);
     }
 `
 
@@ -314,7 +346,7 @@ function IndexPopup() {
                     <HeaderTitle>译趣喵</HeaderTitle>
                     <HeaderSubtitle>智能翻译助手</HeaderSubtitle>
                 </HeaderInfo>
-                <HeaderDot />
+                <HeaderChip>mewCat</HeaderChip>
             </Header>
 
             <Section>
@@ -379,7 +411,7 @@ function IndexPopup() {
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="2.5"
                     >
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
