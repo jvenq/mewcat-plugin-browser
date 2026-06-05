@@ -25,7 +25,6 @@
         "clean": "rimraf \"**/{node_modules,build,dist,.{cache,log},log,.plasmo}\" pnpm-lock.yaml",
         "zip:prod": " pnpm clean:prod:zip && pnpm package",
         "clean:prod:zip": "rimraf **/build/chrome-mv3-prod.zip",
-        "test:401": "npx tsx ./test/test-401-interceptor.ts",
         "sync:hotlink-rules": "node scripts/sync-hotlink-sites-from-immersive.js",
         "check:hotlink-rules": "node scripts/sync-hotlink-sites-from-immersive.js --check"
     },

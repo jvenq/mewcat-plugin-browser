@@ -453,4 +453,14 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：用户要求删除 docs 中多余/无用文档，只保留关键文档，选定「激进」力度。`docs/` 长期积累了大量一次性过程产物——针对单个功能/commit 的方案（plan）、报告（report）、交付总结（summary/completion/delivery），以及给 AI 的实现提示词（prompt）和一次性迁移指南，任务完成即失效，且与代码同步成本高、易过时误导。`docs/cache/` 一个已落地功能竟有 9 份高度重复的交付文档，是冗余重灾区。仅保留描述当前架构与现存代码模块（对应 `src/translation/` 下仍在用的类）的参考文档。删除后核对：保留文档之间无指向被删文档的悬空内部链接，`pnpm check` 全量通过（0 error）。
 
+---
+
+### 2026-06-05 — 删除完全用不上的测试目录
+
+**修改内容**：
+- 删除 `test/` 整个目录（9 个文件）：`test-401-interceptor.ts`、`test-token-refresh.ts`、`test-token-refresh-real.ts`、`test-token-refresh.html`、`test_abort_functionality.js`、`test_ai_role_integration.js`、`archive/web3-test.js`、`401-interceptor-report.md`、`README.md`
+- `package.json`：移除 `test:401` 脚本（唯一残留的测试入口，目标文件已删）
+
+**原因**：逐个核查后所有测试文件均无法实际运行或已无对应实现：`test-token-refresh.ts` 依赖 `axios-mock-adapter`（README 明确标注「暂未安装」）；`test_ai_role_integration.js` 引用路径写错（`./src/services/TranslationServiceManager.js` 不存在），直接崩溃；`archive/web3-test.js` 依赖已移除；`test_abort_functionality.js`、`test-token-refresh-real.ts` 无 package.json 脚本入口。`test-401-interceptor.ts` 虽有 `test:401` 脚本，但核查 `src/services/request.ts` 发现其中只有类型定义，401 拦截器实现已不存在，该测试验证的是一个早已废弃的实现。整个 `test/` 目录是历史遗留产物，无一有效，全部删除。`pnpm check` 全量通过（0 error）。
+
 
