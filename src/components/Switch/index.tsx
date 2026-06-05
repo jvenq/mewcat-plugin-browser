@@ -43,10 +43,10 @@ const SwitchTrack = styled.span<{ $checked: boolean; $size: string }>`
     width: 100%;
     height: 100%;
     background-color: ${props =>
-        props.$checked ? "var(--primary-color)" : "var(--bg-elevated)"};
+        props.$checked ? "var(--primary-color)" : "var(--gray-300)"};
     border: 1px solid
         ${props =>
-            props.$checked ? "var(--border-amber)" : "var(--border-color)"};
+            props.$checked ? "var(--border-citrus)" : "var(--border-color)"};
     border-radius: 9999px;
     transition: all var(--transition-fast);
     flex-shrink: 0;
@@ -81,14 +81,13 @@ const SwitchTrack = styled.span<{ $checked: boolean; $size: string }>`
             }
             return sizes[props.$size as keyof typeof sizes] || "20px"
         }};
-        background-color: ${props =>
-            props.$checked ? "#fff" : "var(--text-tertiary)"};
+        background-color: #fff;
         border-radius: 50%;
         transition: all var(--transition-fast);
         box-shadow: ${props =>
             props.$checked
-                ? "0 2px 6px rgba(0, 0, 0, 0.3)"
-                : "0 1px 3px rgba(0, 0, 0, 0.4)"};
+                ? "0 2px 6px rgba(120, 86, 30, 0.28)"
+                : "0 1px 3px rgba(120, 86, 30, 0.22)"};
         transform: ${props =>
             props.$checked ? "translateX(calc(100% - 2px))" : "translateX(0)"};
     }
@@ -97,7 +96,7 @@ const SwitchTrack = styled.span<{ $checked: boolean; $size: string }>`
         box-shadow: ${props =>
             props.$checked
                 ? "var(--primary-glow)"
-                : "0 0 0 4px rgba(245, 166, 35, 0.08)"};
+                : "0 0 0 4px rgba(255, 138, 30, 0.1)"};
     }
 `
 

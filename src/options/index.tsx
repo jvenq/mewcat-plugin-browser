@@ -22,6 +22,7 @@ const Container = styled.div`
     height: 100vh;
     display: flex;
     background: var(--bg-primary);
+    background-image: var(--sun-glow);
     font-family: var(--font-family);
     color: var(--text-primary);
 `

@@ -1,119 +1,145 @@
 // ============================================
-// 夜·琥珀 — 深色琥珀主题
+// 阳光柑橘 — Sunlit Citrus
+// 清亮暖白 + 柑橘→鲜绿渐变 + 大圆角 + 柔和漫射暖阴影
 // mewCat (译趣喵) Browser Extension
 // ============================================
 
 :root {
     // ============================================
-    // 背景层 — Deep Ink Backgrounds
+    // 背景层 — Warm Cream Surfaces
     // ============================================
-    --bg-base: #0e0c09;
-    --bg-primary: #131008;
-    --bg-secondary: #1a1610;
-    --bg-tertiary: #221d13;
-    --bg-elevated: #2a2318;
-    --bg-glass: rgba(26, 22, 16, 0.85);
-    --bg-overlay: rgba(14, 12, 9, 0.7);
+    --bg-base: #fbf6ec; // 页面暖奶白底
+    --bg-primary: #fffdf8; // 主表面（近白）
+    --bg-secondary: #ffffff; // 卡片纯白
+    --bg-tertiary: #f6efe1; // 内嵌 / 输入填充
+    --bg-elevated: #ffffff; // 悬浮卡片
+    --bg-glass: rgba(255, 253, 248, 0.82);
+    --bg-overlay: rgba(43, 30, 12, 0.32);
+
+    // 阳光氛围光晕（右上角）
+    --sun-glow: radial-gradient(
+        120% 90% at 100% 0%,
+        rgba(255, 194, 46, 0.18) 0%,
+        rgba(255, 138, 30, 0.08) 35%,
+        transparent 70%
+    );
 
     // ============================================
-    // 琥珀主色 — Amber Accent
+    // 柑橘主色 + 鲜绿点缀 — Citrus Accent
     // ============================================
-    --primary-color: #f5a623;
-    --primary-hover: #f7b84b;
-    --primary-active: #e8941a;
-    --primary-light: rgba(245, 166, 35, 0.12);
-    --primary-muted: rgba(245, 166, 35, 0.06);
-    --primary-glow: 0 0 20px rgba(245, 166, 35, 0.35);
-    --primary-glow-sm: 0 0 10px rgba(245, 166, 35, 0.25);
+    --primary-color: #ff8a1e;
+    --primary-hover: #ff9f44;
+    --primary-active: #f0760a;
+    --primary-light: rgba(255, 138, 30, 0.12);
+    --primary-muted: rgba(255, 138, 30, 0.06);
+    --primary-glow: 0 0 22px rgba(255, 138, 30, 0.32);
+    --primary-glow-sm: 0 0 12px rgba(255, 138, 30, 0.22);
 
-    // 渐变
-    --gradient-amber: linear-gradient(135deg, #f5a623 0%, #f7b84b 100%);
+    // 鲜绿叶色（渐变收尾 / 第二强调）
+    --accent-green: #5fb84c;
+    --accent-green-deep: #3e9b36;
+    --accent-yellow: #ffc22e;
+
+    // 招牌渐变 日→果→叶（橙→黄→绿，中段走黄不发浑）
+    --gradient-citrus: linear-gradient(
+        135deg,
+        #ff7a1e 0%,
+        #ffc22e 52%,
+        #8bc53f 100%
+    );
+    // 旧名保留为别名（兼容历史组件引用）
+    --gradient-amber: var(--gradient-citrus);
     --gradient-subtle: linear-gradient(
         180deg,
-        var(--bg-secondary) 0%,
-        var(--bg-primary) 100%
+        var(--bg-primary) 0%,
+        var(--bg-base) 100%
     );
     --gradient-primary-soft: linear-gradient(
         135deg,
-        rgba(245, 166, 35, 0.1) 0%,
-        rgba(247, 184, 75, 0.05) 100%
+        rgba(255, 138, 30, 0.1) 0%,
+        rgba(139, 197, 63, 0.08) 100%
     );
 
     // ============================================
-    // 中性色 — Warm Dark Grayscale
+    // 中性色 — Warm Light Grayscale
     // ============================================
-    --white: #fdf8f0;
+    --white: #ffffff;
 
-    --gray-50: #1a1610;
-    --gray-100: #221d13;
-    --gray-200: #2e2718;
-    --gray-300: #3d3520;
-    --gray-400: #5c5238;
-    --gray-500: #7a6e52;
-    --gray-600: #9c8e70;
-    --gray-700: #c0b090;
-    --gray-800: #d8c8a0;
-    --gray-900: #f0e4c8;
-
-    // ============================================
-    // 文字颜色 — Warm Type Scale
-    // ============================================
-    --text-primary: #ede0c4;
-    --text-secondary: #b8a880;
-    --text-tertiary: #7a6e52;
-    --text-disabled: #3d3520;
-    --text-inverse: #0e0c09;
-    --text-amber: #f5a623;
-    --text-amber-dim: #c47d10;
+    --gray-50: #fbf6ec;
+    --gray-100: #f6efe1;
+    --gray-200: #ece2d0;
+    --gray-300: #ddd0ba;
+    --gray-400: #c8bba4;
+    --gray-500: #9e907a;
+    --gray-600: #7d6f5a;
+    --gray-700: #5c4f3c;
+    --gray-800: #3d3326;
+    --gray-900: #2b2117;
 
     // ============================================
-    // 功能色 — Semantic (warm-shifted)
+    // 文字颜色 — Warm Ink Scale
     // ============================================
-    --success: #52c77a;
-    --success-bg: rgba(82, 199, 122, 0.1);
-    --success-border: rgba(82, 199, 122, 0.25);
-
-    --warning: #f5a623;
-    --warning-bg: rgba(245, 166, 35, 0.1);
-    --warning-border: rgba(245, 166, 35, 0.25);
-
-    --error: #e05c5c;
-    --error-bg: rgba(224, 92, 92, 0.1);
-    --error-border: rgba(224, 92, 92, 0.25);
-
-    --info: #5c9ae0;
-    --info-bg: rgba(92, 154, 224, 0.1);
-    --info-border: rgba(92, 154, 224, 0.25);
+    --text-primary: #2b2117;
+    --text-secondary: #6e614e;
+    --text-tertiary: #9e907a;
+    --text-disabled: #c8bba4;
+    --text-inverse: #ffffff;
+    --text-amber: #e07712; // 浅底上更深的柑橘，保证对比度
+    --text-amber-dim: #b86510;
 
     // ============================================
-    // 边框 — Warm Borders
+    // 功能色 — Semantic (light-appropriate)
     // ============================================
-    --border-color: rgba(245, 166, 35, 0.12);
-    --border-light: rgba(245, 166, 35, 0.06);
-    --border-focus: #f5a623;
-    --border-amber: rgba(245, 166, 35, 0.3);
+    --success: #2ea043;
+    --success-bg: rgba(46, 160, 67, 0.1);
+    --success-border: rgba(46, 160, 67, 0.28);
+
+    --warning: #e8910c;
+    --warning-bg: rgba(232, 145, 12, 0.12);
+    --warning-border: rgba(232, 145, 12, 0.3);
+
+    --error: #e5484d;
+    --error-bg: rgba(229, 72, 77, 0.1);
+    --error-border: rgba(229, 72, 77, 0.28);
+
+    --info: #3b82c4;
+    --info-bg: rgba(59, 130, 196, 0.1);
+    --info-border: rgba(59, 130, 196, 0.26);
 
     // ============================================
-    // 圆角 — Radius
+    // 边框 — Warm Hairlines
     // ============================================
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --border-color: rgba(70, 50, 25, 0.1);
+    --border-light: rgba(70, 50, 25, 0.06);
+    --border-strong: rgba(70, 50, 25, 0.16);
+    --border-focus: #ff8a1e;
+    --border-amber: rgba(255, 138, 30, 0.4); // 旧名保留
+    --border-citrus: rgba(255, 138, 30, 0.4);
+
+    // ============================================
+    // 圆角 — Rounded & Friendly
+    // ============================================
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 22px;
     --radius-full: 9999px;
 
     // ============================================
-    // 阴影 — Deep Shadows + Amber Glow
+    // 阴影 — Soft Diffuse Warm Shadows
     // ============================================
-    --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-xs: 0 1px 3px rgba(120, 86, 30, 0.06);
+    --shadow-sm: 0 2px 8px rgba(120, 86, 30, 0.08);
+    --shadow-md:
+        0 8px 22px rgba(120, 86, 30, 0.1), 0 2px 6px rgba(120, 86, 30, 0.06);
+    --shadow-lg:
+        0 16px 40px rgba(120, 86, 30, 0.14), 0 4px 12px rgba(120, 86, 30, 0.08);
+    --shadow-xl:
+        0 28px 60px rgba(120, 86, 30, 0.18), 0 8px 20px rgba(120, 86, 30, 0.1);
 
     --shadow-primary:
-        0 4px 16px rgba(245, 166, 35, 0.3), 0 0 0 1px rgba(245, 166, 35, 0.15);
-    --shadow-primary-sm: 0 2px 8px rgba(245, 166, 35, 0.25);
+        0 8px 22px rgba(255, 138, 30, 0.3), 0 0 0 1px rgba(255, 138, 30, 0.12);
+    --shadow-primary-sm: 0 4px 14px rgba(255, 138, 30, 0.26);
 
     // ============================================
     // 间距 — Spacing
@@ -129,11 +155,17 @@
     --space-12: 48px;
 
     // ============================================
-    // 字体 — Sora Display + DM Mono Numerals
+    // 字体 — Rounded Display + Clean Body
+    // 命名 + 系统回退（不引入远程 @import，规避 MV3/CSP）
+    // macOS 经 ui-rounded / SF Pro Rounded 直接拿到系统圆体
     // ============================================
     --font-family:
-        "Sora", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-mono: "DM Mono", "Fira Code", "Cascadia Code", monospace;
+        "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+        system-ui, sans-serif;
+    --font-display:
+        "Baloo 2", "Quicksand", ui-rounded, "SF Pro Rounded",
+        "Hiragino Maru Gothic ProN", var(--font-family);
+    --font-mono: "DM Mono", ui-monospace, "Cascadia Code", monospace;
 
     --font-size-xs: 11px;
     --font-size-sm: 12px;
@@ -199,16 +231,16 @@
 }
 
 // ============================================
-// Mixins — Amber Components
+// Mixins — Citrus Components
 // ============================================
 
-// 主按钮 — Amber Button
+// 主按钮 — Citrus Button
 @mixin btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    background: var(--gradient-amber);
+    background: var(--gradient-citrus);
     color: var(--text-inverse);
     border: none;
     border-radius: var(--radius-md);
@@ -220,6 +252,7 @@
     cursor: pointer;
     transition: all var(--transition-fast);
     position: relative;
+    box-shadow: var(--shadow-primary-sm);
 
     &:hover {
         box-shadow: var(--shadow-primary);
@@ -232,7 +265,7 @@
     }
 
     &:disabled {
-        background: var(--bg-elevated);
+        background: var(--bg-tertiary);
         color: var(--text-tertiary);
         cursor: not-allowed;
         transform: none;
@@ -246,7 +279,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    background: transparent;
+    background: var(--bg-secondary);
     color: var(--text-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
@@ -258,8 +291,8 @@
     transition: all var(--transition-fast);
 
     &:hover {
-        background: var(--primary-muted);
-        border-color: var(--border-amber);
+        background: var(--primary-light);
+        border-color: var(--border-citrus);
         color: var(--text-amber);
     }
 
@@ -293,7 +326,7 @@
         background: var(--error);
         color: #fff;
         border-color: var(--error);
-        box-shadow: 0 0 12px rgba(224, 92, 92, 0.3);
+        box-shadow: 0 4px 14px rgba(229, 72, 77, 0.28);
     }
 
     &:active {
@@ -301,7 +334,7 @@
     }
 }
 
-// 输入框 — Dark Input
+// 输入框 — Cream Inset Input
 @mixin input-base {
     width: 100%;
     padding: var(--space-2) var(--space-3);
@@ -319,21 +352,19 @@
     }
 
     &:hover {
-        border-color: var(--border-amber);
-        background: var(--bg-elevated);
+        border-color: var(--border-citrus);
+        background: var(--bg-secondary);
     }
 
     &:focus {
         outline: none;
         border-color: var(--primary-color);
-        background: var(--bg-elevated);
-        box-shadow:
-            0 0 0 3px rgba(245, 166, 35, 0.12),
-            inset 0 0 0 1px rgba(245, 166, 35, 0.05);
+        background: var(--bg-secondary);
+        box-shadow: 0 0 0 3px rgba(255, 138, 30, 0.14);
     }
 
     &:disabled {
-        background: var(--bg-secondary);
+        background: var(--bg-tertiary);
         color: var(--text-tertiary);
         cursor: not-allowed;
         border-color: var(--border-light);
@@ -345,15 +376,14 @@
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
 }
 
 @mixin card-hover {
     &:hover {
-        border-color: var(--border-amber);
-        box-shadow:
-            var(--shadow-md),
-            inset 0 0 0 1px rgba(245, 166, 35, 0.05);
+        border-color: var(--border-citrus);
+        box-shadow: var(--shadow-md);
     }
 }
 
@@ -367,7 +397,7 @@
 
     &:hover {
         box-shadow: var(--shadow-lg);
-        border-color: var(--border-amber);
+        border-color: var(--border-citrus);
         transform: translateY(-1px);
     }
 }
@@ -390,7 +420,7 @@
 
     &.active {
         background: var(--primary-light);
-        border-color: var(--border-amber);
+        border-color: var(--border-citrus);
     }
 }
 
@@ -402,11 +432,11 @@
     margin: var(--space-4) 0;
 }
 
-// 琥珀光晕滚动条
-@mixin amber-scrollbar {
+// 柑橘滚动条（旧名 amber-scrollbar 保留为别名）
+@mixin citrus-scrollbar {
     &::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
+        width: 6px;
+        height: 6px;
     }
 
     &::-webkit-scrollbar-track {
@@ -414,7 +444,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--border-amber);
+        background: var(--gray-300);
         border-radius: var(--radius-full);
 
         &:hover {
@@ -423,17 +453,21 @@
     }
 }
 
+@mixin amber-scrollbar {
+    @include citrus-scrollbar;
+}
+
 // ============================================
-// 琥珀标签 — Amber Badge
+// 柑橘标签 — Citrus Badge
 // ============================================
-@mixin amber-badge {
+@mixin citrus-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px var(--space-2);
+    gap: 5px;
+    padding: 3px var(--space-2);
     background: var(--primary-light);
-    color: var(--primary-color);
-    border: 1px solid rgba(245, 166, 35, 0.2);
+    color: var(--text-amber);
+    border: 1px solid rgba(255, 138, 30, 0.24);
     border-radius: var(--radius-full);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
@@ -447,11 +481,15 @@
         border-radius: 50%;
         background: var(--primary-color);
         box-shadow: 0 0 6px var(--primary-color);
-        animation: amberPulse 2s ease-in-out infinite;
+        animation: citrusPulse 2s ease-in-out infinite;
     }
 }
 
-@keyframes amberPulse {
+@mixin amber-badge {
+    @include citrus-badge;
+}
+
+@keyframes citrusPulse {
     0%,
     100% {
         opacity: 1;
@@ -459,7 +497,19 @@
     }
 
     50% {
-        opacity: 0.6;
+        opacity: 0.55;
         box-shadow: 0 0 2px var(--primary-color);
+    }
+}
+
+// 旧名保留（历史组件可能引用 amberPulse）
+@keyframes amberPulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
     }
 }

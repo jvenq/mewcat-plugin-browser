@@ -376,7 +376,12 @@ export const TranslateServices: React.FunctionComponent = () => {
         return requiresApiKey && !testParams.apiKey
             ? Promise.reject(new Error("请先填写完整的配置信息"))
             : Promise.reject(new Error("请先填写完整的配置信息"))
-    }, [currentModelConfig.items, currentModelConfig.testValidator, currentModelData, resolveBaseUrl])
+    }, [
+        currentModelConfig.items,
+        currentModelConfig.testValidator,
+        currentModelData,
+        resolveBaseUrl
+    ])
 
     const handleTestSingleModel = useCallback(
         async (modelId: string) => {

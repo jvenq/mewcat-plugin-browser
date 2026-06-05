@@ -132,7 +132,7 @@ const LanguageRow = styled.div`
     padding: var(--space-3);
     background: var(--primary-light);
     border-radius: var(--radius-md);
-    border: 1px solid rgba(249, 115, 22, 0.15);
+    border: 1px solid rgba(255, 138, 30, 0.18);
 `
 
 const LanguageBox = styled.div`
