@@ -1,0 +1,36 @@
+html {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: var(--font-size-base, 13px);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+    outline: none;
+    word-break: break-all;
+    --webkit-tap-highlight-color: transparent;
+}
+
+@media (any-hover: none) {
+    *:hover {
+        cursor: none;
+    }
+}
+
+a {
+    text-decoration: none;
+}

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node *)"
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "command": "git push >/dev/null 2>&1 && echo '{\"systemMessage\":\"\\u5df2\\u81ea\\u52a8\\u63a8\\u9001\\u5230\\u8fdc\\u7a0b \\u2705\"}' || echo '{\"systemMessage\":\"\\u81ea\\u52a8\\u63a8\\u9001\\u5931\\u8d25 \\u26a0\\ufe0f \\u8bf7\\u624b\\u52a8\\u6267\\u884c git push \\u67e5\\u770b\\u539f\\u56e0\"}'",
+            "statusMessage": "git push..."
+          }
+        ]
+      }
+    ]
+  }
+}

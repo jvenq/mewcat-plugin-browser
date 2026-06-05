@@ -1,0 +1,73 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "words": [],
+    "dictionaries": ["custom-words"],
+    "dictionaryDefinitions": [
+        {
+            "name": "custom-words",
+            "path": ".cspell/custom-words.txt",
+            "addWords": true
+        }
+    ],
+    "ignorePaths": [
+        "**/node_modules/**",
+        "build/**",
+        ".plasmo/**",
+        "coverage/**",
+        "*.log",
+        "*.lock",
+        "pnpm-lock.yaml",
+        "yarn.lock",
+        "**/*.json",
+        ".git/**",
+        ".vscode/**",
+        ".idea/**",
+        "*.min.js",
+        "*.min.css",
+        "**/*.map",
+        "**/CHANGELOG.md",
+        ".changeset/**",
+        ".husky/**",
+        "scripts/**",
+        "**/*.config.js",
+        "**/*.config.mjs",
+        "**/*.config.ts",
+        "**/test/**",
+        "**/dist/**",
+        "**/__test__/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.test.js",
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/*.spec.js",
+        "**/example/**",
+        "**/assets/**",
+        "eslint.config.mjs",
+        "patches/**",
+        "**/*.md",
+        "rule.old.ts",
+        "rule.ts",
+        "**/*.d.ts",
+        "htmlStandardRules.ts",
+        "apps/browser-extension/build/**",
+        "apiKey.ts",
+        "test/**/*",
+        "**/es/**/*"
+    ],
+    "overrides": [
+        {
+            "filename": "**/*.json",
+            "caseSensitive": false
+        },
+        {
+            "filename": "**/*.tsx",
+            "language": "en,typescript"
+        },
+        {
+            "filename": "**/*.ts",
+            "language": "en,typescript"
+        }
+    ]
+}

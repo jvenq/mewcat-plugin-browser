@@ -1,0 +1,20 @@
+{
+    "extends": "plasmo/templates/tsconfig.base.json",
+    "compilerOptions": {
+        "target": "es2020",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "sourceMap": true,
+        "incremental": false,
+        "noEmit": true,
+        "jsx": "preserve",
+        "jsxImportSource": "react",
+        "types": ["node"],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"],
+            "~/*": ["./*"]
+        }
+    },
+    "exclude": ["node_modules", "build/**/*", "test/**/*", "docs", "**/rule.old.ts"],
+    "include": [".plasmo/index.d.ts", ".plasmo/messaging.d.ts", "src/**/*.ts", "src/**/*.tsx"]
+}
