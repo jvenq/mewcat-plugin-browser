@@ -463,4 +463,20 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：逐个核查后所有测试文件均无法实际运行或已无对应实现：`test-token-refresh.ts` 依赖 `axios-mock-adapter`（README 明确标注「暂未安装」）；`test_ai_role_integration.js` 引用路径写错（`./src/services/TranslationServiceManager.js` 不存在），直接崩溃；`archive/web3-test.js` 依赖已移除；`test_abort_functionality.js`、`test-token-refresh-real.ts` 无 package.json 脚本入口。`test-401-interceptor.ts` 虽有 `test:401` 脚本，但核查 `src/services/request.ts` 发现其中只有类型定义，401 拦截器实现已不存在，该测试验证的是一个早已废弃的实现。整个 `test/` 目录是历史遗留产物，无一有效，全部删除。`pnpm check` 全量通过（0 error）。
 
+---
+
+### 2026-06-05 — 清理 rule.json 无用属性并补充 rule-schema 文档
+
+**修改内容**：
+- `assets/rule.json`：`generalRule` 从 169 个属性精简至 45 个。删除 124 个超出 mewCat 功能范围或从未被代码消费的属性，分类如下：
+  - 功能模块整块删除：`subtitleRule`（~500 行）、`aiWriting`（~200 行）、`bodyRule`、`ytAsrConfig`、PDF 相关（6 个）、触控快捷键（9 个）、鼠标悬停翻译（4 个）、原版产品法务数据（3 个）、DOMPurify（2 个）、搜索增强（2 个）等
+  - 版本化无效键（7 个，如 `excludeSelectorsRegexes.add_v.[1.5.7]`、`rich.stayOriginalTags.remove`）：RuleEngine 从不解析含点号的顶层键
+  - 原版内部调参（7 个，如 `longBuildDomLength`、`detectTextBufferLength`）
+  - 保留 25 个「已使用」属性（DOMTraverser / MutationObserverManager 直接读取）及 20 个「计划功能」属性（如 `glossaries`、`injectedCss`、`waitForSelectors`、`imageRule`、mutation 配置组等）；`rules` 站点规则数组（789 条）完全不动
+- `src/types/rule.ts`：重写 `GeneralRule` 接口，仅保留与新 `generalRule` 对应的属性；删除已废弃的 `SubtitleRule`、`BodyRule`、`DarkModeRule`、`MutationConfig`、`AdvanceMergeConfigItem` 接口；用 A/B 类注释标注每个属性的使用状态；`ImageRule`、`InputConfig`、`GlossaryItem` 接口保留
+- `src/translation/RuleEngine.ts`：`processArrayPropertyAction` 的 remove 分支为 `new Set(operationValues)` 补充 `as string[]` 类型断言——类型精简后 TypeScript 能推导出 `operationValues` 可为 `GlossaryItem[]`，导致原本暗含的 overload 歧义变为显式错误
+- `docs/rule-schema.md`（新建）：完整文档化 `generalRule` 的 45 个属性，含 A/B 类说明、默认值、实现路径；列出已删除属性及删除原因；说明站点规则合并机制
+
+**原因**：`generalRule` 是从 immersive translate 原版直接继承的 169 属性超集，其中大量属性对应字幕 ASR、AI 写作、PDF 阅读、触控快捷键、DOMPurify 等 mewCat 完全没有实现也不计划实现的功能，且含 7 个版本化点号键从未被 RuleEngine 解析。清理后文件从 548 KB 缩减约 60%（generalRule 从 ~1150 行降至 ~300 行），类型定义也更清晰。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。
+
 

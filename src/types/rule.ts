@@ -52,17 +52,7 @@ export interface ReplaceRuleAtom {
 }
 
 /**
- * 暗黑模式规则
- */
-export interface DarkModeRule {
-    /** 检测元素 */
-    element: string
-    /** 选择器列表 */
-    selectors: string[]
-}
-
-/**
- * 输入配置
+ * 输入配置（计划功能：输入框翻译）
  */
 export interface InputConfig {
     /** 是否启用清除内容 */
@@ -82,19 +72,7 @@ export interface InputConfig {
 }
 
 /**
- * 变更配置
- */
-export interface MutationConfig {
-    /** 消费超时时间 */
-    consumeTimeout?: number
-    /** 构建超时时间 */
-    buildTimeout?: number
-    /** 是否检查自身更新 */
-    checkSelfUpdate?: boolean
-}
-
-/**
- * 图片规则
+ * 图片规则（计划功能：通过 rule.json 配置图片翻译行为）
  */
 export interface ImageRule {
     /** 类型 */
@@ -164,318 +142,181 @@ export interface ImageRule {
 }
 
 /**
- * 字幕规则
- */
-export interface SubtitleRule {
-    /** ID */
-    id?: string
-    /** 默认降级服务 */
-    defaultFallbackServices?: string[]
-    /** 是否注入 */
-    isInject?: boolean
-    /** 预翻译 */
-    preTranslation?: boolean
-    /** 人工优先 */
-    humanPreferred?: boolean
-    /** 会议自动启用字幕 */
-    meetingAutoEnableSubtitle?: boolean
-    /** AI 字幕优先 */
-    aiSubtitlePreferred?: boolean
-    /** 是否禁用 */
-    disabled?: boolean
-    /** 钩子类型 */
-    hookType?: string
-    /** 是否显示快速按钮 */
-    showQuickButton?: boolean
-    /** 背景颜色 */
-    backgroundColor?: string
-    /** 背景透明度 */
-    backgroundOpacity?: string
-    /** 类型 */
-    type?: string
-    /** 视频播放器选择器 */
-    videoPlayerSelector?: string
-    /** 是否启用触发翻译 */
-    enableTriggerTranslate?: boolean
-    /** 加载样式 */
-    loadingStyle?: string
-    /** 注入的 CSS */
-    injectedCss?: string[]
-    /** 多视频容器选择器 */
-    multipleVideoContainerSelector?: string
-    /** 快速按钮规则 */
-    quickButtonRule?: {
-        appendSelector?: string
-        insertBeforeSelector?: string
-        injectCSS?: string
-    }
-    /** 实时字幕规则 */
-    liveSubtitleRule?: {
-        containerSelector?: string
-        reportSelector?: string
-        textSelectors?: string[]
-        mutationChangeDelay?: number
-    }
-    /** 是否启用 iOS 全屏文本轨道 */
-    enableIOSFullScreenTextTrack?: boolean
-}
-
-/**
- * Body 规则
- */
-export interface BodyRule {
-    /** 是否启用 */
-    enable?: boolean
-    /** Body 选择器 */
-    bodySelector?: string
-    /** 文章选择器 */
-    articleSelector?: string
-}
-
-/**
- * 词汇表项
+ * 词汇表项（计划功能：术语保护）
  */
 export interface GlossaryItem {
-    /** 键 */
+    /** 键（原文） */
     k: string
-    /** 值 */
+    /** 值（译文，空字符串表示跳过不翻译） */
     v: string
 }
 
 /**
- * 高级合并配置项
- */
-export interface AdvanceMergeConfigItem {
-    /** 条件表达式 */
-    condition: string
-    /** 高级配置 */
-    advanceConfig: Record<string, unknown>
-}
-
-/**
  * 全局规则配置
+ *
+ * 分为两类：
+ * - A 类（已使用）：DOMTraverser / MutationObserverManager 直接读取
+ * - B 类（计划功能）：RuleEngine 在规则合并时处理，下游功能尚未实现
+ *
+ * 详见 docs/rule-schema.md
  */
 export interface GeneralRule {
-    /** 注释 */
-    _comment?: string
-    /** 隐私协议版本 */
-    privacyProtocolVersion?: string
-    /** 隐私协议启用时间 */
-    privacyProtocolEnableTime?: string
-    /** DOM 检查超时 */
-    domCheckTimeout?: number
-    /** 段落最小文本数 */
-    paragraphMinTextCount?: number
-    /** 段落最小单词数 */
-    paragraphMinWordCount?: number
-    /** 块最小文本数 */
-    blockMinTextCount?: number
-    /** 块最小单词数 */
-    blockMinWordCount?: number
-    /** 语言检测最小文本数 */
-    languageDetectMinTextCount?: number
-    /** 主框架最小文本数 */
-    mainFrameMinTextCount?: number
-    /** 主框架最小单词数 */
-    mainFrameMinWordCount?: number
-    /** 侧边栏最大文本数 */
-    asideMaxTextCount?: number
-    /** 侧边栏最大单词数 */
-    asideMaxWordCount?: number
-    /** 侧边栏最大文本数 */
-    asideMaxTextCountPerParagraph?: number
-    /** 侧边栏段落最大单词数 */
-    asideMaxWordCountPerParagraph?: number
-    /** 原子块选择器 */
-    atomicBlockSelectors?: string[]
-    /** 翻译选择器 */
-    selectors?: string[]
-    /** 排除选择器 */
-    excludeSelectors?: string[]
-    /** 额外排除选择器 */
-    additionalExcludeSelectors?: string[]
-    /** 保留原文选择器 */
-    stayOriginalSelectors?: string[]
-    /** 额外保留原文选择器 */
-    additionalStayOriginalSelectors?: string[]
-    /** 额外选择器 */
-    additionalSelectors?: string[]
-    /** 所有块级标签 */
-    allBlockTags?: string[]
-    /** 内联标签 */
-    inlineTags?: string[]
-    /** 排除标签 */
-    excludeTags?: string[]
-    /** 保留原文标签 */
-    stayOriginalTags?: string[]
-    /** 翻译时保留的标签（如 a、code 等，翻译后仍保留这些标签及其属性） */
-    preserveTagsInTranslation?: string[]
-    /** 浮动效果段落数 */
-    floatEffectParagraphNum?: number
-    /** 浮动块效果段落数 */
-    floatBlockEffectParagraphs?: number
-    /** 是否净化富文本 HTML */
-    purifyRichHtml?: boolean
-    /** 长构建 DOM 长度 */
-    longBuildDomLength?: number
-    /** 长构建页面长度 */
-    longBuildPageLength?: number
-    /** 重复翻译次数 */
-    repeatTranslateNum?: number
-    /** 检测文本缓冲区长度 */
-    detectTextBufferLength?: number
-    /** 小代码长度 */
-    smallCodeLength?: number
-    /** 是否强制格式化 pre 标签 */
-    forceFormatPre?: boolean
-    /** 长 HTML 文本长度 */
-    longHtmlTextLength?: number
-    /** 是否启用站点自动翻译 */
-    enableSiteAutoTranslate?: boolean
-    /** 可见观察器屏幕 */
-    visibleObserverScreens?: number[]
-    /** 跳过忽略选择器 */
-    skipIgnoreSelectors?: string[]
-    /** 页面语言检测权重 */
-    pageLangDetectWeight?: Record<string, number>
-    /** DOM 净化添加标签 */
-    domPurifyAddTags?: string[]
-    /** 服务变更时是否翻译 */
-    isTranslateWhenServiceChanged?: boolean
-    /** 排除选择器正则表达式 */
-    excludeSelectorsRegexes?: Record<string, string[]>
-    /** 跳过构建容器选择器 */
-    skipBuildContainerSelectors?: string[]
-    /** 构建容器选择器 */
-    buildContainerSelectors?: string[]
-    /** 是否启用跳过构建容器 */
-    enableSkipBuildContainer?: boolean
-    /** 词汇表 */
-    glossaries?: GlossaryItem[]
-    /** 排除正则表达式 */
-    excludeRegexps?: string[]
-    /** 秘密正则表达式 */
-    secretRegexps?: string[]
-    /** 检测服务顺序 */
-    detectionServiceOrder?: string[]
-    /** 是否检测段落语言 */
-    detectParagraphLanguage?: boolean
-    /** 段落首字母字体大小 */
-    paragraphFirstLetterFontSize?: number
-    /** Toast 错误最小次数 */
-    toastErrorMinTimes?: number
-    /** 是否启用字幕 */
-    enableSubtitle?: boolean
-    /** 是否禁用新文本翻译 */
-    disableNewTextTranslate?: boolean
-    /** 是否跳过可编辑检查 */
-    skipEditableCheck?: boolean
-    /** 条件 */
-    condition?: Record<string, unknown>
-    /** 规范化 body */
-    normalizeBody?: string
-    /** 输入配置 */
-    inputConfig?: InputConfig
-    /** PDF 新段落行高 */
-    pdfNewParagraphLineHeight?: number
-    /** PDF 新段落缩进 */
-    pdfNewParagraphIndent?: number
-    /** PDF 新段落缩进右缩进像素 */
-    pdfNewParagraphIndentRightIndentPx?: number
-    /** 触摸时切换翻译页面的手指数 */
-    fingerCountToToggleTranslagePageWhenTouching?: number
-    /** 触摸时切换翻译遮罩的手指数 */
-    fingerCountToToggleTranslationMaskWhenTouching?: number
-    /** 触摸时切换仅翻译页面的手指数 */
-    fingerCountToToggleTranslagePageOnlyTranslationWhenTouching?: number
-    /** 触摸快捷键切换翻译页面 */
-    touchShortcutsToggleTranslatePage?: string
-    /** 触摸快捷键输入翻译 */
-    touchShortcutsInputTranslate?: string
-    /** 触摸快捷键切换翻译遮罩 */
-    touchShortcutsToggleTranslationMask?: string
-    /** 触摸快捷键切换仅翻译页面 */
-    touchShortcutsToggleTranslatePageOnlyTranslation?: string
-    /** 触摸快捷键切换翻译触摸元素 */
-    touchShortcutsToggleTranslateTouchElement?: string
-    /** 触摸快捷键切换翻译触摸元素偏好键 */
-    touchShortcutsToggleTranslateTouchElementPreferenceKey?: string
-    /** 鼠标悬停按住键 */
-    mouseHoverHoldKey?: string
-    /** 鼠标悬停偏好键 */
-    mouseHoverPreferenceKey?: string
-    /** 鼠标按住翻译延迟 */
-    mousePressHoldTranslateDelay?: number
-    /** 暗黑模式规则 */
-    darkModeRule?: DarkModeRule
-    /** 是否启用通过 referrer 自动翻译 */
-    enableAutoTranslateByReferrer?: boolean
-    /** 变更配置 */
-    mutationConfig?: MutationConfig
-    /** 图片规则 */
-    imageRule?: ImageRule
-    /** 是否使用 iframe postMessage */
-    useIframePostMessage?: boolean
+    // ======== A 类：DOM 选择器（已使用） ========
 
-    // ========== 新增的 MutationObserver 配置 ==========
-    /** 是否启用 MutationObserver */
-    mutationObserverEnabled?: boolean
-    /** 是否检测 URL 变化 */
-    mutationEnableUrlChange?: boolean
-    /** 是否检查自我更新（防止翻译结果再次触发） */
-    mutationCheckSelfUpdate?: boolean
-    /** 变更观察器限制目标选择器 */
-    mutationObserverLimitTargetSelectors?: string[]
-    /** 变更排除选择器 */
-    mutationExcludeSelectors?: string[]
-    /** 变更排除包含选择器 */
-    mutationExcludeContainsSelectors?: string[]
-    /** 变更观察器标签名 */
-    mutationObserverTagNames?: string[]
-    /** 变更观察器容器选择器 */
+    /** 翻译目标选择器（空数组 = 全页面模式） */
+    selectors?: string[]
+    /** 补充选择器（强制包含，即使不在 selectors 范围内） */
+    additionalSelectors?: string[]
+    /** 排除选择器（最高优先级，永不翻译） */
+    excludeSelectors?: string[]
+    /** 额外排除选择器（在 excludeSelectors 基础上追加） */
+    additionalExcludeSelectors?: string[]
+    /** 保留原文选择器（元素自身不翻译，子元素继续处理） */
+    stayOriginalSelectors?: string[]
+    /** 原子块选择器（整体翻译，不拆分子元素） */
+    atomicBlockSelectors?: string[]
+    /** 额外内联选择器（将匹配元素视为内联） */
+    extraInlineSelectors?: string[]
+    /** 额外块级选择器（将匹配元素视为块级） */
+    extraBlockSelectors?: string[]
+
+    // ======== A 类：标签过滤（已使用） ========
+
+    /** 排除的 HTML 标签（永不翻译，如 SCRIPT、STYLE、SVG） */
+    excludeTags?: string[]
+    /** 保留原文的 HTML 标签（如 CODE、TT、IMG） */
+    stayOriginalTags?: string[]
+    /** 所有块级标签集合（用于判断元素是否为块级） */
+    allBlockTags?: string[]
+    /** 翻译时保留的标签（翻译后保留标签及其属性，如 A） */
+    preserveTagsInTranslation?: string[]
+
+    // ======== A 类：文本阈值（已使用） ========
+
+    /** 块级元素最小字符数，低于此值不翻译（默认 24） */
+    blockMinTextCount?: number
+    /** 块级元素最小单词数，低于此值不翻译（默认 4） */
+    blockMinWordCount?: number
+    /** 段落最小字符数，低于此值不翻译（默认 2） */
+    paragraphMinTextCount?: number
+    /** 段落最小单词数，低于此值不翻译（默认 1） */
+    paragraphMinWordCount?: number
+    /** 侧边栏元素的最大总字符数阈值 */
+    asideMaxTextCount?: number
+    /** 侧边栏每段落最大字符数阈值 */
+    asideMaxTextCountPerParagraph?: number
+    /** 侧边栏每段落最大单词数阈值 */
+    asideMaxWordCountPerParagraph?: number
+
+    // ======== A 类：正则过滤（已使用） ========
+
+    /** 内容排除正则（匹配的整段文本跳过翻译） */
+    excludeRegexps?: string[]
+    /** 不翻译正则（匹配的文本块跳过翻译） */
+    noTranslateRegexp?: string[]
+    /** 选择器特定正则排除（键为 CSS 选择器，值为正则数组） */
+    excludeSelectorsRegexes?: Record<string, string[]>
+
+    // ======== A 类：MutationObserver（已使用） ========
+
+    /** MutationObserver 监听的容器选择器列表 */
     mutationObserverContainerSelectors?: string[]
-    /** 构建翻译容器的防抖延迟（毫秒） */
+    /** 排除 MutationObserver 监听的选择器（这些元素的变化不触发翻译） */
+    mutationExcludeSelectors?: string[]
+    /** DOM 变化触发翻译的防抖延迟（毫秒，默认 10） */
+    mutationChangeDelay?: number
+
+    // ======== B 类：DOM 选择器扩展（计划功能） ========
+
+    /**
+     * 额外保留原文选择器（Math、KaTeX 等公式元素）
+     * @planned 需在 DOMTraverser.matchesStayOriginalSelectors 中与
+     *          stayOriginalSelectors 合并后才生效
+     */
+    additionalStayOriginalSelectors?: string[]
+    /**
+     * 内联标签列表（RuleEngine 支持站点规则通过 .add/.remove 操作修改此列表）
+     * @planned 需在 DOMTraverser 中消费 rule.inlineTags 后才生效
+     */
+    inlineTags?: string[]
+
+    // ======== B 类：内容注入（计划功能） ========
+
+    /**
+     * 站点专属 CSS 注入（在目标页面插入样式以修复布局兼容问题）
+     * @planned 需在 ImmersiveTranslator 初始化阶段注入到页面
+     */
+    injectedCss?: string[]
+
+    // ======== B 类：SPA 兼容（计划功能） ========
+
+    /**
+     * 等待选择器列表（在这些元素出现后再启动翻译，用于 SPA 站点）
+     * @planned 需在 ImmersiveTranslator.translate() 入口处理 waitForSelectors
+     */
+    waitForSelectors?: string[]
+    /** waitForSelectors 等待超时（毫秒，默认 3000） */
+    waitForSelectorsTimeout?: number
+
+    // ======== B 类：术语保护（计划功能） ========
+
+    /**
+     * 词汇表（翻译时对指定术语做保护或替换）
+     * @planned 需在 UniversalTranslator.buildPrompt 中注入词汇表指令
+     */
+    glossaries?: GlossaryItem[]
+
+    // ======== B 类：输入框翻译（计划功能） ========
+
+    /**
+     * 输入框翻译配置
+     * @planned 需实现 inputTranslate content script
+     */
+    inputConfig?: InputConfig
+
+    // ======== B 类：图片翻译配置（计划功能） ========
+
+    /**
+     * 图片翻译规则（站点级配置，用于覆盖全局图片翻译行为）
+     * @planned 需在 imageTranslate.tsx 中读取并应用此配置
+     */
+    imageRule?: ImageRule
+
+    // ======== B 类：翻译容器构建（计划功能） ========
+
+    /**
+     * 跳过构建翻译容器的选择器（这些元素不包装翻译容器，如 br、hr）
+     * @planned 需在 DOMTraverser 容器构建阶段消费
+     */
+    skipBuildContainerSelectors?: string[]
+    /** 强制构建翻译容器的选择器（如 td） */
+    buildContainerSelectors?: string[]
+    /** 是否启用跳过构建容器优化 */
+    enableSkipBuildContainer?: boolean
+
+    // ======== B 类：MutationObserver 扩展（计划功能） ========
+
+    /**
+     * 包含这些子选择器的父元素不触发 MutationObserver 翻译
+     * @planned 需在 MutationObserverManager 过滤逻辑中消费
+     */
+    mutationExcludeContainsSelectors?: string[]
+    /** 是否启用 MutationObserver（false 时禁用动态内容翻译） */
+    mutationObserverEnabled?: boolean
+    /** 是否监听 URL 变化并重新翻译 */
+    mutationEnableUrlChange?: boolean
+    /** 是否检测翻译结果自身的变化（防止死循环） */
+    mutationCheckSelfUpdate?: boolean
+    /** 构建翻译容器的防抖延迟（毫秒，默认 100） */
     mutationBuildTimeout?: number
-    /** 文本变化处理的防抖延迟（毫秒） */
+    /** 文本变化处理的防抖延迟（毫秒，默认 100） */
     mutationConsumeTimeout?: number
-    /** 同一节点最多翻译次数（防止死循环） */
+    /** 同一节点最多翻译次数（防止死循环，默认 3） */
     mutationRepeatTranslateNum?: number
-    /** Layer 4: 跳过动态标记的选择器 */
+    /** 跳过动态标记元素的选择器（避免翻译插件自身注入的元素） */
     skipDynamicMarkSelectors?: string[]
     /** URL 黑名单（这些 URL 不启用 MutationObserver） */
     mutationBlockUrls?: string[]
-    /** 搜索增强配置 */
-    searchEnhancementConfig?: unknown[]
-    /** 注入的 CSS */
-    injectedCss?: string[]
-    /** 是否为引导页 */
-    isOnBoardingPage?: boolean
-    /** 是否为电子书 */
-    isEbook?: boolean
-    /** 是否为电子书构建器 */
-    isEbookBuilder?: boolean
-    /** 是否忽略简繁中文 */
-    ignoreZhCNandZhTW?: boolean
-    /** 是否在 Safari 上显示赞助 */
-    showSponsorOnSafari?: boolean
-    /** 不翻译正则表达式 */
-    noTranslateRegexp?: string[]
-    /** 等待选择器 */
-    waitForSelectors?: string[]
-    /** 是否注入选项 URL */
-    isInjectOptionsUrl?: boolean
-    /** 是否注入版本 */
-    isInjectVersion?: boolean
-    /** 是否注入 meta */
-    isInjectMeta?: boolean
-    /** 等待选择器超时 */
-    waitForSelectorsTimeout?: number
-    /** 配对 */
-    pairs?: Record<string, string>
-    /** AI 规则 */
-    aiRule?: Record<string, unknown>
-    /** 字幕规则 */
-    subtitleRule?: SubtitleRule
 }
 
 /**

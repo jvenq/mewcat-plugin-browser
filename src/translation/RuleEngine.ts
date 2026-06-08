@@ -378,7 +378,8 @@ export class RuleEngine {
 
         if (action === "remove") {
             // 移除操作：过滤数组
-            const removeSet = new Set(operationValues)
+            // operationValues 实际总是 string[]（只对字符串数组属性调用此方法）
+            const removeSet = new Set(operationValues as string[])
             const result = currentArray.filter(
                 item => !removeSet.has(item as unknown as never)
             )
