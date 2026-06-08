@@ -92,11 +92,11 @@ const SCxSettingsIcon = styled.div.withConfig({
     shouldForwardProp: prop => prop !== "visible"
 })<{ visible: boolean }>`
     position: absolute;
-    bottom: -45px;
+    bottom: -40px;
     left: 50%;
     transform: translateX(-50%);
-    width: 45px;
-    height: 45px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
