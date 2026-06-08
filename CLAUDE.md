@@ -479,4 +479,19 @@ pnpm package      # 打包为带日期的 ZIP
 
 **原因**：`generalRule` 是从 immersive translate 原版直接继承的 169 属性超集，其中大量属性对应字幕 ASR、AI 写作、PDF 阅读、触控快捷键、DOMPurify 等 mewCat 完全没有实现也不计划实现的功能，且含 7 个版本化点号键从未被 RuleEngine 解析。清理后文件从 548 KB 缩减约 60%（generalRule 从 ~1150 行降至 ~300 行），类型定义也更清晰。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。
 
+---
 
+### 2026-06-08 — SVG 图标统一整理至 src/icons/ 目录
+
+**修改内容**：
+- `src/icons/`（新建目录）：新增 42 个图标 `.tsx` 组件文件 + `index.ts` barrel。每个文件导出一个具名 React 函数组件（`SvgIconProps: { className?, style? }`），视觉风格分两类：32 个 fill 风格（Material Design 路径，迁移自原 `Icon/index.tsx` 内联定义）+ 10 个 stroke 风格（Lucide 风格，从散落内联 SVG 提取）。新增 stroke 图标：`GearIcon`、`ArrowRightIcon`、`SwapIcon`、`XIcon`、`PlayIcon`、`ClipboardIcon`、`ChevronDownIcon`、`CopyStrokeIcon`、`CheckStrokeIcon`、`SpinnerIcon`
+- `src/components/Icon/index.tsx`：移除 32 个内联 SVG 组件定义，改为从 `@/icons` 导入；`iconMap`、`SCxIconContainer`、`Icon` 组件、`IconName` 类型等公共 API **完全不变**，对所有现有调用方零破坏
+- `src/contents/TranslationControlCenter.tsx`：内联 gear SVG → `import { GearIcon } from "../icons"` + `<GearIcon />`
+- `src/popup/index.tsx`：2 处内联 SVG → `import { ArrowRightIcon, GearIcon } from "../icons"`
+- `src/components/SettingsPanel/index.tsx`：2 处内联 SVG → `import { ArrowRightIcon, GearIcon } from "@/icons"`
+- `src/components/Select/index.tsx`：下拉箭头内联 SVG → `import { ChevronDownIcon } from "@/icons"`
+- `src/components/NativeSelect/index.tsx`：下拉箭头内联 SVG → `import { ChevronDownIcon } from "@/icons"`
+- `src/sidepanel/index.tsx`：6 处内联 SVG → `import { CheckStrokeIcon, ClipboardIcon, CopyStrokeIcon, PlayIcon, SwapIcon, XIcon } from "@/icons"`
+- `src/components/ImageTranslateButton.tsx`：2 处内联 SVG → `import { SpinnerIcon, TranslateIcon } from "@/icons"`；`fill: white` → `fill: currentColor` + 按钮 `color: white`，使 `SpinnerIcon`（stroke）与 `TranslateIcon`（fill）均通过 `currentColor` 继承白色
+
+**原因**：项目存在两套并行的 SVG 使用方式——`Icon/index.tsx` 集中注册系统（30+ 图标）和散落在 7 个文件约 15 处的内联 `<svg>` 元素，后者无法复用、维护成本高。统一迁移至 `src/icons/` 后：新增图标只需在一处添加，散落文件通过具名导入引用，消除重复路径字符串；`Icon/index.tsx` 公共 API 保持兼容。Plasmo（Parcel）不支持 Vite 的 `?react` SVG 查询参数，采用 `.tsx` 组件文件方案。`pnpm check` 全量通过（typecheck/lint 0 error、format、hotlink、spell 均 OK；lint 仅余存量 warning）。

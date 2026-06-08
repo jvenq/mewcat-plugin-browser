@@ -11,6 +11,14 @@ import { TranslationServiceManager } from "@/translation/TranslationServiceManag
 
 import LoadingDots from "../components/LoadingDots"
 import NativeSelect from "../components/NativeSelect"
+import {
+    CheckStrokeIcon,
+    ClipboardIcon,
+    CopyStrokeIcon,
+    PlayIcon,
+    SwapIcon,
+    XIcon
+} from "@/icons"
 import iconImg from "~/assets/icon.png"
 
 // ============================================
@@ -505,14 +513,7 @@ const SlidePanel: React.FunctionComponent = () => {
                         title="交换语言"
                         disabled={sourceLang === "auto"}
                     >
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
-                        </svg>
+                        <SwapIcon />
                     </SwapButton>
                     <LangBox>
                         <NativeSelect
@@ -544,29 +545,14 @@ const SlidePanel: React.FunctionComponent = () => {
                             }}
                             title="清空"
                         >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                            >
-                                <path d="M18 6L6 18M6 6l12 12" />
-                            </svg>
+                            <XIcon />
                         </ClearButton>
                     )}
                 </TextAreaWrapper>
 
                 <ActionRow>
                     <PasteButton onClick={handlePaste}>
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-                            <rect x="9" y="3" width="6" height="4" rx="1" />
-                        </svg>
+                        <ClipboardIcon />
                         粘贴
                     </PasteButton>
                     <TranslateButton
@@ -581,14 +567,7 @@ const SlidePanel: React.FunctionComponent = () => {
                                 size={4}
                             />
                         ) : (
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            >
-                                <path d="M5 3l14 9-14 9V3z" />
-                            </svg>
+                            <PlayIcon />
                         )}
                         {loading ? "翻译中…" : "翻译"}
                     </TranslateButton>
@@ -616,33 +595,12 @@ const SlidePanel: React.FunctionComponent = () => {
                             <IconButton $success={copied} onClick={handleCopy}>
                                 {copied ? (
                                     <>
-                                        <svg
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2.5"
-                                        >
-                                            <path d="M20 6L9 17l-5-5" />
-                                        </svg>
+                                        <CheckStrokeIcon />
                                         已复制
                                     </>
                                 ) : (
                                     <>
-                                        <svg
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                        >
-                                            <rect
-                                                x="9"
-                                                y="9"
-                                                width="13"
-                                                height="13"
-                                                rx="2"
-                                            />
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                        </svg>
+                                        <CopyStrokeIcon />
                                         复制
                                     </>
                                 )}

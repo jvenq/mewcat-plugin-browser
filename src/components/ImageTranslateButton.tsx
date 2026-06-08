@@ -1,6 +1,8 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
 
+import { SpinnerIcon, TranslateIcon } from "@/icons"
+
 interface ImageTranslateButtonProps {
     /** 是否显示 */
     visible: boolean
@@ -65,10 +67,12 @@ const SCxButton = styled.button.withConfig({
         transform: ${props => (props.translating ? "scale(1)" : "scale(0.95)")};
     }
 
+    color: white;
+
     svg {
         width: 20px;
         height: 20px;
-        fill: white;
+        fill: currentColor;
         animation: ${props => (props.translating ? spin : "none")} 1s linear
             infinite;
     }
@@ -95,24 +99,7 @@ export const ImageTranslateButton: React.FC<ImageTranslateButtonProps> = ({
             }}
             title={translating ? "翻译中..." : "点击翻译图片"}
         >
-            {translating ? (
-                <svg viewBox="0 0 24 24">
-                    <circle
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="white"
-                        strokeWidth="2"
-                        fill="none"
-                        strokeDasharray="31.4 31.4"
-                        strokeLinecap="round"
-                    />
-                </svg>
-            ) : (
-                <svg viewBox="0 0 24 24">
-                    <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" />
-                </svg>
-            )}
+            {translating ? <SpinnerIcon /> : <TranslateIcon />}
         </SCxButton>
     )
 }

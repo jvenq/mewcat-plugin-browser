@@ -13,6 +13,8 @@ import {
 import React, { useRef, useState } from "react"
 import styled from "styled-components"
 
+import { ChevronDownIcon } from "@/icons"
+
 import { hideScrollBar } from "../../styles/scroll"
 
 interface Option {
@@ -198,14 +200,7 @@ const Select: React.FC<SelectProps> = ({
                           : placeholder}
                 </SelectText>
                 <ArrowIcon isOpen={isOpen}>
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                    >
-                        <path d="M6 9l6 6 6-6" />
-                    </svg>
+                    <ChevronDownIcon />
                 </ArrowIcon>
             </SelectButton>
 
